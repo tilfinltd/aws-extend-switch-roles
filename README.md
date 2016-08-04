@@ -2,6 +2,10 @@
 
 Extend your AWS IAM switching roles by Chrome extension
 
+## Install
+
+Go to [AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
+
 ## Configuration
 
 Click Browser button, edit your profile settings to text area in popup form and save.
