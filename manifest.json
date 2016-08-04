@@ -3,9 +3,13 @@
   "version": "0.1.1",
   "description": "Extend your AWS IAM switching roles. You can set the configuration by aws config format",
   "permissions": ["storage"],
+  "icons" : {
+    "48": "icons/Icon_48x48.png",
+    "128": "icons/Icon_128x128.png"
+  },
   "browser_action": {
     "default_title": "AWS Extend Switch Roles",
-    "default_icon": "icon.png",
+    "default_icon": "icons/Icon_38x38.png",
     "default_popup": "popup.html"
   },
   "content_scripts": [
