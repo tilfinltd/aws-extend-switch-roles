@@ -10,7 +10,7 @@ Go to [AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/web
 
 Click Browser button, edit your profile settings to text area in popup form and save.
 
-Support ~/.aws/config format and like ~/.aws/credentials
+Supports ~/.aws/config format and like ~/.aws/credentials
 
 ```
 [profile marketingadmin]
@@ -27,4 +27,5 @@ color=bbeeff
 - Optional `color` that is RGB hex value without prefix `#`
 
 ## Appearance
-![Screen Shot](https://github.com/tilfin/aws-extend-switch-roles/blob/images/Banner_920x680.png)
+![Screen Shot 1](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_1_960x600.png)
+![Screen Shot 2](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_2_960x600.png)
