@@ -54,7 +54,7 @@ function attachColorLine(profiles) {
     if (color) {
       var menubar = document.querySelector('#nav-menubar');
       var barDiv = document.createElement('div');
-      barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:10000;background-color:#' + color;
+      barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:0;background-color:#' + color;
       menubar.appendChild(barDiv);
     }
   }
