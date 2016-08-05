@@ -7,13 +7,14 @@ function extendIAMFormList() {
   chrome.storage.sync.get('profiles', function(data) {
   	if (data.profiles) {
       loadProfiles(data.profiles, list, csrf);
+      attachColorLine(data.profiles);
   	}
   });
 }
 
 function loadProfiles(profiles, list, csrf) {
   profiles.forEach(function(item) {
-      var color = item.color || 'aaaaaa';
+    var color = item.color || 'aaaaaa';
 	  var listItem = document.createElement('li');
 	  listItem.innerHTML = '<form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">'
 	    +   '<input type="hidden" name="action" value="switchFromBasis">'
@@ -31,7 +32,31 @@ function loadProfiles(profiles, list, csrf) {
 	    + '</form>';
 
 	  list.appendChild(listItem);
+  });
+}
+
+function attachColorLine(profiles) {
+  var usernameMenu = document.querySelector('#nav-usernameMenu');
+  if (usernameMenu.classList.contains('awsc-has-switched-role')) {
+    var r = usernameMenu.textContent.match(/^([^\s]+)/);
+    if (r.length < 2) return;
+
+    var profileName = r[1];
+    var color = null;
+    profiles.some(function(item) {
+      if (item.profile === profileName) {
+        color = item.color;
+        return true;
+      }
     });
+
+    if (color) {
+      var menubar = document.querySelector('#nav-menubar');
+      var barDiv = document.createElement('div');
+      barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:10000;background-color:#' + color;
+      menubar.appendChild(barDiv);
+    }
+  }
 }
 
 extendIAMFormList();
