@@ -1,5 +1,6 @@
 function extendIAMFormList() {
   var list = document.querySelector('#awsc-username-menu-recent-roles');
+  if (!list) return;
 
   var firstForm = list.querySelector('#awsc-recent-role-0 form');
   var csrf = firstForm['csrf'].value;
