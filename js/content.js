@@ -14,7 +14,18 @@ function extendIAMFormList() {
 }
 
 function loadProfiles(profiles, list, csrf) {
+  var submits = list.querySelectorAll('input[type="submit"]');
+  var recentNames = [];
+
+  submits.forEach(function(input){
+    input.style = 'white-space:pre';
+    recentNames.push(input.value);
+  });
+
   profiles.forEach(function(item) {
+    var name = item.profile + '  |  ' + item.aws_account_id;
+    if (recentNames.indexOf(name) !== -1) return true;
+
     var color = item.color || 'aaaaaa';
 	  var listItem = document.createElement('li');
 	  listItem.innerHTML = '<form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">'
@@ -28,8 +39,7 @@ function loadProfiles(profiles, list, csrf) {
 	    +   '<input type="hidden" name="redirect_uri" value="https%3A%2F%2Fconsole.aws.amazon.com%2Fs3%2Fhome">'
 	    +   '<label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #'+color+';">&nbsp;</label>'
 	    +   '<input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="'
-	    +   item.profile + ' &nbsp;|&nbsp; ' + item.aws_account_id
-	    +   '" title="' + item.role_name + '@' + item.aws_account_id + '">'
+	    +   name + '" title="' + item.role_name + '@' + item.aws_account_id + '" style="white-space:pre">'
 	    + '</form>';
 
 	  list.appendChild(listItem);
@@ -41,6 +51,8 @@ function attachColorLine(profiles) {
   if (usernameMenu.classList.contains('awsc-has-switched-role')) {
     var r = usernameMenu.textContent.match(/^([^\s]+)/);
     if (r.length < 2) return;
+
+    usernameMenu.style = 'white-space:pre';
 
     var profileName = r[1];
     var color = null;
