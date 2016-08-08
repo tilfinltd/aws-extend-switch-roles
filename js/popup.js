@@ -118,16 +118,25 @@ function loadAwsConfig(text) {
     var line = rawline.trim();
     var field, r;
 
-    if (item && line.length > 0) {
-      var field = parseKeyValue(line);
-      item[field.key] = field.value;
-    } else if (r = line.match(/^\[(.+)\]$/)) {
+    var firstChar = line.charAt(0);
+    if (firstChar === ';' || firstChar === '#') {
+      line = ''; // Comment Line
+    }
+
+    if (r = line.match(/^\[(.+)\]$/)) {
+      if (item) profiles.push(brushProfile(item));
+
       var pname = r[1].trim();
-      pname = pname.replace(/^profile\s/i, '');
+      pname = pname.replace(/^profile\s+/i, '');
       item = { profile: pname };
-    } else {
-      profiles.push(brushProfile(item));
-      item = null;
+    } else if (item) {
+      if (line.length > 0) {
+        var field = parseKeyValue(line);
+        item[field.key] = field.value;
+      } else {
+        profiles.push(brushProfile(item));
+        item = null;
+      }
     }
   })
   if (item) profiles.push(brushProfile(item));
