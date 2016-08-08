@@ -1,6 +1,64 @@
+function ColorPicker(doc) {
+  var colorPicker = doc.getElementById('colorPicker');
+  var colorValue = doc.getElementById('colorValue');
+  this.onpick = null;
+
+  var me = this;
+
+  colorPicker.oninput = function() {
+    var rrggbb = this.value.substr(1);
+    colorValue.value = rrggbb;
+    if (me.onpick != null) {
+      me.onpick(rrggbb);
+    }
+  }
+
+  colorValue.oninput = function() {
+    colorPicker.value = '#'+this.value;
+    if (me.onpick != null) {
+      me.onpick(this.value);
+    }
+  }
+
+  colorValue.oninput = function() {
+    colorPicker.value = '#'+this.value;
+  }
+
+  colorValue.onkeypress = function(evt) {
+    if (evt.keyCode === 13) {
+      if (me.onpick != null) {
+        me.onpick(this.value);
+      }
+    }
+  }
+}
+
+ColorPicker.prototype.setColor = function(color){
+  colorPicker.value = '#'+color;
+  colorValue.value = color;
+}
+
 
 window.onload = function() {
+  var colorPicker = new ColorPicker(document);
+
+  var selection = [];
   var textArea = document.querySelector('#awsConfigTextArea');
+  textArea.onselect = function() {
+    var str = this.value.substring(this.selectionStart, this.selectionEnd);
+    var r = str.match(/^([0-9a-fA-F]{6})$/);
+    if (r !== null) {
+      colorPicker.setColor(r[1]);
+      selection = [this.selectionStart, this.selectionEnd];
+      colorPicker.onpick = function(newColor) {
+        str = textArea.value;
+        textArea.value = str.substring(0, selection[0]) + newColor + str.substring(selection[1]);
+      }
+    } else {
+      selection = [];
+      colorPicker.onpick = null;
+    }
+  }
 
   var msgSpan = document.querySelector('#msgSpan');
   var saveButton = document.querySelector('#saveButton');
@@ -11,19 +69,21 @@ window.onload = function() {
       var data = loadAwsConfig(rawstr);
       localStorage['rawdata'] = rawstr;
 
-      chrome.storage.sync.set({ profiles: data }, function() {
-        msgSpan.innerHTML = '<span style="color:#1111dd">Updated configuraton!</span>';
-        setTimeout(function() {
-          msgSpan.innerHTML = '';
-        }, 2500);
-      });
+      chrome.storage.sync.set({ profiles: data, rawtext: rawstr },
+        function() {
+          msgSpan.innerHTML = '<span style="color:#1111dd">Updated configuraton!</span>';
+          setTimeout(function() {
+            msgSpan.innerHTML = '';
+          }, 2500);
+        });
     } catch (e) {
       msgSpan.innerHTML = '<span style="color:#dd1111">Failed to save because of invalid format!</span>';
     }
   }
 
-  var str = localStorage['rawdata'];
-  if (str) textArea.value = str;
+  chrome.storage.sync.get('rawtext', function(data) {
+    textArea.value = data.rawtext || localStorage['rawdata'] || '';
+  });
 }
 
 

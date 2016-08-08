@@ -2,15 +2,23 @@
 <html>
 <head>
 <script src="js/popup.js"></script>
+<style>
+a { text-decoration: none }
+</style>
 </head>
 <body style="width:420px; padding:1px;">
  <div style="margin-bottom:10px"><b style="font-size:13px; margin:5px 0">Configuraton like ~/.aws/config file</b> (support color = RRGGBB) </div>
- <textarea id="awsConfigTextArea" style="width:100%; height:400px; padding:0.5ex"></textarea>
- <div style="margin-top:10px"><button id="saveButton">&nbsp;Save&nbsp;</button>
-  <span id="msgSpan" style="margin-left:12px"></span>
-  <a style="float:right" target="_blank" href="http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html">How to write ~/.aws/config file</a>
+ <textarea id="awsConfigTextArea" style="width:400px; height:400px; padding:0.5ex"></textarea>
+ <div style="margin-top:8px">
+  <input type="color" id="colorPicker">
+  <b style="margin-left: 6px">#</b>
+  <input type="text" id="colorValue" style="font-family:monospace; width:9ex" maxlength="6">
+  <a style="float:right" target="_blank" href="http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html">About ~/.aws/config file</a>
  </div>
- <hr>
- <div><a href="https://github.com/tilfin/aws-extend-switch-roles" target="_blank" style="text-decoration:none">About this extension</a></div>
+ <div style="margin-top:8px; padding-top:8px; border-top:1px solid #ccc">
+  <button id="saveButton">&nbsp;Save&nbsp;</button>
+  <span id="msgSpan" style="margin-left:12px"></span>
+  <a href="https://github.com/tilfin/aws-extend-switch-roles/blob/master/README.md" target="_blank" style="float:right">Read me</a>
+ </div>
 </body>
 </html>
