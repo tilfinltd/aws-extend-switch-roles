@@ -24,6 +24,11 @@ function loadProfiles(profiles, list, csrf, hidesHistory) {
       list.removeChild(fc);
       fc = list.firstChild;
     }
+
+    var label = document.getElementById('awsc-recent-roles-label');
+    if (label) {
+      label.textContent = label.textContent.replace('History', 'List');
+    }
   } else {
     submits.forEach(function(input){
       input.style = 'white-space:pre';
