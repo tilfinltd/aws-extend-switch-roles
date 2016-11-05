@@ -5,22 +5,31 @@ function extendIAMFormList() {
   var firstForm = list.querySelector('#awsc-recent-role-0 form');
   var csrf = firstForm['csrf'].value;
 
-  chrome.storage.sync.get('profiles', function(data) {
+  chrome.storage.sync.get(['profiles', 'hidesHistory'], function(data) {
+    var hidesHistory = data.hidesHistory || false;
   	if (data.profiles) {
-      loadProfiles(data.profiles, list, csrf);
+      loadProfiles(data.profiles, list, csrf, hidesHistory);
       attachColorLine(data.profiles);
   	}
   });
 }
 
-function loadProfiles(profiles, list, csrf) {
+function loadProfiles(profiles, list, csrf, hidesHistory) {
   var submits = list.querySelectorAll('input[type="submit"]');
   var recentNames = [];
 
-  submits.forEach(function(input){
-    input.style = 'white-space:pre';
-    recentNames.push(input.value);
-  });
+  if (hidesHistory) {
+    var fc = list.firstChild;
+    while (fc) {
+      list.removeChild(fc);
+      fc = list.firstChild;
+    }
+  } else {
+    submits.forEach(function(input){
+      input.style = 'white-space:pre';
+      recentNames.push(input.value);
+    });
+  }
 
   profiles.forEach(function(item) {
     var name = item.profile + '  |  ' + item.aws_account_id;
