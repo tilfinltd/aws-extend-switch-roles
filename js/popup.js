@@ -81,8 +81,14 @@ window.onload = function() {
     }
   }
 
-  chrome.storage.sync.get('rawtext', function(data) {
+  var hidesHistoryCheckBox = document.querySelector('#hidesHistoryCheckBox');
+  hidesHistoryCheckBox.onchange = function() {
+    chrome.storage.sync.set({ hidesHistory: this.checked }, function() {});
+  }
+
+  chrome.storage.sync.get(['rawtext', 'hidesHistory'], function(data) {
     textArea.value = data.rawtext || localStorage['rawdata'] || '';
+    hidesHistoryCheckBox.checked = data.hidesHistory || false;
   });
 }
 
