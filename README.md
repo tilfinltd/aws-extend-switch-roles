@@ -33,10 +33,9 @@ color=bbeeff
 - Optional `color` that is RGB hex value without prefix `#`
 
 ### Multi base accounts
-
-A profile that has only `aws_account_id` is defined as **base account**.
-A profile that has `source_profile` is defined as **target account**.
-A **base account** is associated with **target account**s.
+- A profile that has only `aws_account_id` is defined as **base account**.
+- A profile that has `source_profile` is defined as **target account**.
+- A **base account** is associated with **target account**s.
 
 ```
 [baseaccount]
