@@ -32,6 +32,22 @@ color=bbeeff
 - Required `role_arn` or (`aws_account_id` and `role_name`)
 - Optional `color` that is RGB hex value without prefix `#`
 
+### Multi base accounts
+- A profile that has only `aws_account_id` is defined as **base account**.
+- A profile that has `source_profile` is defined as **target account**.
+- A **base account** is associated with **target account**s.
+
+```
+[baseaccount]
+aws_account_id = 000000000000
+
+[targetaccount]
+role_arn = arn:aws:iam::123456789012:role/targetaccount
+source_profile = baseaccount
+```
+
+If you sign-in a base account, target accounts of the other base accounts are excluded.
+
 ## Settings
 
 - Can hide original role history (Show only roles in the configuration)
