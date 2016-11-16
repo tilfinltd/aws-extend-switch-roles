@@ -8,14 +8,13 @@ function extendIAMFormList() {
   chrome.storage.sync.get(['profiles', 'hidesHistory'], function(data) {
     var hidesHistory = data.hidesHistory || false;
   	if (data.profiles) {
-      loadProfiles(data.profiles, list, csrf, hidesHistory);
+      loadProfiles(new Profile(data.profiles), list, csrf, hidesHistory);
       attachColorLine(data.profiles);
   	}
   });
 }
 
-function loadProfiles(profiles, list, csrf, hidesHistory) {
-  var submits = list.querySelectorAll('input[type="submit"]');
+function loadProfiles(profile, list, csrf, hidesHistory) {
   var recentNames = [];
 
   if (hidesHistory) {
@@ -30,13 +29,23 @@ function loadProfiles(profiles, list, csrf, hidesHistory) {
       label.textContent = label.textContent.replace('History', 'List');
     }
   } else {
-    submits.forEach(function(input){
-      input.style = 'white-space:pre';
-      recentNames.push(input.value);
-    });
+    var li = list.firstElementChild;
+    while (li) {
+      input = li.querySelector('input[type="submit"]');
+      var name = input.value;
+      if (profile.exProfileNames.indexOf(name) > -1) {
+        var nextLi = li.nextElementSibling;
+        list.removeChild(li);
+        li = nextLi;
+      } else {
+        input.style = 'white-space:pre';
+        recentNames.push(name);
+        li = li.nextElementSibling;
+      }
+    }
   }
 
-  profiles.forEach(function(item) {
+  profile.destProfiles.forEach(function(item) {
     var name = item.profile + '  |  ' + item.aws_account_id;
     if (recentNames.indexOf(name) !== -1) return true;
 
@@ -84,6 +93,54 @@ function attachColorLine(profiles) {
       menubar.appendChild(barDiv);
     }
   }
+}
+
+function Profile(items) {
+  function getAccountId(elId) {
+    var el = document.getElementById(elId);
+    if (!el) return null;
+    return el.textContent.replace(/\-/g, '');
+  }
+
+  var baseAccountId = getAccountId('awsc-login-display-name-account');
+  var srcProfileMap = {};
+  var destProfiles = [];
+  var destProfileMap = {};
+
+  items.forEach(function(item){
+    if (item.source_profile) {
+      if (item.source_profile in destProfileMap) {
+        destProfileMap[item.source_profile].push(item);
+      } else {
+        destProfileMap[item.source_profile] = [item];
+      }
+    } else if (item.aws_account_id && !item.role_name) {
+      srcProfileMap[item.aws_account_id] = item;
+    } else {
+      destProfiles.push(item);
+    }
+  });
+
+  this.destProfiles = (function(){
+    var result = [].concat(destProfiles);
+    var baseProfile = srcProfileMap[baseAccountId];
+    if (baseProfile) {
+      var name = baseProfile.profile;
+      result = result.concat(destProfileMap[name] || []);
+      delete destProfileMap[name];
+    }
+    return result;
+  })();
+
+  this.exProfileNames = (function(){
+    var result = [];
+    for (var name in destProfileMap) {
+      destProfileMap[name].forEach(function(item){
+        result.push(item.profile + '  |  ' + item.aws_account_id);
+      });
+    }
+    return result;
+  })();
 }
 
 extendIAMFormList();
