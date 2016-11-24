@@ -99,7 +99,14 @@ function Profile(items) {
   function getAccountId(elId) {
     var el = document.getElementById(elId);
     if (!el) return null;
-    return el.textContent.replace(/\-/g, '');
+
+    var aid = el.textContent;
+    var r = aid.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
+    if (r) {
+      return r[1] + r[2] + r[3];
+    } else {
+      return aid;
+    }
   }
 
   var baseAccountId = getAccountId('awsc-login-display-name-account');
