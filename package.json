@@ -1,0 +1,31 @@
+{
+  "name": "aws-extend-switch-roles",
+  "version": "0.3.1",
+  "description": "Extend your AWS IAM switching roles by Chrome extension",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tilfin/aws-extend-switch-roles.git"
+  },
+  "author": "Toshimitsu Takahashi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tilfin/aws-extend-switch-roles/issues"
+  },
+  "homepage": "https://github.com/tilfin/aws-extend-switch-roles#readme",
+  "devDependencies": {
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-fixture": "^0.2.6",
+    "karma-html2js-preprocessor": "^1.1.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-json-fixtures-preprocessor": "0.0.6",
+    "karma-phantomjs-launcher": "^1.0.2"
+  }
+}
