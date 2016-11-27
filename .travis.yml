@@ -3,7 +3,7 @@ node_js:
   - 6
 
 script:
-  - npm test
+  - npm run ci
 
 before_script:
   - export DISPLAY=:99.0
