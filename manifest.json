@@ -1,6 +1,6 @@
 {
   "name": "AWS Extend Switch Roles",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Extend your AWS IAM switching roles. You can set the configuration by aws config format",
   "short_name": "Extend SwtichRole",
   "permissions": ["storage"],
@@ -17,7 +17,8 @@
     {
       "matches": [
         "https://console.aws.amazon.com/*",
-        "https://*.console.aws.amazon.com/*"
+        "https://*.console.aws.amazon.com/*",
+        "https://phd.aws.amazon.com/*"
       ],
       "all_frames": true,
       "js": ["js/content.js"],

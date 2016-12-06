@@ -38,12 +38,19 @@ color=bbeeff
 - A **base account** is associated with **target account**s.
 
 ```
-[baseaccount]
+[baseaccount1]
 aws_account_id = 000000000000
 
-[targetaccount]
+[targetaccount1]
 role_arn = arn:aws:iam::123456789012:role/targetaccount
-source_profile = baseaccount
+source_profile = baseaccount1
+
+[baseaccount2]
+aws_account_id = your-alias-name
+
+[targetaccount2]
+role_arn = arn:aws:iam::234567890123:role/targetaccount
+source_profile = baseaccount2
 ```
 
 If you sign-in a base account, target accounts of the other base accounts are excluded.
