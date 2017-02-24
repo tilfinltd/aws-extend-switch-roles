@@ -103,10 +103,10 @@ function parseKeyValue(line) {
 function brushProfile(item) {
   if (item.role_arn) {
     var parts = item.role_arn.split('/');
-    var iams = parts[0].split(':');
+    var iams = parts.shift().split(':');
 
     item.aws_account_id = iams[4];
-    item.role_name = parts[1];
+    item.role_name = parts.join('/');
 
     delete item.role_arn;
   }
