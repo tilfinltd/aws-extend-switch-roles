@@ -1,5 +1,5 @@
 describe('Profile', function() {
-  afterEach(function(){
+  afterEach(function() {
     fixture.cleanup()
   });
 
