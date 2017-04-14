@@ -6,7 +6,7 @@ module.exports = function(config) {
       {
         pattern: 'spec/fixtures/**/*',
       },
-      'js/**/*.js',
+      'src/lib/*.js',
       'spec/**/*.spec.js'
     ],
     preprocessors: {

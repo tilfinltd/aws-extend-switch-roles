@@ -1,9 +1,12 @@
 function extendIAMFormList() {
-  var list = document.querySelector('#awsc-username-menu-recent-roles');
-  if (!list) return;
-
-  var firstForm = list.querySelector('#awsc-recent-role-0 form');
-  var csrf = firstForm['csrf'].value;
+  var csrf, list = document.getElementById('awsc-username-menu-recent-roles');
+  if (list) {
+    var firstForm = list.querySelector('#awsc-recent-role-0 form');
+    csrf = firstForm['csrf'].value;
+  } else {
+    list = generateEmptyRoleList();
+    csrf = '';
+  }
 
   chrome.storage.sync.get(['profiles', 'hidesHistory'], function(data) {
     var hidesHistory = data.hidesHistory || false;
@@ -12,6 +15,22 @@ function extendIAMFormList() {
       attachColorLine(data.profiles);
   	}
   });
+}
+
+function generateEmptyRoleList() {
+  var divLbl = document.createElement('div');
+  divLbl.id = 'awsc-recent-roles-label';
+  divLbl.textContent = 'Role List:';
+  var ul = document.createElement('ul');
+  ul.id = 'awsc-username-menu-recent-roles';
+  var parentEl = document.getElementById('awsc-login-account-section');
+  parentEl.appendChild(divLbl);
+  parentEl.appendChild(ul);
+
+  var script = document.createElement('script');
+  script.src = chrome.extension.getURL('/js/csrf-setter.js');
+  parentEl.appendChild(script);
+  return ul;
 }
 
 function loadProfiles(profile, list, csrf, hidesHistory) {
@@ -93,61 +112,6 @@ function attachColorLine(profiles) {
       menubar.appendChild(barDiv);
     }
   }
-}
-
-function Profile(items) {
-  function getAccountId(elId) {
-    var el = document.getElementById(elId);
-    if (!el) return null;
-
-    var aid = el.textContent;
-    var r = aid.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
-    if (r) {
-      return r[1] + r[2] + r[3];
-    } else {
-      return aid;
-    }
-  }
-
-  var baseAccountId = getAccountId('awsc-login-display-name-account');
-  var srcProfileMap = {};
-  var destProfiles = [];
-  var destProfileMap = {};
-
-  items.forEach(function(item){
-    if (item.source_profile) {
-      if (item.source_profile in destProfileMap) {
-        destProfileMap[item.source_profile].push(item);
-      } else {
-        destProfileMap[item.source_profile] = [item];
-      }
-    } else if (item.aws_account_id && !item.role_name) {
-      srcProfileMap[item.aws_account_id] = item;
-    } else {
-      destProfiles.push(item);
-    }
-  });
-
-  this.destProfiles = (function(){
-    var result = [].concat(destProfiles);
-    var baseProfile = srcProfileMap[baseAccountId];
-    if (baseProfile) {
-      var name = baseProfile.profile;
-      result = result.concat(destProfileMap[name] || []);
-      delete destProfileMap[name];
-    }
-    return result;
-  })();
-
-  this.exProfileNames = (function(){
-    var result = [];
-    for (var name in destProfileMap) {
-      destProfileMap[name].forEach(function(item){
-        result.push(item.profile + '  |  ' + item.aws_account_id);
-      });
-    }
-    return result;
-  })();
 }
 
 extendIAMFormList();
