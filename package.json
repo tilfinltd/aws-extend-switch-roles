@@ -7,6 +7,8 @@
     "test": "test"
   },
   "scripts": {
+    "archive": "./bin/build.sh; ./bin/archive.sh",
+    "build": "./bin/build.sh",
     "test": "karma start",
     "ci": "karma start --single-run"
   },
