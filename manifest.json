@@ -25,5 +25,8 @@
       "run_at": "document_end"
     }
   ],
+  "web_accessible_resources": [
+    "js/csrf-setter.js"
+  ],
   "manifest_version": 2
 }

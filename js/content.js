@@ -1,9 +1,12 @@
 function extendIAMFormList() {
-  var list = document.querySelector('#awsc-username-menu-recent-roles');
-  if (!list) return;
-
-  var firstForm = list.querySelector('#awsc-recent-role-0 form');
-  var csrf = firstForm['csrf'].value;
+  var csrf, list = document.getElementById('awsc-username-menu-recent-roles');
+  if (list) {
+    var firstForm = list.querySelector('#awsc-recent-role-0 form');
+    csrf = firstForm['csrf'].value;
+  } else {
+    list = generateEmptyRoleList();
+    csrf = '';
+  }
 
   chrome.storage.sync.get(['profiles', 'hidesHistory'], function(data) {
     var hidesHistory = data.hidesHistory || false;
@@ -12,6 +15,22 @@ function extendIAMFormList() {
       attachColorLine(data.profiles);
   	}
   });
+}
+
+function generateEmptyRoleList() {
+  var divLbl = document.createElement('div');
+  divLbl.id = 'awsc-recent-roles-label';
+  divLbl.textContent = 'Role List:';
+  var ul = document.createElement('ul');
+  ul.id = 'awsc-username-menu-recent-roles';
+  var parentEl = document.getElementById('awsc-login-account-section');
+  parentEl.appendChild(divLbl);
+  parentEl.appendChild(ul);
+
+  var script = document.createElement('script');
+  script.src = chrome.extension.getURL('/js/csrf-setter.js');
+  parentEl.appendChild(script);
+  return ul;
 }
 
 function loadProfiles(profile, list, csrf, hidesHistory) {
