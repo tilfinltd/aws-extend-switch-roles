@@ -11,27 +11,38 @@ a { text-decoration: none }
 }
 #settings ul {
   list-style: none;
-  margin: 4px 0; padding: 0;
+  margin: 0 0; padding: 0;
 }
 #settings ul li {
   margin: 0;
   padding: 0;
-  line-height: 18px;
+  line-height: 26px;
 }
 #settings input {
   position: relative;
   top: 2px;
 }
+#awsConfigTextArea {
+  padding: 0.5ex;
+  resize: none;
+  white-space: nowrap;
+  width:470px;
+  height:400px;
+}
+#colorValue {
+  font-family: monospace;
+  width: 9ex;
+}
 </style>
 </head>
-<body style="width:420px; padding:1px;">
+<body style="width:480px; padding:1px;">
  <section>
   <div style="margin-bottom:10px"><span class="head">Configuration like ~/.aws/config file</span> (support color = RRGGBB) </div>
-  <textarea id="awsConfigTextArea" style="width:400px; height:400px; padding:0.5ex"></textarea>
+  <textarea id="awsConfigTextArea" spellcheck="false"></textarea>
   <div style="margin-top:8px">
    <input type="color" id="colorPicker">
    <b style="margin-left: 6px">#</b>
-   <input type="text" id="colorValue" style="font-family:monospace; width:9ex" maxlength="6">
+   <input type="text" id="colorValue" maxlength="6" placeholder="RRGGBB">
    <a style="float:right" target="_blank" href="http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html">About ~/.aws/config file</a>
   </div>
   <div style="margin-top:12px">
