@@ -45,8 +45,14 @@ window.onload = function() {
     chrome.storage.sync.set({ hidesHistory: this.checked }, function() {});
   }
 
-  chrome.storage.sync.get(['rawtext', 'hidesHistory'], function(data) {
+  var hidesAccountIdCheckBox = document.querySelector('#hidesAccountIdCheckBox');
+  hidesAccountIdCheckBox.onchange = function() {
+    chrome.storage.sync.set({ hidesAccountId: this.checked }, function() {});
+  }
+
+  chrome.storage.sync.get(['rawtext', 'hidesHistory', 'hidesAccountId'], function(data) {
     textArea.value = data.rawtext || localStorage['rawdata'] || '';
     hidesHistoryCheckBox.checked = data.hidesHistory || false;
+    hidesAccountIdCheckBox.checked = data.hidesAccountId || false;
   });
 }

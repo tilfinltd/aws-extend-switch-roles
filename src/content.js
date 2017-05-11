@@ -8,10 +8,11 @@ function extendIAMFormList() {
     csrf = '';
   }
 
-  chrome.storage.sync.get(['profiles', 'hidesHistory'], function(data) {
+  chrome.storage.sync.get(['profiles', 'hidesHistory', 'hidesAccountId'], function(data) {
     var hidesHistory = data.hidesHistory || false;
+    var hidesAccountId = data.hidesAccountId || false;
   	if (data.profiles) {
-      loadProfiles(new Profile(data.profiles), list, csrf, hidesHistory);
+      loadProfiles(new Profile(data.profiles), list, csrf, hidesHistory, hidesAccountId);
       attachColorLine(data.profiles);
   	}
   });
@@ -33,7 +34,7 @@ function generateEmptyRoleList() {
   return ul;
 }
 
-function loadProfiles(profile, list, csrf, hidesHistory) {
+function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   var recentNames = [];
 
   if (hidesHistory) {
@@ -65,7 +66,8 @@ function loadProfiles(profile, list, csrf, hidesHistory) {
   }
 
   profile.destProfiles.forEach(function(item) {
-    var name = item.profile + '  |  ' + item.aws_account_id;
+    var name = item.profile;
+    if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
     if (recentNames.indexOf(name) !== -1) return true;
 
     var color = item.color || 'aaaaaa';
