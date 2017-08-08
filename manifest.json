@@ -28,5 +28,12 @@
   "web_accessible_resources": [
     "js/csrf-setter.js"
   ],
-  "manifest_version": 2
+  "manifest_version": 2,
+  "applications": {
+    "gecko": {
+      "id": "aws-extend-switch-roles@tilfin.github.com",
+      "strict_min_version": "54.0.1",
+      "strict_max_version": "*"
+    }
+  }
 }
