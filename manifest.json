@@ -2,7 +2,7 @@
   "name": "AWS Extend Switch Roles",
   "version": "0.5.0",
   "description": "Extend your AWS IAM switching roles. You can set the configuration by aws config format",
-  "short_name": "Extend SwtichRole",
+  "short_name": "Extend SwitchRole",
   "permissions": ["storage"],
   "icons" : {
     "48": "icons/Icon_48x48.png",
