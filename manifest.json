@@ -21,19 +21,15 @@
         "https://phd.aws.amazon.com/*"
       ],
       "all_frames": true,
-      "js": ["js/content.js"],
+      "js": [
+        "js/sanitizer.js",
+        "js/content.js"
+      ],
       "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [
     "js/csrf-setter.js"
   ],
-  "manifest_version": 2,
-  "applications": {
-    "gecko": {
-      "id": "aws-extend-switch-roles@tilfin.github.com",
-      "strict_min_version": "54.0.1",
-      "strict_max_version": "*"
-    }
-  }
+  "manifest_version": 2
 }
