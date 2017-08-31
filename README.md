@@ -1,6 +1,6 @@
 # AWS Extend Switch Roles
 
-Extend your AWS IAM switching roles by Chrome extension
+Extend your AWS IAM switching roles by Chrome extension or Firefox add-on
 
 Switch roll history does not remain only 5 maximum on the AWS Management Console.
 This extension extends to show more switch roles by loading your aws configuration.
@@ -10,7 +10,9 @@ The bottom of the console header is emphasized with your specified color if you 
 
 ## Install
 
-Go to [AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
+[AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
+
+[AWS Extend Switch Roles :: Add-ons for Firefox](https://addons.mozilla.org/ja/firefox/addon/aws-extend-switch-roles3/)
 
 ## Configuration
 

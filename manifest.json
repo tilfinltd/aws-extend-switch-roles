@@ -21,7 +21,10 @@
         "https://phd.aws.amazon.com/*"
       ],
       "all_frames": true,
-      "js": ["js/content.js"],
+      "js": [
+        "js/sanitizer.js",
+        "js/content.js"
+      ],
       "run_at": "document_end"
     }
   ],
