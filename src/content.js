@@ -106,6 +106,11 @@ function attachColorLine(profiles) {
     });
 
     if (color) {
+      if (needsInvertForeColorByBack(color)) {
+        var label = usernameMenu.querySelector('.nav-elt-label');
+        label.style = 'color: #eee';
+      }
+
       var menubar = document.querySelector('#nav-menubar');
       var barDiv = document.createElement('div');
       barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:0;background-color:#' + color;
@@ -113,5 +118,18 @@ function attachColorLine(profiles) {
     }
   }
 }
+
+function needsInvertForeColorByBack(color) {
+  var r = color.substr(0, 2),
+      g = color.substr(2, 2),
+      b = color.substr(4, 2);
+
+  r = parseInt(r, 16);
+  g = parseInt(g, 16);
+  b = parseInt(b, 16);
+
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
+}
+
 
 extendIAMFormList();
