@@ -1,11 +1,13 @@
-function extendIAMFormList() {
-  var csrf, list = document.getElementById('awsc-username-menu-recent-roles');
-  if (list) {
-    var firstForm = list.querySelector('#awsc-recent-role-0 form');
-    csrf = firstForm['csrf'].value;
-  } else {
-    list = generateEmptyRoleList();
-    csrf = '';
+function extendIAMFormList(list, csrf) {
+  if (list === undefined) {
+      list = document.getElementById('awsc-username-menu-recent-roles');
+      if (list) {
+          var firstForm = list.querySelector('#awsc-recent-role-0 form');
+          csrf = firstForm['csrf'].value;
+      } else {
+          list = generateEmptyRoleList();
+          csrf = '';
+      }
   }
 
   chrome.storage.sync.get(['profiles', 'hidesHistory', 'hidesAccountId'], function(data) {
@@ -71,7 +73,16 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     if (recentNames.indexOf(name) !== -1) return true;
 
     var color = item.color || 'aaaaaa';
-    list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
+    var redirectUri;
+    if (item.region) {
+      redirectUri = 'https%3A%2F%2F' +
+          item.region +
+          '.console.aws.amazon.com%2Fconsole%2Fhome%3Fregion%3D' +
+          item.region;
+    } else {
+      redirectUri = 'https%3A%2F%2Fconsole.aws.amazon.com%2Fs3%2Fhome';
+    }
+    list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li class="aws_extend_switch_roles_profile">
     <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">
 	   <input type="hidden" name="action" value="switchFromBasis">
 	   <input type="hidden" name="src" value="nav">
@@ -80,7 +91,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 	   <input type="hidden" name="mfaNeeded" value="0">
 	   <input type="hidden" name="color" value="${color}">
 	   <input type="hidden" name="csrf" value="${csrf}">
-	   <input type="hidden" name="redirect_uri" value="https%3A%2F%2Fconsole.aws.amazon.com%2Fs3%2Fhome">
+	   <input type="hidden" name="redirect_uri" value="${redirectUri}">
 	   <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
      <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
             title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
@@ -131,5 +142,16 @@ function needsInvertForeColorByBack(color) {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
 }
 
+document.getElementById('nav-usernameMenu').addEventListener('click', function () {
+  //remove any previously added elements
+  var list = document.getElementById('awsc-username-menu-recent-roles');
+  var csrf = list.firstChild.querySelector('form')['csrf'].value;
+  var profiles = document.getElementsByClassName('aws_extend_switch_roles_profile');
+  while(profiles.length > 0){
+      list.removeChild(profiles[0]);
+  }
+  //now re-create the extented iam form list
+  extendIAMFormList(list, csrf);
+});
 
 extendIAMFormList();
