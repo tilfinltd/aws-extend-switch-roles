@@ -35,7 +35,7 @@ function generateEmptyRoleList() {
   return ul;
 }
 
-function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId, showOnlyMatchingRoles) {
+function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   var recentNames = [];
 
   if (hidesHistory) {
