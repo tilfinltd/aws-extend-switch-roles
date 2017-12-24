@@ -1,3 +1,4 @@
+
 window.onload = function() {
   var colorPicker = new ColorPicker(document);
 
@@ -50,9 +51,15 @@ window.onload = function() {
     chrome.storage.sync.set({ hidesAccountId: this.checked }, function() {});
   }
 
-  chrome.storage.sync.get(['rawtext', 'hidesHistory', 'hidesAccountId'], function(data) {
+  var showOnlyMatchingRolesCheckbox = document.querySelector('#showOnlyMatchingRolesCheckbox');
+  showOnlyMatchingRolesCheckbox.onchange = function() {
+    chrome.storage.sync.set({ showOnlyMatchingRoles: this.checked }, function() {});
+  }
+
+  chrome.storage.sync.get(['rawtext', 'hidesHistory', 'hidesAccountId','showOnlyMatchingRoles'], function(data) {
     textArea.value = data.rawtext || localStorage['rawdata'] || '';
     hidesHistoryCheckBox.checked = data.hidesHistory || false;
     hidesAccountIdCheckBox.checked = data.hidesAccountId || false;
+    showOnlyMatchingRolesCheckbox.checked = data.showOnlyMatchingRoles || false;
   });
 }
