@@ -8,13 +8,14 @@ function extendIAMFormList() {
     csrf = '';
   }
 
-  chrome.storage.sync.get(['profiles', 'hidesHistory', 'hidesAccountId'], function(data) {
+  chrome.storage.sync.get(['profiles', 'hidesHistory', 'hidesAccountId','showOnlyMatchingRoles'], function(data) {
     var hidesHistory = data.hidesHistory || false;
     var hidesAccountId = data.hidesAccountId || false;
-  	if (data.profiles) {
-      loadProfiles(new Profile(data.profiles), list, csrf, hidesHistory, hidesAccountId);
+    var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
+    if (data.profiles) {
+      loadProfiles(new Profile(data.profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
       attachColorLine(data.profiles);
-  	}
+    }
   });
 }
 
@@ -73,15 +74,15 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     var color = item.color || 'aaaaaa';
     list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
     <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">
-	   <input type="hidden" name="action" value="switchFromBasis">
-	   <input type="hidden" name="src" value="nav">
-	   <input type="hidden" name="roleName" value="${item.role_name}">
-	   <input type="hidden" name="account" value="${item.aws_account_id}">
-	   <input type="hidden" name="mfaNeeded" value="0">
-	   <input type="hidden" name="color" value="${color}">
-	   <input type="hidden" name="csrf" value="${csrf}">
-	   <input type="hidden" name="redirect_uri" value="https%3A%2F%2Fconsole.aws.amazon.com%2Fs3%2Fhome">
-	   <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
+          <input type="hidden" name="action" value="switchFromBasis">
+          <input type="hidden" name="src" value="nav">
+          <input type="hidden" name="roleName" value="${item.role_name}">
+          <input type="hidden" name="account" value="${item.aws_account_id}">
+          <input type="hidden" name="mfaNeeded" value="0">
+          <input type="hidden" name="color" value="${color}">
+          <input type="hidden" name="csrf" value="${csrf}">
+          <input type="hidden" name="redirect_uri" value="https%3A%2F%2Fconsole.aws.amazon.com%2Fs3%2Fhome">
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
      <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
             title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
     </li>`);

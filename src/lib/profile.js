@@ -1,4 +1,4 @@
-function Profile(items) {
+function Profile(items, showOnlyMatchingRoles) {
   function getAccountId(elId) {
     var el = document.getElementById(elId);
     if (!el) return null;
@@ -12,7 +12,13 @@ function Profile(items) {
     }
   }
 
+  function getAssumedRole(elId) {
+    var el = document.getElementById(elId);
+    return ( !el ? null : el.textContent.split("/")[0] );
+  }
+
   var baseAccountId = getAccountId('awsc-login-display-name-account');
+  var baseRole = getAssumedRole('awsc-login-display-name-user');
   var srcProfileMap = {};
   var destProfiles = [];
   var destProfileMap = {};
@@ -36,7 +42,11 @@ function Profile(items) {
     var baseProfile = srcProfileMap[baseAccountId];
     if (baseProfile) {
       var name = baseProfile.profile;
-      result = result.concat(destProfileMap[name] || []);
+      var profiles = destProfileMap[name] || [];
+      if (showOnlyMatchingRoles) {
+        profiles = profiles.filter(function(el) { return (el.role_name == baseRole); })
+      }
+      result = result.concat(profiles);
       delete destProfileMap[name];
     }
     return result;

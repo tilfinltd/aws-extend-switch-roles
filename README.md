@@ -20,6 +20,9 @@ Click Browser button, edit your profile settings to text area in popup form and 
 
 Supports ~/.aws/config format and like ~/.aws/credentials
 
+### Simple Configuration
+The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.  An optional 'color' parameter can also be used to specify an RGB hex value without prefix '#'.
+
 ```
 [profile marketingadmin]
 role_arn = arn:aws:iam::123456789012:role/marketingadmin
@@ -31,35 +34,56 @@ role_name = anotherrole
 color=bbeeff
 ```
 
-- Required `role_arn` or (`aws_account_id` and `role_name`)
-- Optional `color` that is RGB hex value without prefix `#`
+### Complex Configuration
+More complex configurations involve multiple AWS accounts and/or organizations.
 
-### Multi base accounts
-- A profile that has only `aws_account_id` is defined as **base account**.
-- A profile that has `source_profile` is defined as **target account**.
-- A **base account** is associated with **target account**s.
+- A profile that has only `aws_account_id` (without a role_name) is defined as **base account**.
+
+- **If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.**
+
+- A **target role** is associated with a **base account** by the **target role** specifying a 'source_profile'.
+
+- As above, **target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter.
 
 ```
-[baseaccount1]
-aws_account_id = 000000000000
+[organization1]
+aws_account_id = your-account-alias
 
-[targetaccount1]
-role_arn = arn:aws:iam::123456789012:role/targetaccount
-source_profile = baseaccount1
+[Org1-Account1-Role1]
+role_arn = arn:aws:iam::123456789012:role/Role1
+source_profile = organization1
+
+[Org1-Account1-Role2]
+aws_account_id = 123456789012
+role_name = Role2
+source_profile = organization1
+
+[Org1-Account2-Role1]
+aws_account_id = 210987654321
+role_name = Role1
+source_profile = organization1
 
 [baseaccount2]
-aws_account_id = your-alias-name
+aws_account_id = 000000000000
 
-[targetaccount2]
-role_arn = arn:aws:iam::234567890123:role/targetaccount
+[Base2-Role1]
+role_arn = arn:aws:iam::234567890123:role/Role1
 source_profile = baseaccount2
+
+[AnotherRole]
+role_name = SomeOtherRole
+aws_account_id = account-3-alias
 ```
 
-If you sign-in a base account, target accounts of the other base accounts are excluded.
+If you sign-in a base account, target roles of the other base accounts are excluded.
+
+The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite.  Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts.  Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown.  You won't see roles that your current role can't actually assume.
 
 ## Settings
 
 - Can hide original role history (Show only roles in the configuration)
+- Can hide the account_id for each profile
+- Can filter to only show profiles with roles that match your role in your master account
 
 ## Appearance
 
