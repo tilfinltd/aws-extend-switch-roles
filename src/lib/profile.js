@@ -1,22 +1,15 @@
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr;
+  if (this.length === 0) return hash;
+  for (i = 0; i < this.length; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 function Profile(items, showOnlyMatchingRoles) {
-  function getAccountId(elId) {
-    var el = document.getElementById(elId);
-    if (!el) return null;
-
-    var aid = el.textContent;
-    var r = aid.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
-    if (r) {
-      return r[1] + r[2] + r[3];
-    } else {
-      return aid;
-    }
-  }
-
-  function getAssumedRole(elId) {
-    var el = document.getElementById(elId);
-    return ( !el ? null : el.textContent.split("/")[0] );
-  }
-
   var baseAccountId = getAccountId('awsc-login-display-name-account');
   var baseRole = getAssumedRole('awsc-login-display-name-user');
   var srcProfileMap = {};
@@ -24,6 +17,7 @@ function Profile(items, showOnlyMatchingRoles) {
   var destProfileMap = {};
 
   items.forEach(function(item){
+    item.hash = JSON.stringify(item).hashCode()
     if (item.source_profile) {
       if (item.source_profile in destProfileMap) {
         destProfileMap[item.source_profile].push(item);

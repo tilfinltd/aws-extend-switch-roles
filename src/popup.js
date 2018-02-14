@@ -56,10 +56,16 @@ window.onload = function() {
     chrome.storage.sync.set({ showOnlyMatchingRoles: this.checked }, function() {});
   }
 
-  chrome.storage.sync.get(['rawtext', 'hidesHistory', 'hidesAccountId','showOnlyMatchingRoles'], function(data) {
+  var autoAssumeLastRoleCheckbox = document.querySelector('#autoAssumeLastRoleCheckbox');
+  autoAssumeLastRoleCheckbox.onchange = function() {
+    chrome.storage.sync.set({ autoAssumeLastRole: this.checked }, function() {});
+  }
+
+  chrome.storage.sync.get(['rawtext', 'hidesHistory', 'hidesAccountId','showOnlyMatchingRoles','autoAssumeLastRole'], function(data) {
     textArea.value = data.rawtext || localStorage['rawdata'] || '';
     hidesHistoryCheckBox.checked = data.hidesHistory || false;
     hidesAccountIdCheckBox.checked = data.hidesAccountId || false;
     showOnlyMatchingRolesCheckbox.checked = data.showOnlyMatchingRoles || false;
+    autoAssumeLastRoleCheckbox.checked = data.autoAssumeLastRole || false;
   });
 }
