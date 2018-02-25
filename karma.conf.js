@@ -12,9 +12,10 @@ module.exports = function(config) {
     ],
     preprocessors: {
       'test/**/*.html': ['html2js'],
-      'test/**/*.json': ['json_fixtures']
+      'test/**/*.json': ['json_fixtures'],
+      'src/**/*.js': ['coverage']
     },
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
     colors: true,
     logLevel: config.LOG_INFO,
     browsers: ['Chrome', 'ChromeHeadless', 'MyHeadlessChrome'],
@@ -31,6 +32,7 @@ module.exports = function(config) {
       'karma-chrome-launcher',
       'karma-mocha',
       'karma-chai',
+      'karma-coverage',
       'karma-fixture',
       'karma-html2js-preprocessor',
       'karma-json-fixtures-preprocessor'
