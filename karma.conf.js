@@ -6,14 +6,24 @@ module.exports = function(config) {
       {
         pattern: 'test/fixtures/**/*',
       },
+      'src/sanitizer.js',
       'src/lib/*.js',
       'test/**/*.test.js'
     ],
     preprocessors: {
       'test/**/*.html': ['html2js'],
-      'test/**/*.json': ['json_fixtures']
+      'test/**/*.json': ['json_fixtures'],
+      'src/**/*.js': ['coverage']
     },
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+    coverageReporter: {
+      reporters: [
+        // generates ./coverage/lcov.info
+        { type:'lcovonly', subdir: '.' },
+        // generates ./coverage/coverage-final.json
+        { type:'json', subdir: '.' },
+      ]
+    },
     colors: true,
     logLevel: config.LOG_INFO,
     browsers: ['Chrome', 'ChromeHeadless', 'MyHeadlessChrome'],
@@ -30,6 +40,7 @@ module.exports = function(config) {
       'karma-chrome-launcher',
       'karma-mocha',
       'karma-chai',
+      'karma-coverage',
       'karma-fixture',
       'karma-html2js-preprocessor',
       'karma-json-fixtures-preprocessor'

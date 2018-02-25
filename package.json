@@ -10,7 +10,8 @@
     "archive": "./bin/build.sh; ./bin/archive.sh",
     "build": "./bin/build.sh",
     "test": "karma start",
-    "test_ci": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
+    "test_ci": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
+    "coverage": "codecov"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "karma": "^2.0.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
     "karma-fixture": "^0.2.6",
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-json-fixtures-preprocessor": "0.0.6",
