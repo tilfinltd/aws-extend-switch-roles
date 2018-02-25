@@ -10,7 +10,8 @@
     "archive": "./bin/build.sh; ./bin/archive.sh",
     "build": "./bin/build.sh",
     "test": "karma start",
-    "test_ci": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
+    "test_ci": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
+    "coverage": "codecov"
   },
   "repository": {
     "type": "git",

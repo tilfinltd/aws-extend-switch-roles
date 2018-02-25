@@ -16,6 +16,14 @@ module.exports = function(config) {
       'src/**/*.js': ['coverage']
     },
     reporters: ['progress', 'coverage'],
+    coverageReporter: {
+      reporters: [
+        // generates ./coverage/lcov.info
+        { type:'lcovonly', subdir: '.' },
+        // generates ./coverage/coverage-final.json
+        { type:'json', subdir: '.' },
+      ]
+    },
     colors: true,
     logLevel: config.LOG_INFO,
     browsers: ['Chrome', 'ChromeHeadless', 'MyHeadlessChrome'],
