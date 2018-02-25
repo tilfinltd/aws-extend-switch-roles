@@ -1,7 +1,7 @@
 module.exports = function(config) {
   config.set({
     basePath: '.',
-    frameworks: ['jasmine', 'fixture'],
+    frameworks: ['mocha', 'chai', 'fixture'],
     files: [
       {
         pattern: 'spec/fixtures/**/*',
@@ -28,7 +28,8 @@ module.exports = function(config) {
     },
     plugins: [
       'karma-chrome-launcher',
-      'karma-jasmine',
+      'karma-mocha',
+      'karma-chai',
       'karma-fixture',
       'karma-html2js-preprocessor',
       'karma-json-fixtures-preprocessor'
