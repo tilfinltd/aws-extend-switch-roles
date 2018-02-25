@@ -43,7 +43,7 @@ function Profile(items, showOnlyMatchingRoles) {
     if (baseProfile) {
       var name = baseProfile.profile;
       var profiles = destProfileMap[name] || [];
-      if (showOnlyMatchingRoles) {
+      if (showOnlyMatchingRoles && document.body.className.includes('user-type-federated')) {
         profiles = profiles.filter(function(el) { return (el.role_name == baseRole); })
       }
       result = result.concat(profiles);
