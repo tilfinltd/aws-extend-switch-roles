@@ -16,16 +16,22 @@ module.exports = function(config) {
     reporters: ['progress'],
     colors: true,
     logLevel: config.LOG_INFO,
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome', 'ChromeHeadless', 'MyHeadlessChrome'],
+    customLaunchers: {
+      MyHeadlessChrome: {
+        base: 'ChromeHeadless',
+        flags: ['--disable-translate', '--disable-extensions', '--remote-debugging-port=9223']
+      }
+    },
     jsonFixturesPreprocessor: {
       variableName: '__json__'
     },
     plugins: [
+      'karma-chrome-launcher',
       'karma-jasmine',
       'karma-fixture',
       'karma-html2js-preprocessor',
-      'karma-json-fixtures-preprocessor',
-      'karma-phantomjs-launcher'
+      'karma-json-fixtures-preprocessor'
     ]
   })
 }
