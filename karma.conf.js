@@ -4,14 +4,14 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai', 'fixture'],
     files: [
       {
-        pattern: 'spec/fixtures/**/*',
+        pattern: 'test/fixtures/**/*',
       },
       'src/lib/*.js',
-      'spec/**/*.spec.js'
+      'test/**/*.test.js'
     ],
     preprocessors: {
-      'spec/**/*.html': ['html2js'],
-      'spec/**/*.json': ['json_fixtures']
+      'test/**/*.html': ['html2js'],
+      'test/**/*.json': ['json_fixtures']
     },
     reporters: ['progress'],
     colors: true,
