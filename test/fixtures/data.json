@@ -1,0 +1,13 @@
+{
+  "profiles": [
+    { "profile": "independence", "aws_account_id": "111122223333", "role_name": "independence_role" },
+    { "profile": "history-contained", "aws_account_id": "111122224444", "role_name": "contained_history_role" },
+    { "profile": "base-a", "aws_account_id": "555511112222" },
+    { "profile": "a-stg",  "aws_account_id": "555511113333", "role_name": "stg-role", "source_profile": "base-a" },
+    { "profile": "a-prod", "aws_account_id": "555511114444", "role_name": "prod-role", "source_profile": "base-a" },
+    { "profile": "base-b", "aws_account_id": "666611112222" },
+    { "profile": "b-stg",  "aws_account_id": "666611113333", "role_name": "stg-role", "source_profile": "base-b" },
+    { "profile": "b-prod", "aws_account_id": "666611114444", "role_name": "prod-role", "source_profile": "base-b" },
+    { "profile": "b-renpou", "aws_account_id": "666611115555", "role_name": "renpou", "source_profile": "base-b" }
+  ]
+}

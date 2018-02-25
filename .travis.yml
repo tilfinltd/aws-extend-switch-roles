@@ -13,5 +13,7 @@ cache:
     - node_modules
 install:
   - yarn
+  - yarn add codecov -D
 script:
   - yarn test_ci
+  - yarn coverage
