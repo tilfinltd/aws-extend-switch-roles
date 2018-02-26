@@ -12,13 +12,22 @@ function Profile(items, showOnlyMatchingRoles) {
     }
   }
 
-  function getAssumedRole(elId) {
-    var el = document.getElementById(elId);
-    return ( !el ? null : el.textContent.split("/")[0] );
+  function getAssumedRole() {
+    var el = document.getElementById('awsc-role-display-name-user');
+    if (el) {
+      return el.textContent.trim();
+    }
+
+    el = document.getElementById('awsc-login-display-name-user');
+    if (el) {
+      return el.textContent.trim().split("/")[0]
+    }
+
+    return null;
   }
 
   var baseAccountId = getAccountId('awsc-login-display-name-account');
-  var baseRole = getAssumedRole('awsc-login-display-name-user');
+  var baseRole = getAssumedRole();
   var srcProfileMap = {};
   var destProfiles = [];
   var destProfileMap = {};

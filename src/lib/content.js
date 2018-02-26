@@ -93,12 +93,10 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 function attachColorLine(profiles) {
   var usernameMenu = document.querySelector('#nav-usernameMenu');
   if (usernameMenu.classList.contains('awsc-has-switched-role')) {
-    var r = usernameMenu.textContent.match(/^([^\s]+)/);
-    if (r.length < 2) return;
+    var profileName = usernameMenu.textContent.trim();
 
     usernameMenu.style = 'white-space:pre';
 
-    var profileName = r[1];
     var color = null;
     profiles.some(function(item) {
       if (item.profile === profileName) {
