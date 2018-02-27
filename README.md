@@ -25,7 +25,12 @@ Click Browser button, edit your profile settings to text area in popup form and 
 Supports ~/.aws/config format and like ~/.aws/credentials
 
 ### Simple Configuration
-The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.  An optional 'color' parameter can also be used to specify an RGB hex value without prefix '#'.
+The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.
+
+#### Optional parameters
+
+* A 'color' parameter can be used to specify an RGB hex value without prefix '#'.
+* A 'region' parameter can be used to change the region whenever switching the role.
 
 ```
 [profile marketingadmin]
@@ -35,7 +40,7 @@ color = ffaaee
 [anotheraccount]
 aws_account_id = 987654321987
 role_name = anotherrole
-color=bbeeff
+region=ap-northeast-1
 ```
 
 ### Complex Configuration
@@ -47,7 +52,7 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 
 - A **target role** is associated with a **base account** by the **target role** specifying a 'source_profile'.
 
-- As above, **target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter.
+- As above, **target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter and a 'region' parameter.
 
 ```
 [organization1]

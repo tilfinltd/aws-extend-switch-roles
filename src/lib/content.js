@@ -36,6 +36,28 @@ function generateEmptyRoleList() {
   return ul;
 }
 
+function hookBeforeSwitch(form, profile) {
+  if (profile.region) {
+    const destRegion = profile.region;
+    var redirectUri = decodeURIComponent(form.redirect_uri.value);
+    const md = redirectUri.match(/region=([a-z\-1-9]+)/);
+    if (md) {
+      const currentRegion = md[1];
+      if (currentRegion !== destRegion) {
+        redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
+        if (currentRegion === 'us-east-1') {
+          redirectUri = redirectUri.replace('://', `://${destRegion}.`);
+        } else if (destRegion === 'us-east-1') {
+          redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
+        }
+      }
+      form.redirect_uri.value = encodeURIComponent(redirectUri);
+    }
+  }
+
+  return true;
+}
+
 function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   var recentNames = [];
 
@@ -87,6 +109,16 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
      <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
             title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
     </li>`);
+  });
+
+  Array.from(list.querySelectorAll('form')).forEach(form => {
+    form.onsubmit = function(e) {
+      const accountId = this.account.value, roleName =  this.roleName.value;
+      const foundProfile = profile.destProfiles.find(item => {
+        return accountId === item.aws_account_id && roleName === item.role_name;
+      });
+      return foundProfile ? hookBeforeSwitch(this, foundProfile) : true;
+    }
   });
 }
 
