@@ -1,5 +1,9 @@
+function elById(id) {
+  return document.getElementById(id);
+}
+
 function extendIAMFormList() {
-  var csrf, list = document.getElementById('awsc-username-menu-recent-roles');
+  var csrf, list = elById('awsc-username-menu-recent-roles');
   if (list) {
     var firstForm = list.querySelector('#awsc-recent-role-0 form');
     csrf = firstForm['csrf'].value;
@@ -26,7 +30,7 @@ function generateEmptyRoleList() {
   var ul = document.createElement('ul');
   ul.id = 'awsc-username-menu-recent-roles';
 
-  var parentEl = document.getElementById('awsc-login-account-section');
+  var parentEl = elById('awsc-login-account-section');
   parentEl.appendChild(divLbl);
   parentEl.appendChild(ul);
 
@@ -68,7 +72,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       fc = list.firstChild;
     }
 
-    var label = document.getElementById('awsc-recent-roles-label');
+    var label = elById('awsc-recent-roles-label');
     if (label) {
       label.textContent = label.textContent.replace('History', 'List');
     }
@@ -123,7 +127,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 }
 
 function attachColorLine(profiles) {
-  var usernameMenu = document.querySelector('#nav-usernameMenu');
+  var usernameMenu = elById('nav-usernameMenu');
   if (usernameMenu.classList.contains('awsc-has-switched-role')) {
     var profileName = usernameMenu.textContent.trim();
 
@@ -143,7 +147,7 @@ function attachColorLine(profiles) {
         label.style = 'color: #eee';
       }
 
-      var menubar = document.querySelector('#nav-menubar');
+      var menubar = elById('nav-menubar');
       var barDiv = document.createElement('div');
       barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:0;background-color:#' + color;
       menubar.appendChild(barDiv);

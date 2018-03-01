@@ -1,9 +1,12 @@
+function elById(id) {
+  return document.getElementById(id);
+}
 
 window.onload = function() {
   var colorPicker = new ColorPicker(document);
 
   var selection = [];
-  var textArea = document.querySelector('#awsConfigTextArea');
+  var textArea = elById('awsConfigTextArea');
   textArea.onselect = function() {
     var str = this.value.substring(this.selectionStart, this.selectionEnd);
     var r = str.match(/^([0-9a-fA-F]{6})$/);
@@ -20,8 +23,8 @@ window.onload = function() {
     }
   }
 
-  var msgSpan = document.querySelector('#msgSpan');
-  var saveButton = document.querySelector('#saveButton');
+  var msgSpan = elById('msgSpan');
+  var saveButton = elById('saveButton');
   saveButton.onclick = function() {
     var rawstr = textArea.value;
 
@@ -41,17 +44,17 @@ window.onload = function() {
     }
   }
 
-  var hidesHistoryCheckBox = document.querySelector('#hidesHistoryCheckBox');
+  var hidesHistoryCheckBox = elById('hidesHistoryCheckBox');
   hidesHistoryCheckBox.onchange = function() {
     chrome.storage.sync.set({ hidesHistory: this.checked }, function() {});
   }
 
-  var hidesAccountIdCheckBox = document.querySelector('#hidesAccountIdCheckBox');
+  var hidesAccountIdCheckBox = elById('hidesAccountIdCheckBox');
   hidesAccountIdCheckBox.onchange = function() {
     chrome.storage.sync.set({ hidesAccountId: this.checked }, function() {});
   }
 
-  var showOnlyMatchingRolesCheckbox = document.querySelector('#showOnlyMatchingRolesCheckbox');
+  var showOnlyMatchingRolesCheckbox = elById('showOnlyMatchingRolesCheckbox');
   showOnlyMatchingRolesCheckbox.onchange = function() {
     chrome.storage.sync.set({ showOnlyMatchingRoles: this.checked }, function() {});
   }
