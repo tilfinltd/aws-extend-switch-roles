@@ -44,25 +44,17 @@ window.onload = function() {
     }
   }
 
-  var hidesHistoryCheckBox = elById('hidesHistoryCheckBox');
-  hidesHistoryCheckBox.onchange = function() {
-    chrome.storage.sync.set({ hidesHistory: this.checked }, function() {});
+  const booleanSettings = ['hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles'];
+  for (let key of booleanSettings) {
+    elById(`${key}CheckBox`).onchange = function() {
+      chrome.storage.sync.set({ [key]: this.checked });
+    }
   }
 
-  var hidesAccountIdCheckBox = elById('hidesAccountIdCheckBox');
-  hidesAccountIdCheckBox.onchange = function() {
-    chrome.storage.sync.set({ hidesAccountId: this.checked }, function() {});
-  }
-
-  var showOnlyMatchingRolesCheckbox = elById('showOnlyMatchingRolesCheckbox');
-  showOnlyMatchingRolesCheckbox.onchange = function() {
-    chrome.storage.sync.set({ showOnlyMatchingRoles: this.checked }, function() {});
-  }
-
-  chrome.storage.sync.get(['rawtext', 'hidesHistory', 'hidesAccountId','showOnlyMatchingRoles'], function(data) {
+  chrome.storage.sync.get(['rawtext'].concat(booleanSettings), function(data) {
     textArea.value = data.rawtext || localStorage['rawdata'] || '';
-    hidesHistoryCheckBox.checked = data.hidesHistory || false;
-    hidesAccountIdCheckBox.checked = data.hidesAccountId || false;
-    showOnlyMatchingRolesCheckbox.checked = data.showOnlyMatchingRoles || false;
+    for (let key of booleanSettings) {
+      elById(`${key}CheckBox`).checked = data[key] || false;
+    }
   });
 }
