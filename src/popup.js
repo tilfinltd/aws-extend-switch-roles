@@ -34,7 +34,7 @@ window.onload = function() {
 
       chrome.storage.sync.set({ profiles: data, rawtext: rawstr },
         function() {
-          msgSpan.innerHTML = '<span style="color:#1111dd">Updated configuration!</span>';
+          msgSpan.innerHTML = '<span style="color:#1111dd">Configuration has been updated!</span>';
           setTimeout(function() {
             msgSpan.innerHTML = '';
           }, 2500);
