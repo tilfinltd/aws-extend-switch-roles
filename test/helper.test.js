@@ -8,7 +8,11 @@ chrome = {
         cb(this.data)
       },
       set: function(data, cb){
-        this.setData = data;
+        this.data = data;
+        if (cb) cb();
+      },
+      remove: function(key, cb) {
+        this.data[key] = null;
         if (cb) cb();
       },
       data: {}

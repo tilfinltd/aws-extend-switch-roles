@@ -43,4 +43,21 @@ describe('Auto assume last assumed role on content script', () => {
       done();
     })
   })
+
+  context('has assumed role', () => {
+    it('clears on clicking exit', (done) => {
+      loadFixtures('awsmc-iam-switched', 'data');
+      document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
+      chrome.storage.sync.data.autoAssumeLastRole = true;
+      chrome.storage.sync.data.lastRole_555511112222_tilfin = '555511113333_stg-role';
+      extendIAMFormList();
+      const form = document.getElementById('awsc-exit-role-form');
+      form.addEventListener('submit', function(e) {
+        expect(chrome.storage.sync.data.lastRole_555511112222_tilfin).to.null;
+        e.preventDefault(); 
+        done();
+      });
+      form.querySelector('input[type="submit"]').click();
+    })
+  })
 })
