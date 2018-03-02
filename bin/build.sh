@@ -7,17 +7,21 @@ mkdir -p dist/chrome/js
 mkdir -p dist/firefox/js
 
 content=dist/chrome/js/content.js
+options=dist/chrome/js/options.js
 popup=dist/chrome/js/popup.js
 
 cat src/lib/profile.js         > $content
 cat src/lib/content.js        >> $content
 cat src/content.js            >> $content
 
-cat src/lib/load_aws_config.js > $popup
-cat src/lib/color_picker.js   >> $popup
+cat src/lib/load_aws_config.js > $options
+cat src/lib/color_picker.js   >> $options
+cat src/options.js            >> $options
+
 cat src/popup.js              >> $popup
 
 \cp -f $content dist/firefox/js/content.js
+\cp -f $options dist/firefox/js/options.js
 \cp -f $popup   dist/firefox/js/popup.js
 
 \cp -f manifest.json dist/chrome/

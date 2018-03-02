@@ -28,6 +28,10 @@
       "run_at": "document_end"
     }
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "web_accessible_resources": [
     "js/csrf-setter.js"
   ],
