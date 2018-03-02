@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AWS Extend Switch Roles - Configuration</title>
+<script src="js/options.js"></script>
+<style>
+html { padding: 0 }
+body {
+  background-color: #666;
+  font-size: 14px;
+  line-height: 1.25;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+.pane {
+  box-sizing: border-box;
+  height: 100vh;
+  max-width: 660px;
+  width: 100%;
+  padding: 10px 20px;
+}
+#settingPane { background-color: #fff }
+#howto {
+  background-color: #eee;
+  color: #444;
+  overflow-y: scroll;
+  padding-bottom: 25px;
+}
+#howto p {
+  line-height: 1.6;
+}
+#howto li {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  line-height: 1.5;
+}
+a { text-decoration: none }
+.head {
+  font-size: 13px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+#settings ul {
+  list-style: none;
+  margin: 0 0; padding: 0;
+}
+#settings ul li {
+  margin: 0;
+  padding: 0;
+  line-height: 26px;
+}
+#settings input {
+  position: relative;
+  top: 2px;
+}
+#awsConfigTextArea {
+  box-sizing: border-box;
+  font-size: 14px;
+  font-family: Consolas, "Courier New", Courier, Monaco, monospace;
+  padding: 0.5ex;
+  resize: none;
+  white-space: pre;
+  width: 100%;
+  height: calc(100vh - 400px);
+  max-height: 800px;
+}
+#colorValue {
+  font-family: monospace;
+  width: 9ex;
+}
+pre {
+  border: 1px solid #484848;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-family: Consolas, "Courier New", Courier, Monaco, monospace;
+  padding: 0.5ex;
+}
+input, button { font-size: 16px }
+</style>
+</head>
+<body>
+<div class="pane" id="settingPane">
+ <section>
+  <h1>Configuration</h1>
+  <textarea id="awsConfigTextArea" spellcheck="false"></textarea>
+  <div style="margin-top:8px">
+   <input type="color" id="colorPicker">
+   <b style="margin-left: 6px">#</b>
+   <input type="text" id="colorValue" maxlength="6" placeholder="RRGGBB">
+   <a style="float:right" target="_blank" href="http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html">About ~/.aws/config file</a>
+  </div>
+  <div style="margin-top:12px">
+   <button id="saveButton">&nbsp; Save &nbsp;</button>
+   <span id="msgSpan" style="margin-left:12px"></span>
+  </div>
+ </section>
+ <section id="settings">
+  <h1>Settings</h1>
+  <ul>
+    <li><label for="hidesHistoryCheckBox"><input type="checkbox" id="hidesHistoryCheckBox">Hide original role history</label></li>
+    <li><label for="hidesAccountIdCheckBox"><input type="checkbox" id="hidesAccountIdCheckBox">Hide account id</label></li>
+    <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
+  </ul>
+ </section>
+</div>
+<div class="pane" id="howto">
+ <h2>How to configure</h2>
+ <section>
+  <h3>Simple Configuration</h3>
+  <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.</p>
+
+  <h4>Optional parameters</h4>
+  <ul>
+   <li>A 'color' parameter can be used to specify an RGB hex value without prefix '#'.</li>
+   <li>A 'region' parameter can be used to change the region whenever switching the role.</li>
+  </ul>
+  <pre>
+[profile marketingadmin]
+role_arn = arn:aws:iam::123456789012:role/marketingadmin
+color = ffaaee
+
+[anotheraccount]
+aws_account_id = 987654321987
+role_name = anotherrole
+region=ap-northeast-1
+  </pre>
+ </section>
+ <section>
+  <h3>Complex Configuration</h3>  
+  <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
+  <ul>
+   <li>A profile that has only `aws_account_id` (without a role_name) is defined as <b>base account</b></li>
+   <li><b>If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.</b></li>
+   <li>A <b>target role</b> is associated with a <b>base account</b> by the <b>target role</b> specifying a 'source_profile'.</li>
+   <li>As above, <b>target roles</b> can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter and a 'region' parameter.</li>
+  </ul>
+  <pre>
+[organization1]
+aws_account_id = your-account-alias
+
+[Org1-Account1-Role1]
+role_arn = arn:aws:iam::123456789012:role/Role1
+source_profile = organization1
+
+[Org1-Account1-Role2]
+aws_account_id = 123456789012
+role_name = Role2
+source_profile = organization1
+
+[Org1-Account2-Role1]
+aws_account_id = 210987654321
+role_name = Role1
+source_profile = organization1
+
+[baseaccount2]
+aws_account_id = 000000000000
+
+[Base2-Role1]
+role_arn = arn:aws:iam::234567890123:role/Role1
+source_profile = baseaccount2
+
+[AnotherRole]
+role_name = SomeOtherRole
+aws_account_id = account-3-alias
+  </pre>
+  <p>If you sign-in a base account, target roles of the other base accounts are excluded.</p>
+  <p>The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite.  Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts.  Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown.  You won't see roles that your current role can't actually assume.</p>
+ </section>
+ <section>
+  <h3>Settings</h3>
+  <ul>
+   <li>Can hide original role history (Show only roles in the configuration)</li>
+   <li>Can hide the account_id for each profile</li>
+   <li>Can filter to only show profiles with roles that match your role in your master account</li>
+  </ul>   
+ </section>
+</div>
+</body>
+</html>
