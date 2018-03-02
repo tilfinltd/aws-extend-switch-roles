@@ -1,31 +1,4 @@
 function Profile(items, showOnlyMatchingRoles) {
-  function getAccountId(elId) {
-    var el = document.getElementById(elId);
-    if (!el) return null;
-
-    var aid = el.textContent;
-    var r = aid.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
-    if (r) {
-      return r[1] + r[2] + r[3];
-    } else {
-      return aid;
-    }
-  }
-
-  function getAssumedRole() {
-    var el = document.getElementById('awsc-role-display-name-user');
-    if (el) {
-      return el.textContent.trim();
-    }
-
-    el = document.getElementById('awsc-login-display-name-user');
-    if (el) {
-      return el.textContent.trim().split("/")[0]
-    }
-
-    return null;
-  }
-
   var baseAccountId = getAccountId('awsc-login-display-name-account');
   var baseRole = getAssumedRole();
   var srcProfileMap = {};

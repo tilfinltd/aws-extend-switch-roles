@@ -10,7 +10,9 @@ content=dist/chrome/js/content.js
 options=dist/chrome/js/options.js
 popup=dist/chrome/js/popup.js
 
-cat src/lib/profile.js         > $content
+cat src/lib/common.js          > $content
+cat src/lib/auto_assume_last_role.js >> $content
+cat src/lib/profile.js        >> $content
 cat src/lib/content.js        >> $content
 cat src/content.js            >> $content
 
