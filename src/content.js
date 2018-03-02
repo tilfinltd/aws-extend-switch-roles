@@ -1,1 +1,1 @@
-extendIAMFormList();
+if (document.body) extendIAMFormList();

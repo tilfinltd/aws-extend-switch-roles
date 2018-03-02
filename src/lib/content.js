@@ -1,6 +1,4 @@
-function elById(id) {
-  return document.getElementById(id);
-}
+const autoAssumeLastRole = new AutoAssumeLastRole();
 
 function extendIAMFormList() {
   var csrf, list = elById('awsc-username-menu-recent-roles');
@@ -12,14 +10,23 @@ function extendIAMFormList() {
     csrf = '';
   }
 
-  chrome.storage.sync.get(['profiles', 'hidesHistory', 'hidesAccountId','showOnlyMatchingRoles'], function(data) {
+  const lastRoleKey = autoAssumeLastRole.createKey();
+
+  chrome.storage.sync.get([
+    'profiles', 'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
+    'autoAssumeLastRole', lastRoleKey
+  ], function(data) {
     var hidesHistory = data.hidesHistory || false;
     var hidesAccountId = data.hidesAccountId || false;
     var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
+    autoAssumeLastRole.enabled = data.autoAssumeLastRole || false;
+
     if (data.profiles) {
       loadProfiles(new Profile(data.profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
       attachColorLine(data.profiles);
     }
+    // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
+    autoAssumeLastRole.execute(data[lastRoleKey], list);
   });
 }
 
@@ -40,25 +47,34 @@ function generateEmptyRoleList() {
   return ul;
 }
 
-function hookBeforeSwitch(form, profile) {
-  if (profile.region) {
-    const destRegion = profile.region;
-    var redirectUri = decodeURIComponent(form.redirect_uri.value);
-    const md = redirectUri.match(/region=([a-z\-1-9]+)/);
-    if (md) {
-      const currentRegion = md[1];
-      if (currentRegion !== destRegion) {
-        redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
-        if (currentRegion === 'us-east-1') {
-          redirectUri = redirectUri.replace('://', `://${destRegion}.`);
-        } else if (destRegion === 'us-east-1') {
-          redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
-        }
-      }
-      form.redirect_uri.value = encodeURIComponent(redirectUri);
-    }
-  }
+function replaceRedirectURI(form, profile) {
+  if (!profile.region) return false;
 
+  const destRegion = profile.region;
+  var redirectUri = decodeURIComponent(form.redirect_uri.value);
+  const md = redirectUri.match(/region=([a-z\-1-9]+)/);
+  if (md) {
+    const currentRegion = md[1];
+    if (currentRegion !== destRegion) {
+      redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
+      if (currentRegion === 'us-east-1') {
+        redirectUri = redirectUri.replace('://', `://${destRegion}.`);
+      } else if (destRegion === 'us-east-1') {
+        redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
+      }
+    }
+    form.redirect_uri.value = encodeURIComponent(redirectUri);
+  }  
+}
+
+function hookBeforeSwitch(form, profile) {
+  replaceRedirectURI(form, profile);
+  autoAssumeLastRole.save(profile);
+  return true;
+}
+
+function hookBeforeExit() {
+  autoAssumeLastRole.clear();
   return true;
 }
 
@@ -93,6 +109,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     }
   }
 
+  const redirectUri = encodeURIComponent(window.location.href);
   profile.destProfiles.forEach(function(item) {
     var name = item.profile;
     if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
@@ -108,7 +125,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="mfaNeeded" value="0">
           <input type="hidden" name="color" value="${color}">
           <input type="hidden" name="csrf" value="${csrf}">
-          <input type="hidden" name="redirect_uri" value="https%3A%2F%2Fconsole.aws.amazon.com%2Fs3%2Fhome">
+          <input type="hidden" name="redirect_uri" value="${redirectUri}">
           <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
      <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
             title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
@@ -124,12 +141,19 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       return foundProfile ? hookBeforeSwitch(this, foundProfile) : true;
     }
   });
+
+  const exitRoleForm = elById('awsc-exit-role-form');
+  if (exitRoleForm) {
+    exitRoleForm.addEventListener('submit', () => {
+      hookBeforeExit(this);
+    });
+  }
 }
 
 function attachColorLine(profiles) {
   var usernameMenu = elById('nav-usernameMenu');
   if (usernameMenu.classList.contains('awsc-has-switched-role')) {
-    var profileName = usernameMenu.textContent.trim();
+    var profileName = usernameMenu.textContent.trim().split(/\s+\|\s+/)[0];
 
     usernameMenu.style = 'white-space:pre';
 
