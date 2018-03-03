@@ -1,6 +1,7 @@
 # AWS Extend Switch Roles
 
 [![Build Status](https://travis-ci.org/tilfin/aws-extend-switch-roles.svg?branch=master)](https://travis-ci.org/tilfin/aws-extend-switch-roles)
+[![codecov](https://codecov.io/gh/tilfin/s3-block-read-stream/branch/master/graph/badge.svg)](https://codecov.io/gh/tilfin/s3-block-read-stream)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jpmkfafbacpgapdghgdpembnojdlgkdl.svg)](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
 [![Firefox Add-on](https://img.shields.io/amo/v/aws-extend-switch-roles3.svg)](https://addons.mozilla.org/ja/firefox/addon/aws-extend-switch-roles3/)
 
@@ -93,6 +94,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 - Can hide original role history (Show only roles in the configuration)
 - Can hide the account_id for each profile
 - Can filter to only show profiles with roles that match your role in your master account
+- Can automatically assume last assumed role on next sign-in if did not back to the base account and signed out (Experimental)
 
 ## Appearance
 

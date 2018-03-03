@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.8.0 (2018/03/03)
+
+- Change the configuration from popup panel to another tab page
+- Support new 'Automatically assume last assumed role' option (Experimental) 
+- Fix attaching color line broken
+
 
 ## v0.7.0 (2018/02/27)
 
