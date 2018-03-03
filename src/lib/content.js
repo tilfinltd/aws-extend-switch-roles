@@ -117,17 +117,17 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 
     var color = item.color || 'aaaaaa';
     list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
-    <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">
-          <input type="hidden" name="action" value="switchFromBasis">
-          <input type="hidden" name="src" value="nav">
-          <input type="hidden" name="roleName" value="${item.role_name}">
-          <input type="hidden" name="account" value="${item.aws_account_id}">
-          <input type="hidden" name="mfaNeeded" value="0">
-          <input type="hidden" name="color" value="${color}">
-          <input type="hidden" name="csrf" value="${csrf}">
-          <input type="hidden" name="redirect_uri" value="${redirectUri}">
-          <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
-     <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
+     <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">
+      <input type="hidden" name="action" value="switchFromBasis">
+      <input type="hidden" name="src" value="nav">
+      <input type="hidden" name="roleName" value="${item.role_name}">
+      <input type="hidden" name="account" value="${item.aws_account_id}">
+      <input type="hidden" name="mfaNeeded" value="0">
+      <input type="hidden" name="color" value="${color}">
+      <input type="hidden" name="csrf" value="${csrf}">
+      <input type="hidden" name="redirect_uri" value="${redirectUri}">
+      <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
+      <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
             title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
     </li>`);
   });
@@ -157,13 +157,8 @@ function attachColorLine(profiles) {
 
     usernameMenu.style = 'white-space:pre';
 
-    var color = null;
-    profiles.some(function(item) {
-      if (item.profile === profileName) {
-        color = item.color;
-        return true;
-      }
-    });
+    const found = profiles.find(item => { return item.profile === profileName });
+    const color = found && found.color || null;
 
     if (color) {
       if (needsInvertForeColorByBack(color)) {
@@ -173,6 +168,7 @@ function attachColorLine(profiles) {
 
       var menubar = elById('nav-menubar');
       var barDiv = document.createElement('div');
+      barDiv.id = 'AESW_ColorLine';
       barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:0;background-color:#' + color;
       menubar.appendChild(barDiv);
     }
