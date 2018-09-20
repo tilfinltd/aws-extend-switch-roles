@@ -122,6 +122,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       <input type="hidden" name="src" value="nav">
       <input type="hidden" name="roleName" value="${item.role_name}">
       <input type="hidden" name="account" value="${item.aws_account_id}">
+      <input type="hidden" name="region" value="${item.region}">
       <input type="hidden" name="mfaNeeded" value="0">
       <input type="hidden" name="color" value="${color}">
       <input type="hidden" name="csrf" value="${csrf}">
@@ -134,9 +135,9 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 
   Array.from(list.querySelectorAll('form')).forEach(form => {
     form.onsubmit = function(e) {
-      const accountId = this.account.value, roleName =  this.roleName.value;
+      const accountId = this.account.value, roleName =  this.roleName.value, region = this.region.value;
       const foundProfile = profile.destProfiles.find(item => {
-        return accountId === item.aws_account_id && roleName === item.role_name;
+        return accountId === item.aws_account_id && roleName === item.role_name && (item.region == undefined || region === item.region);
       });
       return foundProfile ? hookBeforeSwitch(this, foundProfile) : true;
     }
