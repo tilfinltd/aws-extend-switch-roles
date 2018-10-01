@@ -102,6 +102,8 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
         list.removeChild(li);
         li = nextLi;
       } else {
+        const form = li.querySelector('form');
+        form.dataset.aesrProfile = name.replace(/\s+\|\s+\d+$/, '');
         input.style = 'white-space:pre';
         recentNames.push(name);
         li = li.nextElementSibling;
@@ -117,7 +119,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 
     var color = item.color || 'aaaaaa';
     list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
-     <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top">
+     <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
       <input type="hidden" name="action" value="switchFromBasis">
       <input type="hidden" name="src" value="nav">
       <input type="hidden" name="roleName" value="${item.role_name}">
@@ -134,10 +136,8 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
 
   Array.from(list.querySelectorAll('form')).forEach(form => {
     form.onsubmit = function(e) {
-      const accountId = this.account.value, roleName =  this.roleName.value;
-      const foundProfile = profile.destProfiles.find(item => {
-        return accountId === item.aws_account_id && roleName === item.role_name;
-      });
+      const destProfileName = this.dataset.aesrProfile;
+      const foundProfile = profile.destProfiles.find(item => item.profile === destProfileName);
       return foundProfile ? hookBeforeSwitch(this, foundProfile) : true;
     }
   });
