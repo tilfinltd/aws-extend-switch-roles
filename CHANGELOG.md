@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## v0.8.1 (2018/10/02)
+- Fix finding profile on form submit (thanks to @craig-miskell-fluxfederation)
+
 ## v0.8.0 (2018/03/03)
 
 - Change the configuration from popup panel to another tab page
