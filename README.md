@@ -96,6 +96,11 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 - Can filter to only show profiles with roles that match your role in your master account
 - Can automatically assume last assumed role on next sign-in if did not back to the base account and signed out (Experimental)
 
+## Donation
+
+Would you like to support me? I gladly accept small donations via PayPal.  
+[![Donate $5](https://img.shields.io/badge/Donate-%245-blue.svg?longCache=true&style=popout&logo=paypal)](https://www.paypal.me/toshitilfin/5USD)
+
 ## Appearance
 
 ![Screen Shot 1](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_1_960x600.png)
