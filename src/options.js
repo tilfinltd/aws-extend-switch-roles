@@ -39,7 +39,7 @@ window.onload = function() {
 
       const dps = new DataProfilesSplitter();
       const dataSet = dps.profilesToDataSet(profiles);
-      dataSet.rawtext = rawstr;
+      dataSet.lztext = LZString.compressToUTF16(rawstr);
 
       chrome.storage.sync.set(dataSet,
         function() {
@@ -66,8 +66,24 @@ window.onload = function() {
     }
   }
 
-  chrome.storage.sync.get(['rawtext'].concat(booleanSettings), function(data) {
-    textArea.value = data.rawtext || localStorage['rawdata'] || '';
+  chrome.storage.sync.get(['lztext', 'rawtext'].concat(booleanSettings), function(data) {
+    let rawData = localStorage['rawdata'];
+    if (!rawData) {
+      if (data.lztext) {
+        try {
+          rawData = LZString.decompressFromUTF16(data.lztext);
+        } catch(err) {
+          if (data.rawtext) {
+            rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken, reverted old setting.\n;; !!!WARNING!!!\n\n' + data.rawtext;
+          } else {
+            rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
+          }
+        }
+      } else if (data.rawtext) {
+        rawdata = data.rawtext;
+      }
+    }
+    textArea.value = rawData || '';
     for (let key of booleanSettings) {
       elById(`${key}CheckBox`).checked = data[key] || false;
     }
