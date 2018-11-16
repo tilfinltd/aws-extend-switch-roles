@@ -1,8 +1,13 @@
 function openOptions() {
-  var opening = (window.browser || window.chrome).runtime.openOptionsPage();
-  opening.catch(err => {
-    console.log(`Error: ${error}`);
-  });
+  if (window.chrome) {
+    chrome.runtime.openOptionsPage(err => {
+      console.log(`Error: ${error}`);
+    });
+  } else if (window.browser) {
+    window.browser.runtime.openOptionsPage().catch(err => {
+      console.log(`Error: ${error}`);
+    });
+  }
 }
 
 window.onload = function() {
@@ -13,6 +18,11 @@ window.onload = function() {
 
   document.getElementById('openCreditsLink').onclick = function(e) {
     chrome.tabs.create({ url: chrome.extension.getURL('credits.html')}, function(tab){});
+    return false;
+  }
+
+  document.getElementById('openDonationLink').onclick = function(e) {
+    chrome.tabs.create({ url: chrome.extension.getURL('donation.html')}, function(tab){});
     return false;
   }
 }

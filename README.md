@@ -98,7 +98,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 ## Donation
 
-Would you like to support me? I gladly accept small donations via PayPal.  
+Would you like to support this extension? I gladly accept small donations via PayPal.  
 [![Donate $5](https://img.shields.io/badge/Donate-%245-blue.svg?longCache=true&style=popout&logo=paypal)](https://www.paypal.me/toshitilfin/5USD)
 
 ## Appearance
