@@ -43,6 +43,12 @@ window.onload = function() {
 
       chrome.storage.sync.set(dataSet,
         function() {
+          const { lastError } = chrome.runtime || browser.runtime;
+          if (lastError) {
+            msgSpan.innerHTML = `<span style="color:#dd1111">${lastError.message}</span>`;
+            return;
+          }
+
           msgSpan.innerHTML = '<span style="color:#1111dd">Configuration has been updated!</span>';
           setTimeout(function() {
             msgSpan.innerHTML = '';
