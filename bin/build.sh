@@ -20,6 +20,7 @@ cat src/content.js                    >> $content
 cat src/lib/load_aws_config.js         > $options
 cat src/lib/color_picker.js           >> $options
 cat src/lib/data_profiles_splitter.js >> $options
+cat src/lib/lz-string.min.js          >> $options
 cat src/options.js                    >> $options
 
 cat src/popup.js                       > $popup
