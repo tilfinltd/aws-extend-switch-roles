@@ -29,11 +29,26 @@ window.onload = function() {
     var rawstr = textArea.value;
 
     try {
-      var data = loadAwsConfig(rawstr);
+      const profiles = loadAwsConfig(rawstr);
+      if (profiles.length > 200) {
+        msgSpan.innerHTML = '<span style="color:#dd1111">Failed to save bacause the number of profiles exceeded maximum 200!</span>';
+        return;
+      }
+
       localStorage['rawdata'] = rawstr;
 
-      chrome.storage.sync.set({ profiles: data, rawtext: rawstr },
+      const dps = new DataProfilesSplitter();
+      const dataSet = dps.profilesToDataSet(profiles);
+      dataSet.lztext = LZString.compressToUTF16(rawstr);
+
+      chrome.storage.sync.set(dataSet,
         function() {
+          const { lastError } = chrome.runtime || browser.runtime;
+          if (lastError) {
+            msgSpan.innerHTML = `<span style="color:#dd1111">${lastError.message}</span>`;
+            return;
+          }
+
           msgSpan.innerHTML = '<span style="color:#1111dd">Configuration has been updated!</span>';
           setTimeout(function() {
             msgSpan.innerHTML = '';
@@ -51,8 +66,24 @@ window.onload = function() {
     }
   }
 
-  chrome.storage.sync.get(['rawtext'].concat(booleanSettings), function(data) {
-    textArea.value = data.rawtext || localStorage['rawdata'] || '';
+  chrome.storage.sync.get(['lztext', 'rawtext'].concat(booleanSettings), function(data) {
+    let rawData = localStorage['rawdata'];
+    if (!rawData) {
+      if (data.lztext) {
+        try {
+          rawData = LZString.decompressFromUTF16(data.lztext);
+        } catch(err) {
+          if (data.rawtext) {
+            rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken, reverted old setting.\n;; !!!WARNING!!!\n\n' + data.rawtext;
+          } else {
+            rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
+          }
+        }
+      } else if (data.rawtext) {
+        rawdata = data.rawtext;
+      }
+    }
+    textArea.value = rawData || '';
     for (let key of booleanSettings) {
       elById(`${key}CheckBox`).checked = data[key] || false;
     }

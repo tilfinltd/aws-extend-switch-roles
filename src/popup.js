@@ -10,4 +10,9 @@ window.onload = function() {
     openOptions();
     return false;
   }
+
+  document.getElementById('openCreditsLink').onclick = function(e) {
+    chrome.tabs.create({ url: chrome.extension.getURL('credits.html')}, function(tab){});
+    return false;
+  }
 }
