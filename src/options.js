@@ -29,10 +29,19 @@ window.onload = function() {
     var rawstr = textArea.value;
 
     try {
-      var data = loadAwsConfig(rawstr);
+      const profiles = loadAwsConfig(rawstr);
+      if (profiles.length > 200) {
+        msgSpan.innerHTML = '<span style="color:#dd1111">Failed to save bacause the number of profiles exceeded maximum 200!</span>';
+        return;
+      }
+
       localStorage['rawdata'] = rawstr;
 
-      chrome.storage.sync.set({ profiles: data, rawtext: rawstr },
+      const dps = new DataProfilesSplitter();
+      const dataSet = dps.profilesToDataSet(profiles);
+      dataSet.rawtext = rawstr;
+
+      chrome.storage.sync.set(dataSet,
         function() {
           msgSpan.innerHTML = '<span style="color:#1111dd">Configuration has been updated!</span>';
           setTimeout(function() {

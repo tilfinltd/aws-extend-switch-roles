@@ -10,17 +10,19 @@ content=dist/chrome/js/content.js
 options=dist/chrome/js/options.js
 popup=dist/chrome/js/popup.js
 
-cat src/lib/common.js          > $content
-cat src/lib/auto_assume_last_role.js >> $content
-cat src/lib/profile.js        >> $content
-cat src/lib/content.js        >> $content
-cat src/content.js            >> $content
+cat src/lib/common.js                  > $content
+cat src/lib/auto_assume_last_role.js  >> $content
+cat src/lib/profile.js                >> $content
+cat src/lib/data_profiles_splitter.js >> $content
+cat src/lib/content.js                >> $content
+cat src/content.js                    >> $content
 
-cat src/lib/load_aws_config.js > $options
-cat src/lib/color_picker.js   >> $options
-cat src/options.js            >> $options
+cat src/lib/load_aws_config.js         > $options
+cat src/lib/color_picker.js           >> $options
+cat src/lib/data_profiles_splitter.js >> $options
+cat src/options.js                    >> $options
 
-cat src/popup.js              >> $popup
+cat src/popup.js                       > $popup
 
 \cp -f $content dist/firefox/js/content.js
 \cp -f $options dist/firefox/js/options.js
