@@ -1,8 +1,16 @@
 Changelog
 =========
 
+## v0.9.0 (2018/11/17)
+
+- Support the number of profiles maximum 200
+- Add 'Credits' and 'Donation' links on popup menu
+
+
 ## v0.8.1 (2018/10/02)
+
 - Fix finding profile on form submit (thanks to @craig-miskell-fluxfederation)
+
 
 ## v0.8.0 (2018/03/03)
 
