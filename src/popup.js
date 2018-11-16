@@ -20,4 +20,9 @@ window.onload = function() {
     chrome.tabs.create({ url: chrome.extension.getURL('credits.html')}, function(tab){});
     return false;
   }
+
+  document.getElementById('openDonationLink').onclick = function(e) {
+    chrome.tabs.create({ url: chrome.extension.getURL('donation.html')}, function(tab){});
+    return false;
+  }
 }
