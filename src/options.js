@@ -45,7 +45,7 @@ window.onload = function() {
         function() {
           const { lastError } = chrome.runtime || browser.runtime;
           if (lastError) {
-            msgSpan.innerHTML = `<span style="color:#dd1111">${lastError.message}</span>`;
+            msgSpan.innerHTML = Sanitizer.escapeHTML`<span style="color:#dd1111">${lastError.message}</span>`;
             return;
           }
 
