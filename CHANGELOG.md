@@ -1,7 +1,12 @@
 Changelog
 =========
 
-## v0.9.0 (2018/11/17)
+## v0.10.0 (2018/11/17)
+
+- Add new textbox that filters items by profile name and its 'Enter' key makes switching to first matched role
+
+
+## v0.9.0 (2018/11/16)
 
 - Support the number of profiles maximum 200
 - Add 'Credits' and 'Donation' links on popup menu
@@ -27,7 +32,7 @@ Changelog
 
 ## v0.6.3 (2018/01/07)
 
-- Added role filtering for use with federated AWS login by @robsweet
+- Add role filtering for use with federated AWS login by @robsweet
 
 
 ## v0.6.0 (2017/09/02)
