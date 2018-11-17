@@ -152,6 +152,42 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       hookBeforeExit(this);
     });
   }
+
+  // Place role filter textinput
+  var AWSR_firstForm = null;
+
+  document.getElementById('awsc-recent-roles-label').insertAdjacentHTML('beforeend', '<input id="AESR_RoleFilter" type="text" placeholder="Filter by profile name" style="border:1px solid #ccc;border-radius:3px;font-size:13px;margin-left:0.25em;max-width:20ex;padding:0.4ex">');
+
+  document.getElementById('AESR_RoleFilter').onkeyup = function(e) {
+    const str = this.value;
+    if (e.keyCode === 13) {
+      if (AWSR_firstForm) {
+        AWSR_firstForm.querySelector('input[type="submit"]').click()
+      }
+    } else {
+      const lis = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles > li'));
+      let firstHitLi = null;
+      lis.forEach(li => {
+        const profileName = li.firstElementChild.dataset.aesrProfile.toLowerCase();
+        const hit = str ? profileName.indexOf(str) > -1 : false;
+        const shown = str ? hit : true;
+        li.style.display = shown ? 'block' : 'none';
+        li.style.background = null;
+        if (hit && firstHitLi === null) firstHitLi = li;
+      });
+
+      if (firstHitLi) {
+        firstHitLi.style.background = '#f0f9ff';
+        AWSR_firstForm = firstHitLi.querySelector('form');
+      } else {
+        AWSR_firstForm = null;
+      }
+    }
+  }
+
+  document.getElementById('nav-usernameMenu').addEventListener('click', () => {
+    document.getElementById('AESR_RoleFilter').focus()
+  })
 }
 
 function attachColorLine(profiles) {
