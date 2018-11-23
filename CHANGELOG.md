@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v0.10.1 (2018/11/23)
+
+- Change popmenu links
+
+
 ## v0.10.0 (2018/11/17)
 
 - Add new textbox that filters items by profile name and its 'Enter' key makes switching to first matched role
