@@ -220,7 +220,7 @@ function attachColorLine(profiles) {
 
     var label = usernameMenu.querySelector('.nav-elt-label');
     if (found && found.image) {
-        label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML(`<img src=${found.image.replace(/"/g, '')} width="17em" height="17em" style="float: left; padding-right: 1em">`));
+        label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML(`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} width="17em" height="17em" style="float: left; padding-right: 1em">`));
     }
 
     if (color) {
