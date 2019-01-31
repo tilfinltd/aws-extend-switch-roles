@@ -219,7 +219,7 @@ function attachColorLine(profiles) {
     const color = found && found.color || null;
 
     var label = usernameMenu.querySelector('.nav-elt-label');
-    if (found.image) {
+    if (found && found.image) {
         label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML(`<img src=${found.image.replace(/"/g, '')} width="17em" height="17em" style="float: left; padding-right: 1em">`));
     }
 
