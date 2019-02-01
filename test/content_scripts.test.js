@@ -72,13 +72,15 @@ describe('ContentScripts', () => {
           expect(document.body.className.includes('user-type-federated')).to.be.false;
 
           const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-          expect(roles.length).to.eq(4);
+          expect(roles.length).to.eq(5);
           expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
           expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
           expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
           expect(roles[2].querySelector('input[type="submit"]').value).to.eq('a-stg  |  555511113333');
           expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('prod-role');
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('a-prod  |  555511114444');
+          expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('stg-role-image');
+          expect(roles[4].querySelector('input[type="submit"]').value).to.eq('a-stg-image  |  555511113333');
         })
       })
 
@@ -93,7 +95,7 @@ describe('ContentScripts', () => {
           expect(document.body.className.includes('user-type-federated')).to.be.false;
 
           const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-          expect(roles.length).to.eq(5);
+          expect(roles.length).to.eq(6);
           expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
           expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
           expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
@@ -102,6 +104,8 @@ describe('ContentScripts', () => {
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
           expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
           expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
         })
       })
     })
@@ -119,7 +123,7 @@ describe('ContentScripts', () => {
           expect(document.body.className.includes('user-type-federated')).to.be.false;
 
           const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-          expect(roles.length).to.eq(5);
+          expect(roles.length).to.eq(6);
           expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
           expect(roles[0].querySelector('input[type="submit"]').value).to.eq('independence');
           expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
@@ -130,6 +134,8 @@ describe('ContentScripts', () => {
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod');
           expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
           expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image');
         })
       })
     })
@@ -145,7 +151,7 @@ describe('ContentScripts', () => {
         expect(document.body.className.includes('user-type-federated')).to.be.false;
 
         const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-        expect(roles.length).to.eq(9);
+        expect(roles.length).to.eq(10);
         expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
         expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('independence_role');
         expect(roles[6].querySelector('input[name="roleName"]').value).to.eq('stg-role');
@@ -154,6 +160,8 @@ describe('ContentScripts', () => {
         expect(roles[7].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
         expect(roles[8].querySelector('input[name="roleName"]').value).to.eq('renpou');
         expect(roles[8].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
+        expect(roles[9].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+        expect(roles[9].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
       })
     })
 
@@ -169,7 +177,7 @@ describe('ContentScripts', () => {
         expect(document.body.className.includes('user-type-federated')).to.be.false;
 
         const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-        expect(roles.length).to.eq(5);
+        expect(roles.length).to.eq(6);
         expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
         expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
         expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
@@ -178,6 +186,8 @@ describe('ContentScripts', () => {
         expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
         expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
         expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
+        expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+        expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
       })
     })
   })
@@ -237,13 +247,15 @@ describe('ContentScripts', () => {
           expect(document.body.className.includes('user-type-iam')).to.be.false;
 
           const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-          expect(roles.length).to.eq(4);
+          expect(roles.length).to.eq(5);
           expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
           expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
           expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
           expect(roles[2].querySelector('input[type="submit"]').value).to.eq('a-stg  |  555511113333');
           expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('prod-role');
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('a-prod  |  555511114444');
+          expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('stg-role-image');
+          expect(roles[4].querySelector('input[type="submit"]').value).to.eq('a-stg-image  |  555511113333');
         })
       })
 
@@ -258,7 +270,7 @@ describe('ContentScripts', () => {
           expect(document.body.className.includes('user-type-iam')).to.be.false;
 
           const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-          expect(roles.length).to.eq(5);
+          expect(roles.length).to.eq(6);
           expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
           expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
           expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
@@ -267,6 +279,8 @@ describe('ContentScripts', () => {
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
           expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
           expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
         })
       })
     })
