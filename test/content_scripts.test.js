@@ -134,7 +134,7 @@ describe('ContentScripts', () => {
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod');
           expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
           expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou');
-          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role-image');
           expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image');
         })
       })
