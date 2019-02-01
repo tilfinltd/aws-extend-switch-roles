@@ -104,7 +104,7 @@ describe('ContentScripts', () => {
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
           expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
           expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
-          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role-image');
           expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
         })
       })
@@ -160,7 +160,7 @@ describe('ContentScripts', () => {
         expect(roles[7].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
         expect(roles[8].querySelector('input[name="roleName"]').value).to.eq('renpou');
         expect(roles[8].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
-        expect(roles[9].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+        expect(roles[9].querySelector('input[name="roleName"]').value).to.eq('prod-role-image');
         expect(roles[9].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
       })
     })
@@ -186,7 +186,7 @@ describe('ContentScripts', () => {
         expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
         expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
         expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
-        expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+        expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role-image');
         expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
       })
     })
@@ -279,7 +279,7 @@ describe('ContentScripts', () => {
           expect(roles[3].querySelector('input[type="submit"]').value).to.eq('b-prod  |  666611114444');
           expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('renpou');
           expect(roles[4].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
-          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('prod-role-image');
           expect(roles[5].querySelector('input[type="submit"]').value).to.eq('b-prod-image  |  666611114444');
         })
       })
