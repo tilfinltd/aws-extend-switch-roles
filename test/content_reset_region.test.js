@@ -21,7 +21,7 @@ describe('Content redirect_uri', () => {
       expect(document.body.className.includes('user-type-federated')).to.be.false;
 
       const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-      expect(roles.length).to.eq(4);
+      expect(roles.length).to.eq(5);
       expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('prod-role');
       expect(roles[3].querySelector('input[type="submit"]').value).to.eq('a-prod  |  555511114444');
 
@@ -39,7 +39,7 @@ describe('Content redirect_uri', () => {
       expect(document.body.className.includes('user-type-federated')).to.be.false;
 
       const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
-      expect(roles.length).to.eq(4);
+      expect(roles.length).to.eq(5);
       expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
       expect(roles[2].querySelector('input[type="submit"]').value).to.eq('a-stg  |  555511113333');
 

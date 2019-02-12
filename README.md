@@ -32,6 +32,7 @@ The simplest configuration is for multiple **target roles** when you always inte
 
 * A 'color' parameter can be used to specify an RGB hex value without prefix '#'.
 * A 'region' parameter can be used to change the region whenever switching the role.
+* An 'image' parameter can be used to specify the uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.
 
 ```
 [profile marketingadmin]
@@ -42,6 +43,11 @@ color = ffaaee
 aws_account_id = 987654321987
 role_name = anotherrole
 region=ap-northeast-1
+
+[athirdaccount]
+aws_account_id = 987654321988
+role_name = athirdrole
+image = "https://via.placeholder.com/150"
 ```
 
 ### Complex Configuration

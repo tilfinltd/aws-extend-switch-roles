@@ -122,20 +122,38 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     if (recentNames.indexOf(name) !== -1) return true;
 
     var color = item.color || 'aaaaaa';
-    list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
-     <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
-      <input type="hidden" name="action" value="switchFromBasis">
-      <input type="hidden" name="src" value="nav">
-      <input type="hidden" name="roleName" value="${item.role_name}">
-      <input type="hidden" name="account" value="${item.aws_account_id}">
-      <input type="hidden" name="mfaNeeded" value="0">
-      <input type="hidden" name="color" value="${color}">
-      <input type="hidden" name="csrf" value="${csrf}">
-      <input type="hidden" name="redirect_uri" value="${redirectUri}">
-      <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
-      <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
-            title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
-    </li>`);
+    if (!item.image) {
+        list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
+         <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
+          <input type="hidden" name="action" value="switchFromBasis">
+          <input type="hidden" name="src" value="nav">
+          <input type="hidden" name="roleName" value="${item.role_name}">
+          <input type="hidden" name="account" value="${item.aws_account_id}">
+          <input type="hidden" name="mfaNeeded" value="0">
+          <input type="hidden" name="color" value="${color}">
+          <input type="hidden" name="csrf" value="${csrf}">
+          <input type="hidden" name="redirect_uri" value="${redirectUri}">
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
+          <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
+                title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
+        </li>`);
+    } else {
+        list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
+         <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
+          <input type="hidden" name="action" value="switchFromBasis">
+          <input type="hidden" name="src" value="nav">
+          <input type="hidden" name="roleName" value="${item.role_name}">
+          <input type="hidden" name="account" value="${item.aws_account_id}">
+          <input type="hidden" name="mfaNeeded" value="0">
+          <input type="hidden" name="color" value="${color}">
+          <input type="hidden" name="csrf" value="${csrf}">
+          <input type="hidden" name="redirect_uri" value="${redirectUri}">
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="width: 1em; height: 1em"></label>
+          <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
+                title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
+        </li>`);
+
+    }
   });
 
   Array.from(list.querySelectorAll('form')).forEach(form => {
@@ -200,9 +218,13 @@ function attachColorLine(profiles) {
     const found = profiles.find(item => { return item.profile === profileName });
     const color = found && found.color || null;
 
+    var label = usernameMenu.querySelector('.nav-elt-label');
+    if (found && found.image) {
+        label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML(`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} style="float: left; padding-right: 1em; width: 1em; height: 1em">`));
+    }
+
     if (color) {
       if (needsInvertForeColorByBack(color)) {
-        var label = usernameMenu.querySelector('.nav-elt-label');
         label.style = 'color: #eee';
       }
 

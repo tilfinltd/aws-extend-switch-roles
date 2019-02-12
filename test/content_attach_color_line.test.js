@@ -8,6 +8,13 @@ describe('ContentScripts', () => {
         expect(document.getElementById('AESW_ColorLine')).to.exist;
       })
 
+      it('attaches image', () => {
+        loadFixtures('awsmc-iam-switched', 'data');
+        document.querySelector('#nav-usernameMenu .nav-elt-label').textContent = 'a-stg-image';
+        extendIAMFormList();
+        expect(document.getElementById('AESW_Image')).to.exist;
+      })
+
       context('color not defined', () => {
         it('does not attach color line', () => {
           loadFixtures('awsmc-iam-switched', 'data');
@@ -55,12 +62,28 @@ describe('ContentScripts', () => {
         expect(document.getElementById('AESW_ColorLine')).to.exist;
       })
 
+      it('attaches image', () => {
+        loadFixtures('awsmc-federated-switched', 'data');
+        document.querySelector('#nav-usernameMenu .nav-elt-label').textContent = 'b-prod-image';
+        extendIAMFormList();
+        expect(document.getElementById('AESW_Image')).to.exist;
+      })
+
       context('color not defined', () => {
         it('does not attach color line', () => {
           loadFixtures('awsmc-federated-switched', 'data');
           document.querySelector('#nav-usernameMenu .nav-elt-label').textContent = 'b-renpou';
           extendIAMFormList();
           expect(document.getElementById('AESW_ColorLine')).to.be.null;
+        })
+      })
+
+      context('image not defined', () => {
+        it('does not attach image', () => {
+          loadFixtures('awsmc-federated-switched', 'data');
+          document.querySelector('#nav-usernameMenu .nav-elt-label').textContent = 'b-renpou';
+          extendIAMFormList();
+          expect(document.getElementById('AESW_Image')).to.be.null;
         })
       })
     })
@@ -89,6 +112,15 @@ describe('ContentScripts', () => {
         document.querySelector('#nav-usernameMenu .nav-elt-label').textContent = 'other  |  000000000000';
         extendIAMFormList();
         expect(document.getElementById('AESW_ColorLine')).to.be.null;
+      })
+    })
+
+    context('profile not found', () => {
+      it('does not attach icon', () => {
+        loadFixtures('awsmc-federated-switched', 'data');
+        document.querySelector('#nav-usernameMenu .nav-elt-label').textContent = 'other  |  000000000000';
+        extendIAMFormList();
+        expect(document.getElementById('AESW_Image')).to.be.null;
       })
     })
   })
