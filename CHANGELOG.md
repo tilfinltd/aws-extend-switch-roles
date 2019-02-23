@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.11.0 (2019/02/23)
+
+- Add image option (thanks to @timcleaver)
+- Fix that a part of deleted profiles remaining
+
+
 ## v0.10.1 (2018/11/23)
 
 - Change popmenu links
