@@ -27,7 +27,7 @@ function extendIAMFormList() {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
 
-      loadProfiles(new Profile(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
+      loadProfiles(new Profile(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId, includeAccountIdInSearch);
       attachColorLine(profiles);
     }
     // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
@@ -83,7 +83,7 @@ function hookBeforeExit() {
   return true;
 }
 
-function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
+function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId, includeAccountIdInSearch) {
   var recentNames = [];
 
   if (hidesHistory) {
@@ -186,9 +186,14 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     } else {
       const lis = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles > li'));
       let firstHitLi = null;
+      let profileName = "";
       lis.forEach(li => {
-        const profileName = li.firstElementChild.dataset.aesrProfile.toLowerCase();
-        const hit = str ? profileName.indexOf(str) > -1 : false;
+        if (includeAccountIdInSearch) {
+          profileName = li.firstElementChild.querySelector("input[name='displayName']").value;
+        } else {
+          profileName = li.firstElementChild.dataset.aesrProfile
+        }
+        const hit = str ? profileName.toLowerCase().indexOf(str) > -1 : false;
         const shown = str ? hit : true;
         li.style.display = shown ? 'block' : 'none';
         li.style.background = null;
