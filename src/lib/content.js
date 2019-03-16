@@ -14,12 +14,13 @@ function extendIAMFormList() {
 
   chrome.storage.sync.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
+    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 'includeAccountIdInSearch',
     'autoAssumeLastRole', lastRoleKey
   ], function(data) {
     var hidesHistory = data.hidesHistory || false;
     var hidesAccountId = data.hidesAccountId || false;
     var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
+    var includeAccountIdInSearch = data.includeAccountIdInSearch || false;
     autoAssumeLastRole.enabled = data.autoAssumeLastRole || false;
 
     if (data.profiles) {
