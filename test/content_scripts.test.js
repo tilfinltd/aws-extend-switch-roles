@@ -343,5 +343,25 @@ describe('ContentScripts', () => {
         expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('renpou');
       })
     })
+    
+    context('includeAccountIdInSearch', () => {
+      it('appends 3 roles then filter', () => {
+        loadFixtures('awsmc-federated', 'data');
+        document.getElementById('awsc-login-display-name-account').textContent = '6666-1111-2222';
+        chrome.storage.sync.data.hidesHistory = true;
+        chrome.storage.sync.data.showOnlyMatchingRoles = true;
+        chrome.storage.sync.data.includeAccountIdInSearch = true;
+        extendIAMFormList();
+        
+        const filter = document.querySelector('#AESR_RoleFilter')      
+        filter.value = "666611115555"
+        filter.dispatchEvent(new KeyboardEvent('keyup',{'key':'5'}))
+
+        const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
+        expect(roles.length).to.eq(1);
+        expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('renpou');        
+      })
+    })
+    
   })
 })
