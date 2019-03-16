@@ -377,7 +377,7 @@ describe('ContentScripts', () => {
         filter.dispatchEvent(new KeyboardEvent('keyup',{'key':'5'}))
 
         const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
-        expect(roles.length).to.eq(3);
+        expect(roles.length).to.eq(0);
       })
     })
     
