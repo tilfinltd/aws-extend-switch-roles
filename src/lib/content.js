@@ -14,20 +14,19 @@ function extendIAMFormList() {
 
   chrome.storage.sync.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 'includeAccountIdInSearch',
+    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 
     'autoAssumeLastRole', lastRoleKey
   ], function(data) {
     var hidesHistory = data.hidesHistory || false;
     var hidesAccountId = data.hidesAccountId || false;
     var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
-    var includeAccountIdInSearch = data.includeAccountIdInSearch || false;
     autoAssumeLastRole.enabled = data.autoAssumeLastRole || false;
 
     if (data.profiles) {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
 
-      loadProfiles(new Profile(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId, includeAccountIdInSearch);
+      loadProfiles(new Profile(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
       attachColorLine(profiles);
     }
     // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
@@ -83,7 +82,7 @@ function hookBeforeExit() {
   return true;
 }
 
-function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId, includeAccountIdInSearch) {
+function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   var recentNames = [];
 
   if (hidesHistory) {
@@ -187,11 +186,8 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId, include
       const lis = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles > li'));
       let firstHitLi = null;
       lis.forEach(li => {
-        let profileName = li.firstElementChild.dataset.aesrProfile;        
-        if (includeAccountIdInSearch) {
-          profileName += li.firstElementChild.querySelector("input[name='account']").value;        
-        }
-        const hit = str ? profileName.toLowerCase().indexOf(str) > -1 : false;
+        const profileName = li.firstElementChild.querySelector("input[name='displayName']").value.toLowerCase();
+        const hit = str ? profileName.indexOf(str) > -1 : false;
         const shown = str ? hit : true;
         li.style.display = shown ? 'block' : 'none';
         li.style.background = null;
