@@ -379,7 +379,6 @@ describe('ContentScripts', () => {
         const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
         expect(roles.length).to.eq(0);
       })
-    })
-    
+    })    
   })
 })
