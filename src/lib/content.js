@@ -14,7 +14,7 @@ function extendIAMFormList() {
 
   chrome.storage.sync.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 
+    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
     'autoAssumeLastRole', lastRoleKey
   ], function(data) {
     var hidesHistory = data.hidesHistory || false;
