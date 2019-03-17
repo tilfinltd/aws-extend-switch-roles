@@ -349,6 +349,7 @@ describe('ContentScripts', () => {
         loadFixtures('awsmc-federated', 'data');
         document.getElementById('awsc-login-display-name-account').textContent = '6666-1111-2222';
         chrome.storage.sync.data.hidesHistory = true;
+        chrome.storage.sync.data.hidesAccountId = true;
         chrome.storage.sync.data.showOnlyMatchingRoles = true;
         chrome.storage.sync.data.includeAccountIdInSearch = true;
         extendIAMFormList();
