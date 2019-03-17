@@ -186,12 +186,10 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId, include
     } else {
       const lis = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles > li'));
       let firstHitLi = null;
-      let profileName = "";
       lis.forEach(li => {
+        let profileName = li.firstElementChild.dataset.aesrProfile;        
         if (includeAccountIdInSearch) {
-          profileName = li.firstElementChild.querySelector("input[name='displayName']").value;
-        } else {
-          profileName = li.firstElementChild.dataset.aesrProfile
+          profileName += li.firstElementChild.querySelector("input[name='account']").value;        
         }
         const hit = str ? profileName.toLowerCase().indexOf(str) > -1 : false;
         const shown = str ? hit : true;
