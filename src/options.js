@@ -59,7 +59,7 @@ window.onload = function() {
     }
   }
 
-  const booleanSettings = ['hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 'includeAccountIdInSearch', 'autoAssumeLastRole'];
+  const booleanSettings = ['hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
   for (let key of booleanSettings) {
     elById(`${key}CheckBox`).onchange = function() {
       chrome.storage.sync.set({ [key]: this.checked });
