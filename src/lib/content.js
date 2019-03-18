@@ -186,7 +186,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       const lis = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles > li'));
       let firstHitLi = null;
       lis.forEach(li => {
-        const profileName = li.firstElementChild.dataset.aesrProfile.toLowerCase();
+        const profileName = li.firstElementChild.querySelector("input[name='displayName']").value.toLowerCase();
         const hit = str ? profileName.indexOf(str) > -1 : false;
         const shown = str ? hit : true;
         li.style.display = shown ? 'block' : 'none';

@@ -323,5 +323,62 @@ describe('ContentScripts', () => {
         expect(roles[2].querySelector('input[type="submit"]').value).to.eq('b-renpou  |  666611115555');
       })
     })
+
+    context('hidesHistory, showOnlyMatchingRoles and hidesAccountId', () => {
+      it('appends 3 roles and nothing breaks', () => {
+        loadFixtures('awsmc-federated', 'data');
+        document.getElementById('awsc-login-display-name-account').textContent = '6666-1111-2222';
+        chrome.storage.sync.data.hidesHistory = true;
+        chrome.storage.sync.data.hidesAccountId = true;
+        chrome.storage.sync.data.showOnlyMatchingRoles = true;
+        extendIAMFormList();
+
+        expect(document.body.className.includes('user-type-federated')).to.be.true;
+        expect(document.body.className.includes('user-type-iam')).to.be.false;
+
+        const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
+        expect(roles.length).to.eq(3);
+        expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
+        expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
+        expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('renpou');
+      })
+    })
+    
+    context('including the AccountId in Search', () => {
+      it('appends 3 roles then filter', () => {
+        loadFixtures('awsmc-federated', 'data');
+        document.getElementById('awsc-login-display-name-account').textContent = '6666-1111-2222';
+        chrome.storage.sync.data.hidesHistory = true;
+        chrome.storage.sync.data.hidesAccountId = false;
+        chrome.storage.sync.data.showOnlyMatchingRoles = true;
+        extendIAMFormList();
+        
+        const filter = document.querySelector('#AESR_RoleFilter')      
+        filter.value = "666611115555"
+        filter.dispatchEvent(new KeyboardEvent('keyup',{'key':'5'}))
+
+        const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
+        expect(roles.length).to.eq(1);
+        expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('renpou');        
+      })
+    })
+
+    context('not including the AccountId in Search', () => {
+      it('appends 3 roles then filter', () => {
+        loadFixtures('awsmc-federated', 'data');
+        document.getElementById('awsc-login-display-name-account').textContent = '6666-1111-2222';
+        chrome.storage.sync.data.hidesHistory = true;
+        chrome.storage.sync.data.hidesAccountId = true;
+        chrome.storage.sync.data.showOnlyMatchingRoles = true;
+        extendIAMFormList();
+        
+        const filter = document.querySelector('#AESR_RoleFilter')      
+        filter.value = "666611115555"
+        filter.dispatchEvent(new KeyboardEvent('keyup',{'key':'5'}))
+
+        const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
+        expect(roles.length).to.eq(0);
+      })
+    })    
   })
 })
