@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.12.0 (2019/03/27)
+
+- Textbox filtering supports by account id (thanks to @heldersepu)
+- Fix auto switch last role feature
+- Support AWS GovCloud (experimental)
+
 ## v0.11.0 (2019/02/23)
 
 - Add image option (thanks to @timcleaver)
