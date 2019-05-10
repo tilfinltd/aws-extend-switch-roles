@@ -1,11 +1,18 @@
 Changelog
 =========
 
+## v0.12.1 (2019/05/10)
+
+- Enlarge profile image icon
+- Fix configuration textarea not synchronized
+
+
 ## v0.12.0 (2019/03/27)
 
 - Textbox filtering supports by account id (thanks to @heldersepu)
 - Fix auto switch last role feature
 - Support AWS GovCloud (experimental)
+
 
 ## v0.11.0 (2019/02/23)
 
