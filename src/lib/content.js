@@ -149,7 +149,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="color" value="${color}">
           <input type="hidden" name="csrf" value="${csrf}">
           <input type="hidden" name="redirect_uri" value="${redirectUri}">
-          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="width: 1em; height: 1em"></label>
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
           <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
                 title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
         </li>`);
@@ -221,7 +221,7 @@ function attachColorLine(profiles) {
 
     var label = usernameMenu.querySelector('.nav-elt-label');
     if (found && found.image) {
-        label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} style="float: left; padding-right: 1em; width: 1em; height: 1em">`);
+      label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} style="float: left; padding-right: .66em; width: 1.33em; height: 1.33em">`);
     }
 
     if (color) {
