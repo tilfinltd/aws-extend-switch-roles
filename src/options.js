@@ -66,21 +66,13 @@ window.onload = function() {
     }
   }
 
-  chrome.storage.sync.get(['lztext', 'rawtext'].concat(booleanSettings), function(data) {
+  chrome.storage.sync.get(['lztext'].concat(booleanSettings), function(data) {
     let rawData = localStorage['rawdata'];
-    if (!rawData) {
-      if (data.lztext) {
-        try {
-          rawData = LZString.decompressFromUTF16(data.lztext);
-        } catch(err) {
-          if (data.rawtext) {
-            rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken, reverted old setting.\n;; !!!WARNING!!!\n\n' + data.rawtext;
-          } else {
-            rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
-          }
-        }
-      } else if (data.rawtext) {
-        rawdata = data.rawtext;
+    if (data.lztext) {
+      try {
+        rawData = LZString.decompressFromUTF16(data.lztext);
+      } catch(err) {
+        rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
       }
     }
     textArea.value = rawData || '';
