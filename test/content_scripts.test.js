@@ -42,6 +42,26 @@ describe('ContentScripts', () => {
           expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('independence_role');
         })
       })
+
+      context('base-a profile', () => {
+        it('hides base-b histories and appends 3 roles', () => {
+          loadFixtures('awsmc-exclude-unrelated-profile-from-history', 'data');
+          document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
+          chrome.storage.sync.data.hidesHistory = false;
+          extendIAMFormList();
+
+          const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
+          expect(roles.length).to.eq(5);
+          expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('stg-role_history');
+          expect(roles[0].querySelector('input[type="submit"]').value).to.eq('a-stg');
+          expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
+          expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('independence_role');
+          expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[3].querySelector('input[type="submit"]').value).to.eq('a-prod  |  555511114444');
+          expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('stg-role-image');
+          expect(roles[4].querySelector('input[type="submit"]').value).to.eq('a-stg-image  |  555511113333');
+        })
+      })
     })
 
     context('hidesHistory', () => {

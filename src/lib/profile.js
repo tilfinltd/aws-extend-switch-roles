@@ -34,11 +34,12 @@ function Profile(items, showOnlyMatchingRoles) {
     return result;
   })();
 
-  this.exProfileNames = (function(){
-    var result = [];
-    for (var name in destProfileMap) {
-      destProfileMap[name].forEach(function(item){
-        result.push(item.profile + '  |  ' + item.aws_account_id);
+  // For excluding unrelated profiles from recent history
+  this.excludedNames = (() => {
+    let result = [];
+    for (let name in destProfileMap) {
+      destProfileMap[name].forEach(item => {
+        result.push(item.profile);
       });
     }
     return result;

@@ -22,7 +22,7 @@ describe('Profile', () => {
     expect(profile.destProfiles[0].profile).to.eq('targetex');
     expect(profile.destProfiles[1].profile).to.eq('target1');
     expect(profile.destProfiles[2].profile).to.eq('target2');
-    expect(profile.exProfileNames[0]).to.eq('target4  |  222200001112');
+    expect(profile.excludedNames[0]).to.eq('target4');
   });
 
   it('load base aws account is alias', () => {
@@ -38,6 +38,6 @@ describe('Profile', () => {
 
     expect(profile.destProfiles[0].profile).to.eq('target1');
     expect(profile.destProfiles[1].profile).to.eq('target2');
-    expect(profile.exProfileNames.length).to.eq(0);
+    expect(profile.excludedNames.length).to.eq(0);
   });
 });
