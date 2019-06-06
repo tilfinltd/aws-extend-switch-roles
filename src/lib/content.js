@@ -100,14 +100,15 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     var li = list.firstElementChild;
     while (li) {
       input = li.querySelector('input[type="submit"]');
-      var name = input.value;
-      if (profile.exProfileNames.indexOf(name) > -1) {
-        var nextLi = li.nextElementSibling;
+      let name = input.value;
+      name = name.replace(/\s+\|\s+\d+$/, '');
+      if (profile.excludedNames.includes(name)) {
+        const nextLi = li.nextElementSibling;
         list.removeChild(li);
         li = nextLi;
       } else {
         const form = li.querySelector('form');
-        form.dataset.aesrProfile = name.replace(/\s+\|\s+\d+$/, '');
+        form.dataset.aesrProfile = name;
         input.style = 'white-space:pre';
         recentNames.push(name);
         li = li.nextElementSibling;
@@ -118,8 +119,8 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   const redirectUri = encodeURIComponent(window.location.href);
   profile.destProfiles.forEach(function(item) {
     var name = item.profile;
-    if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
     if (recentNames.indexOf(name) !== -1) return true;
+    if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
 
     var color = item.color || 'aaaaaa';
     var actionHost = window.location.host.endsWith('.amazonaws-us-gov.com') ? 'signin.amazonaws-us-gov.com' : 'signin.aws.amazon.com';
