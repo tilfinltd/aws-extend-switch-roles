@@ -100,14 +100,15 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
     var li = list.firstElementChild;
     while (li) {
       input = li.querySelector('input[type="submit"]');
-      var name = input.value;
-      if (profile.exProfileNames.indexOf(name) > -1) {
-        var nextLi = li.nextElementSibling;
+      let name = input.value;
+      name = name.replace(/\s+\|\s+\d+$/, '');
+      if (profile.excludedNames.includes(name)) {
+        const nextLi = li.nextElementSibling;
         list.removeChild(li);
         li = nextLi;
       } else {
         const form = li.querySelector('form');
-        form.dataset.aesrProfile = name.replace(/\s+\|\s+\d+$/, '');
+        form.dataset.aesrProfile = name;
         input.style = 'white-space:pre';
         recentNames.push(name);
         li = li.nextElementSibling;
@@ -118,13 +119,14 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   const redirectUri = encodeURIComponent(window.location.href);
   profile.destProfiles.forEach(function(item) {
     var name = item.profile;
-    if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
     if (recentNames.indexOf(name) !== -1) return true;
+    if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
 
     var color = item.color || 'aaaaaa';
+    var actionHost = window.location.host.endsWith('.amazonaws-us-gov.com') ? 'signin.amazonaws-us-gov.com' : 'signin.aws.amazon.com';
     if (!item.image) {
         list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
-         <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
+         <form action="https://${actionHost}/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
           <input type="hidden" name="action" value="switchFromBasis">
           <input type="hidden" name="src" value="nav">
           <input type="hidden" name="roleName" value="${item.role_name}">
@@ -139,7 +141,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
         </li>`);
     } else {
         list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
-         <form action="https://signin.aws.amazon.com/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
+         <form action="https://${actionHost}/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
           <input type="hidden" name="action" value="switchFromBasis">
           <input type="hidden" name="src" value="nav">
           <input type="hidden" name="roleName" value="${item.role_name}">
@@ -148,7 +150,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="color" value="${color}">
           <input type="hidden" name="csrf" value="${csrf}">
           <input type="hidden" name="redirect_uri" value="${redirectUri}">
-          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="width: 1em; height: 1em"></label>
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
           <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
                 title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
         </li>`);
@@ -186,7 +188,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       const lis = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles > li'));
       let firstHitLi = null;
       lis.forEach(li => {
-        const profileName = li.firstElementChild.dataset.aesrProfile.toLowerCase();
+        const profileName = li.firstElementChild.querySelector("input[name='displayName']").value.toLowerCase();
         const hit = str ? profileName.indexOf(str) > -1 : false;
         const shown = str ? hit : true;
         li.style.display = shown ? 'block' : 'none';
@@ -220,7 +222,7 @@ function attachColorLine(profiles) {
 
     var label = usernameMenu.querySelector('.nav-elt-label');
     if (found && found.image) {
-        label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML(`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} style="float: left; padding-right: 1em; width: 1em; height: 1em">`));
+      label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} style="float: left; padding-right: .66em; width: 1.33em; height: 1.33em">`);
     }
 
     if (color) {

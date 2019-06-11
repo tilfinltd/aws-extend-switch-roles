@@ -60,7 +60,10 @@ describe('DataProfilesSplitter', () => {
       expect(dataSet.profiles[0].profile).to.eq('p0');
       expect(dataSet.profiles[39].profile).to.eq('p39');
       expect(dataSet.profiles.length).to.eq(40);
-      expect(dataSet.profiles_1).to.be.undefined;
+      expect(dataSet.profiles_1).to.be.empty;
+      expect(dataSet.profiles_2).to.be.empty;
+      expect(dataSet.profiles_3).to.be.empty;
+      expect(dataSet.profiles_4).to.be.empty;
     })
 
     it('returns dataSet thas has 2 profiles fields from 41 profiles', () => {
@@ -73,7 +76,9 @@ describe('DataProfilesSplitter', () => {
       expect(dataSet.profiles.length).to.eq(40);
       expect(dataSet.profiles_1[0].profile).to.eq('p40');
       expect(dataSet.profiles_1.length).to.eq(1);
-      expect(dataSet.profiles_2).to.be.undefined;
+      expect(dataSet.profiles_2).to.be.empty;
+      expect(dataSet.profiles_3).to.be.empty;
+      expect(dataSet.profiles_4).to.be.empty;
     })
 
     it('returns dataSet thas has 5 profiles fields from 200 profiles', () => {

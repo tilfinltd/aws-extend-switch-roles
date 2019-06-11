@@ -5,6 +5,11 @@ class AutoAssumeLastRole {
 
   execute(targetIdRole, list) {
     if (!this.enabled || this.hasAssumedRole() || !targetIdRole) return;
+
+    const event = document.createEvent('MouseEvents');
+    event.initEvent('click', false, true);
+    elById('nav-usernameMenu').dispatchEvent(event);
+
     setTimeout(() => {
       for (let form of list.querySelectorAll('form')) {
         const val = `${form.account.value}_${form.roleName.value}`;
@@ -13,7 +18,7 @@ class AutoAssumeLastRole {
           break;
         }        
       }
-    }, 0);    
+    }, 0);
   }
 
   save(profile) {
