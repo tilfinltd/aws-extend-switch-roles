@@ -26,7 +26,7 @@ function extendIAMFormList() {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
 
-      loadProfiles(new Profile(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
+      loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
       attachColorLine(profiles);
     }
     // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
@@ -82,7 +82,7 @@ function hookBeforeExit() {
   return true;
 }
 
-function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
+function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
   var recentNames = [];
 
   if (hidesHistory) {
@@ -102,7 +102,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
       input = li.querySelector('input[type="submit"]');
       let name = input.value;
       name = name.replace(/\s+\|\s+\d+$/, '');
-      if (profile.excludedNames.includes(name)) {
+      if (profileSet.excludedNames.includes(name)) {
         const nextLi = li.nextElementSibling;
         list.removeChild(li);
         li = nextLi;
@@ -117,7 +117,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   }
 
   const redirectUri = encodeURIComponent(window.location.href);
-  profile.destProfiles.forEach(function(item) {
+  profileSet.destProfiles.forEach(function(item) {
     var name = item.profile;
     if (recentNames.indexOf(name) !== -1) return true;
     if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
@@ -161,7 +161,7 @@ function loadProfiles(profile, list, csrf, hidesHistory, hidesAccountId) {
   Array.from(list.querySelectorAll('form')).forEach(form => {
     form.onsubmit = function(e) {
       const destProfileName = this.dataset.aesrProfile;
-      const foundProfile = profile.destProfiles.find(item => item.profile === destProfileName);
+      const foundProfile = profileSet.destProfiles.find(item => item.profile === destProfileName);
       return foundProfile ? hookBeforeSwitch(this, foundProfile) : true;
     }
   });
