@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.13.0 (2019/06/23)
+
+- Support 'target_role_name' parameter that expresses the role name for target roles, on base account
+- Fix excluding unrelated profiles from role history
+
+
 ## v0.12.1 (2019/05/10)
 
 - Enlarge profile image icon
@@ -50,7 +56,7 @@ Changelog
 
 ## v0.7.0 (2018/02/27)
 
-- Support A 'region' parameter can be used to change the region whenever switching the role
+- Support a 'region' parameter can be used to change the region whenever switching the role
 - Fix Show only matching roles option has negative effect on normal AWS login
 
 
