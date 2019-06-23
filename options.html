@@ -79,6 +79,10 @@ pre {
   padding: 0.5ex;
 }
 input, button { font-size: 16px }
+code {
+  color: #222;
+  font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -112,13 +116,13 @@ input, button { font-size: 16px }
  <h2>How to configure</h2>
  <section>
   <h3>Simple Configuration</h3>
-  <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.</p>
+  <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code>.</p>
 
   <h4>Optional parameters</h4>
   <ul>
-   <li>A 'color' parameter can be used to specify an RGB hex value without prefix '#'.</li>
-   <li>A 'region' parameter can be used to change the region whenever switching the role.</li>
-   <li>An 'image' parameter can be used to specify the uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.</li>
+   <li><code>color</code> - The RGB hex value (without the prefix '#') for the color of the header bottom border and around the current profile.</li>
+   <li><code>region</code> - Changing the region whenever switching the role if this parameter is specified.</li>
+   <li><code>image</code> - The uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.</li>
   </ul>
   <pre>
 [profile marketingadmin]
@@ -140,10 +144,10 @@ image = "https://via.placeholder.com/150"
   <h3>Complex Configuration</h3>  
   <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
   <ul>
-   <li>A profile that has only `aws_account_id` (without a role_name) is defined as <b>base account</b></li>
+   <li>A profile that has only <code>aws_account_id</code> (without a <code>role_name</code>) is defined as <b>base account</b></li>
    <li><b>If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.</b></li>
-   <li>A <b>target role</b> is associated with a <b>base account</b> by the <b>target role</b> specifying a 'source_profile'.</li>
-   <li>As above, <b>target roles</b> can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter and a 'region' parameter.</li>
+   <li>A <b>target role</b> is associated with a <b>base account</b> by the <b>target role</b> specifying a <code>source_profile</code>.</li>
+   <li>As above, <b>target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code> and can pass the optional parameters.</li>
   </ul>
   <pre>
 [organization1]
@@ -180,10 +184,10 @@ aws_account_id = account-3-alias
  <section>
   <h3>Settings</h3>
   <ul>
-   <li>Can hide original role history (Show only roles in the configuration)</li>
-   <li>Can hide the account_id for each profile</li>
-   <li>Can filter to only show profiles with roles that match your role in your master account</li>
-   <li>Can automatically assume last assumed role on next sign-in if did not back to the base account and signed out (Experimental)</li>
+   <li><b>Hide original role history</b> hides original role history (Show only roles in the configuration).</li>
+   <li><b>Hide account id</b> hides the account_id for each profile.</li>
+   <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
+   <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
   </ul>
  </section>
 </div>

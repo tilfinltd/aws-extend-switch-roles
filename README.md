@@ -26,13 +26,13 @@ Click Browser button, edit your profile settings to text area in popup form and 
 Supports ~/.aws/config format and like ~/.aws/credentials
 
 ### Simple Configuration
-The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.
+The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name`.
 
 #### Optional parameters
 
-* A 'color' parameter can be used to specify an RGB hex value without prefix '#'.
-* A 'region' parameter can be used to change the region whenever switching the role.
-* An 'image' parameter can be used to specify the uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.
+* `color` - The RGB hex value (without the prefix '#') for the color of the header bottom border and around the current profile.
+* `region` - Changing the region whenever switching the role if this parameter is specified.
+* `image` - The uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.
 
 ```
 [profile marketingadmin]
@@ -53,13 +53,13 @@ image = "https://via.placeholder.com/150"
 ### Complex Configuration
 More complex configurations involve multiple AWS accounts and/or organizations.
 
-- A profile that has only `aws_account_id` (without a role_name) is defined as **base account**.
+- A profile that has only `aws_account_id` (without a `role_name`) is defined as **base account**.
 
 - **If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.**
 
-- A **target role** is associated with a **base account** by the **target role** specifying a 'source_profile'.
+- A **target role** is associated with a **base account** by the **target role** specifying a `source_profile`.
 
-- As above, **target roles** can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter and a 'region' parameter.
+- As above, **target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name` and can optionally pass the optional parameters.
 
 ```
 [organization1]
@@ -97,10 +97,10 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 ## Settings
 
-- Can hide original role history (Show only roles in the configuration)
-- Can hide the account_id for each profile
-- Can filter to only show profiles with roles that match your role in your master account
-- Can automatically assume last assumed role on next sign-in if did not back to the base account and signed out (Experimental)
+- **Hide original role history** hides original role history (Show only roles in the configuration).
+- **Hide account id** hides the account_id for each profile.
+- **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
+- **Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.
 
 ## Donation
 
