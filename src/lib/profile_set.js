@@ -1,11 +1,13 @@
 class ProfileSet {
   constructor(items, showOnlyMatchingRoles) {
-    let profileByIdMap = {}; // { <awsAccountId>: <Profile> }
+    // Map that has entries { <awsAccountId>: <Profile> }
+    this.profileByIdMap = {};
+
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
     let independentDests = [];
 
     items.forEach(item => {
-      profileByIdMap[item.aws_account_id] = item;
+      this.profileByIdMap[item.aws_account_id] = item;
 
       if (item.source_profile) {
         if (item.source_profile in destsBySrcMap) {
@@ -18,7 +20,12 @@ class ProfileSet {
       }
     });
 
-    const complexDests = this._decideComplexDestProfiles(profileByIdMap, destsBySrcMap, { showOnlyMatchingRoles })
+    let complexDests = [];
+    let baseProfileName = this._getBaseProfileName();
+    if (baseProfileName) {
+      complexDests = this._decideComplexDestProfiles(baseProfileName, destsBySrcMap, { showOnlyMatchingRoles })
+      delete destsBySrcMap[baseProfileName];
+    }
 
     // To display roles on the list
     this.destProfiles = [].concat(independentDests).concat(complexDests)
@@ -27,20 +34,19 @@ class ProfileSet {
     this.excludedNames = this._decideExcludedNames(destsBySrcMap)
   }
 
-  _decideComplexDestProfiles(srcProfileMap, destsBySrcMap, { showOnlyMatchingRoles }) {
+  _getBaseProfileName() {
     let baseAccountId = getAccountId('awsc-login-display-name-account');
-    let baseProfile = srcProfileMap[baseAccountId];
-    if (baseProfile) {
-      let name = baseProfile.profile;
-      let profiles = destsBySrcMap[name] || [];
-      if (showOnlyMatchingRoles && document.body.className.includes('user-type-federated')) {
-        let baseRole = getAssumedRole();
-        profiles = profiles.filter(el => el.role_name === baseRole)
-      }
-      delete destsBySrcMap[name];
-      return profiles;
+    const baseProfile = this.profileByIdMap[baseAccountId];
+    return baseProfile ? baseProfile.profile : null;
+  }
+
+  _decideComplexDestProfiles(baseProfileName, destsBySrcMap, { showOnlyMatchingRoles }) {
+    let profiles = destsBySrcMap[baseProfileName] || [];
+    if (showOnlyMatchingRoles && document.body.className.includes('user-type-federated')) {
+      let baseRole = getAssumedRole();
+      profiles = profiles.filter(el => el.role_name === baseRole)
     }
-    return [];
+    return profiles;
   }
 
   _decideExcludedNames(destsBySrcMap) {
