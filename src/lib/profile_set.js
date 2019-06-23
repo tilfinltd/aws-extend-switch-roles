@@ -15,16 +15,16 @@ class ProfileSet {
         } else {
           destsBySrcMap[item.source_profile] = [item];
         }
-      } else if (item.aws_account_id && item.role_name) {
+      } else if (item.aws_account_id && item.role_name && !item.target_role_name) {
         independentDests.push(item);
       }
     });
 
     let complexDests = [];
-    let baseProfileName = this._getBaseProfileName();
-    if (baseProfileName) {
-      complexDests = this._decideComplexDestProfiles(baseProfileName, destsBySrcMap, { showOnlyMatchingRoles })
-      delete destsBySrcMap[baseProfileName];
+    let baseProfile = this._getBaseProfile();
+    if (baseProfile) {
+      complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles })
+      delete destsBySrcMap[baseProfile.profile];
     }
 
     // To display roles on the list
@@ -34,14 +34,19 @@ class ProfileSet {
     this.excludedNames = this._decideExcludedNames(destsBySrcMap)
   }
 
-  _getBaseProfileName() {
+  _getBaseProfile() {
     let baseAccountId = getAccountId('awsc-login-display-name-account');
-    const baseProfile = this.profileByIdMap[baseAccountId];
-    return baseProfile ? baseProfile.profile : null;
+    return this.profileByIdMap[baseAccountId];
   }
 
-  _decideComplexDestProfiles(baseProfileName, destsBySrcMap, { showOnlyMatchingRoles }) {
-    let profiles = destsBySrcMap[baseProfileName] || [];
+  _decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles }) {
+    let profiles = (destsBySrcMap[baseProfile.profile] || []).map(profile => {
+      if (!profile.role_name) {
+        profile.role_name = baseProfile.target_role_name
+      }
+      return profile
+    })
+
     if (showOnlyMatchingRoles && document.body.className.includes('user-type-federated')) {
       let baseRole = getAssumedRole();
       profiles = profiles.filter(el => el.role_name === baseRole)

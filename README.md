@@ -61,6 +61,8 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 
 - As above, **target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name` and can optionally pass the optional parameters.
 
+- If `target_role_name` is set in **base account**, the value is provided as the default role name for each **target roles**.
+
 ```
 [organization1]
 aws_account_id = your-account-alias
@@ -89,6 +91,22 @@ source_profile = baseaccount2
 [AnotherRole]
 role_name = SomeOtherRole
 aws_account_id = account-3-alias
+
+;
+; target_role_name example
+;
+[Org2-BaseAccount]
+aws_account_id = 222200000000
+target_role_name = Developer
+
+[Org2-Account1-Developer]
+aws_account_id = 222200001111
+source_profile = Org2-BaseAccount
+
+[Org2-Account2-Manager]
+aws_account_id = 222200002222
+role_name = Manager ; overrides target role name
+source_profile = Org2-BaseAccount
 ```
 
 If you sign-in a base account, target roles of the other base accounts are excluded.
