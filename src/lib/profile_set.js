@@ -1,24 +1,24 @@
 class ProfileSet {
   constructor(items, showOnlyMatchingRoles) {
-    let srcProfileMap = {}; // { <awsAccountId>: <Profile> }
+    let profileByIdMap = {}; // { <awsAccountId>: <Profile> }
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
     let independentDests = [];
 
     items.forEach(item => {
+      profileByIdMap[item.aws_account_id] = item;
+
       if (item.source_profile) {
         if (item.source_profile in destsBySrcMap) {
           destsBySrcMap[item.source_profile].push(item);
         } else {
           destsBySrcMap[item.source_profile] = [item];
         }
-      } else if (item.aws_account_id && !item.role_name) {
-        srcProfileMap[item.aws_account_id] = item;
-      } else {
+      } else if (item.aws_account_id && item.role_name) {
         independentDests.push(item);
       }
     });
 
-    const complexDests = this._decideComplexDestProfiles(srcProfileMap, destsBySrcMap, { showOnlyMatchingRoles })
+    const complexDests = this._decideComplexDestProfiles(profileByIdMap, destsBySrcMap, { showOnlyMatchingRoles })
 
     // To display roles on the list
     this.destProfiles = [].concat(independentDests).concat(complexDests)
