@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v0.13.1 (2019/06/24)
+
+- Fix that the switch role definition in the same AWS Account ID causes the list to be empty
+
+
 ## v0.13.0 (2019/06/23)
 
 - Support 'target_role_name' parameter that expresses the role name for target roles, on base account
