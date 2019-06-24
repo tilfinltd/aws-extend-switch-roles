@@ -1,14 +1,11 @@
 class ProfileSet {
   constructor(items, showOnlyMatchingRoles) {
     // Map that has entries { <awsAccountId>: <Profile> }
-    this.profileByIdMap = {};
-
+    this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
     let independentDests = [];
 
     items.forEach(item => {
-      this.profileByIdMap[item.aws_account_id] = item;
-
       if (item.source_profile) {
         if (item.source_profile in destsBySrcMap) {
           destsBySrcMap[item.source_profile].push(item);
@@ -17,6 +14,8 @@ class ProfileSet {
         }
       } else if (item.aws_account_id && item.role_name && !item.target_role_name) {
         independentDests.push(item);
+      } else {
+        this.srcProfileMap[item.aws_account_id] = item;
       }
     });
 
@@ -36,7 +35,7 @@ class ProfileSet {
 
   _getBaseProfile() {
     let baseAccountId = getAccountId('awsc-login-display-name-account');
-    return this.profileByIdMap[baseAccountId];
+    return this.srcProfileMap[baseAccountId];
   }
 
   _decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles }) {
