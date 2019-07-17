@@ -1,6 +1,6 @@
 {
   "name": "AWS Extend Switch Roles",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "Extend your AWS IAM switching roles. You can set the configuration like aws config format",
   "short_name": "Extend SwitchRole",
   "permissions": ["storage"],
@@ -37,5 +37,11 @@
   "web_accessible_resources": [
     "js/csrf-setter.js"
   ],
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": false
+  },
   "manifest_version": 2
 }
