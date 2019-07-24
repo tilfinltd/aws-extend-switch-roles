@@ -43,6 +43,11 @@ a { text-decoration: none }
   font-weight: bold;
   margin: 5px 0;
 }
+#settingPane h1 {
+  font-size: 20px;
+  line-height: 1.125;
+  margin: 1em 0 .68em;
+}
 #settings ul {
   list-style: none;
   margin: 0 0; padding: 0;
@@ -110,6 +115,13 @@ code {
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
     <li><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </li>
   </ul>
+ </section>
+ <section id="api">
+  <h1>Extension API</h1>
+  <div>
+   <label for="configSenderIdText">Config sender extension ID:</label>
+   <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex">
+  </div>
  </section>
 </div>
 <div class="pane" id="howto">
@@ -205,6 +217,12 @@ source_profile = Org2-BaseAccount
    <li><b>Hide account id</b> hides the account_id for each profile.</li>
    <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
    <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
+  </ul>
+ </section>
+ <section>
+  <h3>Extension API</h3>
+  <ul>
+   <li><b>Config sender extension</b> allowed by the **ID** can send your switch roles configuration to this extension. <a href="https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension" target="_blank" rel="noopener noreferrer">See</a> how to make your config sender extension.</li>
   </ul>
  </section>
 </div>

@@ -120,6 +120,10 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 - **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
 - **Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.
 
+## Extension API
+
+- **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
+
 ## Donation
 
 Would you like to support this extension? I gladly accept small donations.

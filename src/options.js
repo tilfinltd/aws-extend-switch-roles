@@ -66,7 +66,11 @@ window.onload = function() {
     }
   }
 
-  chrome.storage.sync.get(['lztext'].concat(booleanSettings), function(data) {
+  elById('configSenderIdText').onchange = function() {
+    chrome.storage.sync.set({ configSenderId: this.value });
+  }
+
+  chrome.storage.sync.get(['lztext', 'configSenderId'].concat(booleanSettings), function(data) {
     let rawData = localStorage['rawdata'];
     if (data.lztext) {
       try {
@@ -76,6 +80,7 @@ window.onload = function() {
       }
     }
     textArea.value = rawData || '';
+    elById('configSenderIdText').value = data.configSenderId || '';
     for (let key of booleanSettings) {
       elById(`${key}CheckBox`).checked = data[key] || false;
     }
