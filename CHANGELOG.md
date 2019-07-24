@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v0.14.0 (2019/07/24)
+
+- Support Config sender extension of External API
+
+
 ## v0.13.1 (2019/06/24)
 
 - Fix that the switch role definition in the same AWS Account ID causes the list to be empty
