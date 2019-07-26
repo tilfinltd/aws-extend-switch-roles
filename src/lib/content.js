@@ -178,6 +178,9 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
 
   document.getElementById('awsc-recent-roles-label').insertAdjacentHTML('beforeend', '<input id="AESR_RoleFilter" type="text" placeholder="Filter by profile name" style="border:1px solid #ccc;border-radius:3px;font-size:13px;margin-left:0.25em;max-width:20ex;padding:0.4ex">');
   document.getElementById('awsc-username-menu-recent-roles').setAttribute("style", "height:200px;overflow:auto");
+  document.getElementById('awsc-username-menu-recent-roles').style.overflow = "auto";
+  document.getElementById('awsc-username-menu-recent-roles').style.height = "calc(100vh * 0.3)";
+
   document.getElementById('AESR_RoleFilter').onkeyup = function(e) {
     const str = this.value;
     if (e.keyCode === 13) {
