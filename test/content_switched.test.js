@@ -78,12 +78,13 @@ describe('ContentScripts', () => {
       })
     })
 
-    context('useColumns', () => {
+    context('usesColumns', () => {
       context('base-a profile', () => {
-        it('appends 4 roles and uses columns', () => {
+        it('hides histories and appends 4 roles and uses columns', () => {
           loadFixtures('awsmc-iam-switched', 'data');
           document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
-          chrome.storage.sync.data.useColumns = true;
+          chrome.storage.sync.data.hidesHistory = true;
+          chrome.storage.sync.data.usesColumns = true;
           extendIAMFormList();
 
           expect(document.body.className.includes('user-type-federated')).to.be.true;
