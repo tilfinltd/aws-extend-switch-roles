@@ -130,6 +130,48 @@ describe('ContentScripts', () => {
       })
     })
 
+    context('hidesHistory and usesColumns', () => {
+      context('base profile is undefined', () => {
+        it('hides histories and appends 2 roles and uses columns', () => {
+          loadFixtures('awsmc-iam', 'data');
+          chrome.storage.sync.data.hidesHistory = true;
+          extendIAMFormList();
+
+          expect(document.body.className.includes('user-type-iam')).to.be.true;
+          expect(document.body.className.includes('user-type-federated')).to.be.false;
+
+          const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
+          expect(roles.length).to.eq(2);
+          expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
+          expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
+        })
+      })
+
+      context('base-a profile', () => {
+        it('hides histories and appends 4 roles', () => {
+          loadFixtures('awsmc-iam', 'data');
+          document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
+          chrome.storage.sync.data.hidesHistory = true;
+          chrome.storage.sync.data.usesColumns = true;
+          extendIAMFormList();
+
+          expect(document.body.className.includes('user-type-iam')).to.be.true;
+          expect(document.body.className.includes('user-type-federated')).to.be.false;
+
+          const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
+          expect(roles.length).to.eq(5);
+          expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('independence_role');
+          expect(roles[1].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
+          expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('stg-role');
+          expect(roles[2].querySelector('input[type="submit"]').value).to.eq('a-stg  |  555511113333');
+          expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[3].querySelector('input[type="submit"]').value).to.eq('a-prod  |  555511114444');
+          expect(roles[4].querySelector('input[name="roleName"]').value).to.eq('stg-role-image');
+          expect(roles[4].querySelector('input[type="submit"]').value).to.eq('a-stg-image  |  555511113333');
+        })
+      })
+    })
+
     context('hidesHistory and hidesAccountId', () => {
       context('base-b profile', () => {
         it('hides account id', () => {
@@ -363,7 +405,7 @@ describe('ContentScripts', () => {
         expect(roles[2].querySelector('input[name="roleName"]').value).to.eq('renpou');
       })
     })
-    
+
     context('including the AccountId in Search', () => {
       it('appends 3 roles then filter', () => {
         loadFixtures('awsmc-federated', 'data');
@@ -372,14 +414,14 @@ describe('ContentScripts', () => {
         chrome.storage.sync.data.hidesAccountId = false;
         chrome.storage.sync.data.showOnlyMatchingRoles = true;
         extendIAMFormList();
-        
-        const filter = document.querySelector('#AESR_RoleFilter')      
+
+        const filter = document.querySelector('#AESR_RoleFilter')
         filter.value = "666611115555"
         filter.dispatchEvent(new KeyboardEvent('keyup',{'key':'5'}))
 
         const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
         expect(roles.length).to.eq(1);
-        expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('renpou');        
+        expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('renpou');
       })
     })
 
@@ -391,14 +433,14 @@ describe('ContentScripts', () => {
         chrome.storage.sync.data.hidesAccountId = true;
         chrome.storage.sync.data.showOnlyMatchingRoles = true;
         extendIAMFormList();
-        
-        const filter = document.querySelector('#AESR_RoleFilter')      
+
+        const filter = document.querySelector('#AESR_RoleFilter')
         filter.value = "666611115555"
         filter.dispatchEvent(new KeyboardEvent('keyup',{'key':'5'}))
 
         const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li[style*="display: block;"]'))
         expect(roles.length).to.eq(0);
       })
-    })    
+    })
   })
 })

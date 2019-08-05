@@ -78,7 +78,7 @@ describe('ContentScripts', () => {
       })
     })
 
-    context('usesColumns', () => {
+    context('hidesHistory and usesColumns', () => {
       context('base-a profile', () => {
         it('hides histories and appends 4 roles and uses columns', () => {
           loadFixtures('awsmc-iam-switched', 'data');
