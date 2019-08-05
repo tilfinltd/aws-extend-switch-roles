@@ -209,15 +209,23 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId, useC
   if(useColumns)
   {
     // Split into columns
+    document.getElementById('awsc-username-menu-recent-roles').style.display = "block";
     document.getElementById('awsc-username-menu-recent-roles').style.webkitColumns = "2";
     document.getElementById('awsc-username-menu-recent-roles').style.setProperty("-moz-columns", "2")
     document.getElementById('awsc-username-menu-recent-roles').style.columns = "2";
     document.getElementById('awsc-username-menu-recent-roles').style.paddingLeft = "0";
+    document.getElementById('awsc-username-menu-recent-roles').style.webkitColumnGap = "2em";
+    document.getElementById('awsc-username-menu-recent-roles').style.columnGap = "2em";
+    document.getElementById('awsc-username-menu-recent-roles').style.setProperty("-moz-column-gap", "2em")
+    document.getElementById('awsc-username-menu-recent-roles').style.columnRule = "thin solid #cccccc";
+    document.getElementById('awsc-username-menu-recent-roles').style.webkitColumnRule = "thin solid #cccccc";
+    document.getElementById('awsc-username-menu-recent-roles').style.setProperty("-moz-column-rule", "thin solid #cccccc")
     document.getElementById('awsc-username-menu-recent-roles').style.listStylePosition = "inside";
     document.getElementById('awsc-username-menu-recent-roles').style.webkitColumnBreakInside = "avoid";
     document.getElementById('awsc-username-menu-recent-roles').style.pageBreakInside = "avoid";
     document.getElementById('awsc-username-menu-recent-roles').style.breakInside = "avoid";
-    document.getElementById('awsc-switch-role').style.marginTop = "1em";
+    document.getElementById('awsc-username-menu-recent-roles').style.marginTop = "1em";
+    document.getElementById('awsc-username-menu-recent-roles').style.marginBottom = "1em";
   }
 
   document.getElementById('nav-usernameMenu').addEventListener('click', () => {
