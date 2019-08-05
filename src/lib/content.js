@@ -14,9 +14,10 @@ function extendIAMFormList() {
 
   chrome.storage.sync.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
+    'useColumns', 'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
     'autoAssumeLastRole', lastRoleKey
   ], function(data) {
+    var useColumns = data.useColumns || false;
     var hidesHistory = data.hidesHistory || false;
     var hidesAccountId = data.hidesAccountId || false;
     var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
@@ -26,7 +27,7 @@ function extendIAMFormList() {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
 
-      loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
+      loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId, useColumns);
       attachColorLine(profiles);
     }
     // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
@@ -68,7 +69,7 @@ function replaceRedirectURI(form, profile) {
       }
     }
     form.redirect_uri.value = encodeURIComponent(redirectUri);
-  }  
+  }
 }
 
 function hookBeforeSwitch(form, profile) {
@@ -82,7 +83,7 @@ function hookBeforeExit() {
   return true;
 }
 
-function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
+function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId, useColumns) {
   var recentNames = [];
 
   if (hidesHistory) {
@@ -205,6 +206,20 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
     }
   }
 
+  if(useColumns)
+  {
+    // Split into columns
+    document.getElementById('awsc-username-menu-recent-roles').style.webkitColumns = "2";
+    document.getElementById('awsc-username-menu-recent-roles').style.setProperty("-moz-columns", "2")
+    document.getElementById('awsc-username-menu-recent-roles').style.columns = "2";
+    document.getElementById('awsc-username-menu-recent-roles').style.paddingLeft = "0";
+    document.getElementById('awsc-username-menu-recent-roles').style.listStylePosition = "inside";
+    document.getElementById('awsc-username-menu-recent-roles').style.webkitColumnBreakInside = "avoid";
+    document.getElementById('awsc-username-menu-recent-roles').style.pageBreakInside = "avoid";
+    document.getElementById('awsc-username-menu-recent-roles').style.breakInside = "avoid";
+    document.getElementById('awsc-switch-role').style.marginTop = "1em";
+  }
+
   document.getElementById('nav-usernameMenu').addEventListener('click', () => {
     document.getElementById('AESR_RoleFilter').focus()
   })
@@ -250,4 +265,3 @@ function needsInvertForeColorByBack(color) {
 
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
 }
-

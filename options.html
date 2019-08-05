@@ -110,6 +110,7 @@ code {
  <section id="settings">
   <h1>Settings</h1>
   <ul>
+    <li><label for="useColumnsCheckBox"><input type="checkbox" id="useColumnsCheckBox">Use columns</label></li>
     <li><label for="hidesHistoryCheckBox"><input type="checkbox" id="hidesHistoryCheckBox">Hide original role history</label></li>
     <li><label for="hidesAccountIdCheckBox"><input type="checkbox" id="hidesAccountIdCheckBox">Hide account id</label></li>
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
@@ -153,7 +154,7 @@ image = "https://via.placeholder.com/150"
   </pre>
  </section>
  <section>
-  <h3>Complex Configuration</h3>  
+  <h3>Complex Configuration</h3>
   <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
   <ul>
    <li>A profile that has only <code>aws_account_id</code> (without a <code>role_name</code>) is defined as <b>base account</b></li>
