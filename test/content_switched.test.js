@@ -78,6 +78,29 @@ describe('ContentScripts', () => {
       })
     })
 
+    context('not hidesHistory and usesColumns', () => {
+      context('base-a profile', () => {
+        it('appends 4 roles but two of them already exist and uses columns', () => {
+          loadFixtures('awsmc-iam-switched', 'data');
+          document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
+          chrome.storage.sync.data.usesColumns = true;
+          extendIAMFormList();
+
+          expect(document.body.className.includes('user-type-federated')).to.be.true;
+          expect(document.body.className.includes('user-type-iam')).to.be.false;
+
+          const roles = Array.from(document.querySelectorAll('#awsc-username-menu-recent-roles li'))
+          expect(roles.length).to.eq(8);
+          expect(roles[0].querySelector('input[name="roleName"]').value).to.eq('stg-role');
+          expect(roles[0].querySelector('input[type="submit"]').value).to.eq('a-stg  |  555511113333');
+          expect(roles[3].querySelector('input[name="roleName"]').value).to.eq('contained_history_role');
+          expect(roles[5].querySelector('input[name="roleName"]').value).to.eq('independence_role');
+          expect(roles[6].querySelector('input[name="roleName"]').value).to.eq('prod-role');
+          expect(roles[6].querySelector('input[type="submit"]').value).to.eq('a-prod  |  555511114444');
+        })
+      })
+    })
+
     context('hidesHistory and usesColumns', () => {
       context('base-a profile', () => {
         it('hides histories and appends 4 roles and uses columns', () => {
