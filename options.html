@@ -43,6 +43,11 @@ a { text-decoration: none }
   font-weight: bold;
   margin: 5px 0;
 }
+#settingPane h1 {
+  font-size: 20px;
+  line-height: 1.125;
+  margin: 1em 0 .68em;
+}
 #settings ul {
   list-style: none;
   margin: 0 0; padding: 0;
@@ -79,6 +84,10 @@ pre {
   padding: 0.5ex;
 }
 input, button { font-size: 16px }
+code {
+  color: #222;
+  font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -107,18 +116,25 @@ input, button { font-size: 16px }
     <li><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </li>
   </ul>
  </section>
+ <section id="api">
+  <h1>Extension API</h1>
+  <div>
+   <label for="configSenderIdText">Config sender extension ID:</label>
+   <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex">
+  </div>
+ </section>
 </div>
 <div class="pane" id="howto">
  <h2>How to configure</h2>
  <section>
   <h3>Simple Configuration</h3>
-  <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name'.</p>
+  <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code>.</p>
 
   <h4>Optional parameters</h4>
   <ul>
-   <li>A 'color' parameter can be used to specify an RGB hex value without prefix '#'.</li>
-   <li>A 'region' parameter can be used to change the region whenever switching the role.</li>
-   <li>An 'image' parameter can be used to specify the uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.</li>
+   <li><code>color</code> - The RGB hex value (without the prefix '#') for the color of the header bottom border and around the current profile.</li>
+   <li><code>region</code> - Changing the region whenever switching the role if this parameter is specified.</li>
+   <li><code>image</code> - The uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.</li>
   </ul>
   <pre>
 [profile marketingadmin]
@@ -140,10 +156,11 @@ image = "https://via.placeholder.com/150"
   <h3>Complex Configuration</h3>  
   <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
   <ul>
-   <li>A profile that has only `aws_account_id` (without a role_name) is defined as <b>base account</b></li>
+   <li>A profile that has only <code>aws_account_id</code> (without a <code>role_name</code>) is defined as <b>base account</b></li>
    <li><b>If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.</b></li>
-   <li>A <b>target role</b> is associated with a <b>base account</b> by the <b>target role</b> specifying a 'source_profile'.</li>
-   <li>As above, <b>target roles</b> can be expressed with a 'role_arn' or with both 'aws_account_id' and 'role_name' and can optionally pass a 'color' parameter and a 'region' parameter.</li>
+   <li>A <b>target role</b> is associated with a <b>base account</b> by the <b>target role</b> specifying a <code>source_profile</code>.</li>
+   <li>As above, <b>target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code> and can pass the optional parameters.</li>
+   <li>If <code>target_role_name</code> is set in <b>base account</b>, the value is provided as the default role name for each <b>target roles</b>.</li>
   </ul>
   <pre>
 [organization1]
@@ -173,6 +190,22 @@ source_profile = baseaccount2
 [AnotherRole]
 role_name = SomeOtherRole
 aws_account_id = account-3-alias
+
+;
+; target_role_name example
+;
+[Org2-BaseAccount]
+aws_account_id = 222200000000
+target_role_name = Developer
+
+[Org2-Account1-Developer]
+aws_account_id = 222200001111
+source_profile = Org2-BaseAccount
+
+[Org2-Account2-Manager]
+aws_account_id = 222200002222
+role_name = Manager ; overrides target role name
+source_profile = Org2-BaseAccount
   </pre>
   <p>If you sign-in a base account, target roles of the other base accounts are excluded.</p>
   <p>The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite.  Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts.  Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown.  You won't see roles that your current role can't actually assume.</p>
@@ -180,10 +213,16 @@ aws_account_id = account-3-alias
  <section>
   <h3>Settings</h3>
   <ul>
-   <li>Can hide original role history (Show only roles in the configuration)</li>
-   <li>Can hide the account_id for each profile</li>
-   <li>Can filter to only show profiles with roles that match your role in your master account</li>
-   <li>Can automatically assume last assumed role on next sign-in if did not back to the base account and signed out (Experimental)</li>
+   <li><b>Hide original role history</b> hides original role history (Show only roles in the configuration).</li>
+   <li><b>Hide account id</b> hides the account_id for each profile.</li>
+   <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
+   <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
+  </ul>
+ </section>
+ <section>
+  <h3>Extension API</h3>
+  <ul>
+   <li><b>Config sender extension</b> allowed by the **ID** can send your switch roles configuration to this extension. <a href="https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension" target="_blank" rel="noopener noreferrer">See</a> how to make your config sender extension.</li>
   </ul>
  </section>
 </div>
