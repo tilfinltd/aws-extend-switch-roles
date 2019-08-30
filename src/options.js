@@ -1,15 +1,15 @@
-function elById (id) {
+function elById(id) {
   return document.getElementById(id);
 }
 
 // taken from: https://davidwalsh.name/convert-image-data-uri-javascript
 // converted to return a promise
-function getDataUri (profile) {
-  return new Promise(function (resolve, reject) {
+function getDataUri(profile) {
+  return new Promise(function(resolve, reject) {
     var image = new Image();
     image.setAttribute('crossOrigin', 'anonymous');
 
-    image.onload = function () {
+    image.onload = function() {
       var canvas = document.createElement('canvas');
       canvas.width = 64; // or 'width' if you want a special/scaled size
       canvas.height = 64; // or 'height' if you want a special/scaled size
@@ -21,7 +21,7 @@ function getDataUri (profile) {
       console.log(`Got data uri for: ${profile.image}: ${profile.imagedata}`);
       resolve(profile);
     };
-    image.onerror = function () {
+    image.onerror = function() {
       console.error(`Failed to load image: ${profile.image}`);
       reject(profile)
     }
@@ -31,18 +31,18 @@ function getDataUri (profile) {
   })
 }
 
-window.onload = function () {
+window.onload = function() {
   var colorPicker = new ColorPicker(document);
 
   var selection = [];
   var textArea = elById('awsConfigTextArea');
-  textArea.onselect = function () {
+  textArea.onselect = function() {
     var str = this.value.substring(this.selectionStart, this.selectionEnd);
     var r = str.match(/^([0-9a-fA-F]{6})$/);
     if (r !== null) {
       colorPicker.setColor(r[1]);
       selection = [this.selectionStart, this.selectionEnd];
-      colorPicker.onpick = function (newColor) {
+      colorPicker.onpick = function(newColor) {
         str = textArea.value;
         textArea.value = str.substring(0, selection[0]) + newColor + str.substring(selection[1]);
       }
@@ -54,7 +54,7 @@ window.onload = function () {
 
   var msgSpan = elById('msgSpan');
   var saveButton = elById('saveButton');
-  saveButton.onclick = function () {
+  saveButton.onclick = function() {
     var rawstr = textArea.value;
 
     try {
@@ -66,11 +66,11 @@ window.onload = function () {
       // map the profiles to promises. if there is an image specification but no
       // imagedata attribute then generate the data-uri otherwise resolve to the
       // original profile
-      Promise.all(profiles.map(function (profile) {
+      Promise.all(profiles.map(function(profile) {
         if (profile.image && !profile.imagedata) {
           return getDataUri(profile)
         }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
           resolve(profile)
         });
       })).then(values => {
@@ -82,7 +82,7 @@ window.onload = function () {
         const profileLines = [];
         let output = "";
         let currentProfile = undefined;
-        lines.forEach(function (line) {
+        lines.forEach(function(line) {
           if (r = line.match(/^\[(.+)\]$/)) {
             var pname = r[1].trim();
             pname = pname.replace(/^profile\s+/i, '');
@@ -101,15 +101,15 @@ window.onload = function () {
         });
 
         // re-render the profiles as string to update the UI and local storage
-        output += profileLines.map(function (profile) {
-          let match = values.find(function (value) {
+        output += profileLines.map(function(profile) {
+          let match = values.find(function(value) {
             return value.profile === profile.profile
           });
           // only add an imagedata line if there isn't one
-          if (!profile.lines.find(function (line) { return line.startsWith('imagedata'); })) {
+          if (!profile.lines.find(function(line) { return line.startsWith('imagedata'); })) {
             console.log('no imagedata');
             // add it after the image line if there is one
-            const index = profile.lines.findIndex(function (line) { return line.startsWith('image'); });
+            const index = profile.lines.findIndex(function(line) { return line.startsWith('image'); });
             if (index > -1) {
               profile.lines = profile.lines.slice(0, index + 1)
                 .concat([`imagedata = ${match.imagedata}`])
@@ -127,7 +127,7 @@ window.onload = function () {
         dataSet.lztext = LZString.compressToUTF16(output);
 
         chrome.storage.sync.set(dataSet,
-          function () {
+          function() {
             const { lastError } = chrome.runtime || browser.runtime;
             if (lastError) {
               msgSpan.innerHTML = Sanitizer.escapeHTML`<span style="color:#dd1111">${lastError.message}</span>`;
@@ -135,7 +135,7 @@ window.onload = function () {
             }
 
             msgSpan.innerHTML = '<span style="color:#1111dd">Configuration has been updated!</span>';
-            setTimeout(function () {
+            setTimeout(function() {
               msgSpan.innerHTML = '';
             }, 2500);
           });
@@ -149,16 +149,16 @@ window.onload = function () {
 
   const booleanSettings = ['hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
   for (let key of booleanSettings) {
-    elById(`${key}CheckBox`).onchange = function () {
+    elById(`${key}CheckBox`).onchange = function() {
       chrome.storage.sync.set({ [key]: this.checked });
     }
   }
 
-  elById('configSenderIdText').onchange = function () {
+  elById('configSenderIdText').onchange = function() {
     chrome.storage.sync.set({ configSenderId: this.value });
   }
 
-  chrome.storage.sync.get(['lztext', 'configSenderId'].concat(booleanSettings), function (data) {
+  chrome.storage.sync.get(['lztext', 'configSenderId'].concat(booleanSettings), function(data) {
     let rawData = localStorage['rawdata'];
     if (data.lztext) {
       try {
