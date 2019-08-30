@@ -105,9 +105,9 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
       let profile = profileSet.destProfiles.find(function (profile) {
         return profile.profile === name;
       });
-      if (profile && profile.image) {
+      if (profile && profile.imagedata) {
         li.querySelector('label.awsc-role-color').innerHTML = Sanitizer.escapeHTML`
-          <img src=${profile.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px">
+          <img src=${profile.imagedata} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px">
         `;
       }
       if (profileSet.excludedNames.includes(name)) {
@@ -132,7 +132,7 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
 
     var color = item.color || 'aaaaaa';
     var actionHost = window.location.host.endsWith('.amazonaws-us-gov.com') ? 'signin.amazonaws-us-gov.com' : 'signin.aws.amazon.com';
-    if (!item.image) {
+    if (!item.imagedata) {
         list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
          <form action="https://${actionHost}/switchrole" method="POST" target="_top" data-aesr-profile="${item.profile}">
           <input type="hidden" name="action" value="switchFromBasis">
@@ -158,7 +158,7 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="color" value="${color}">
           <input type="hidden" name="csrf" value="${csrf}">
           <input type="hidden" name="redirect_uri" value="${redirectUri}">
-          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.imagedata} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
           <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
                 title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
         </li>`);
@@ -229,8 +229,8 @@ function attachColorLine(profiles) {
     const color = found && found.color || null;
 
     var label = usernameMenu.querySelector('.nav-elt-label');
-    if (found && found.image) {
-      label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML`<img id="AESW_Image" src=${found.image.replace(/"/g, '')} style="float: left; padding-right: .66em; width: 1.33em; height: 1.33em">`);
+    if (found && found.imagedata) {
+      label.insertAdjacentHTML('beforebegin', Sanitizer.escapeHTML`<img id="AESW_Image" src=${found.imagedata} style="float: left; padding-right: .66em; width: 1.33em; height: 1.33em">`);
     }
 
     if (color) {
