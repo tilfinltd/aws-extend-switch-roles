@@ -105,9 +105,6 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
       let profile = profileSet.destProfiles.find(function (profile) {
         return profile.profile === name;
       });
-      console.log(profile);
-      console.log(profile.image);
-      console.log(li);
       if (profile.image) {
         li.querySelector('label.awsc-role-color').innerHTML = Sanitizer.escapeHTML`
           <img src=${profile.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px">
