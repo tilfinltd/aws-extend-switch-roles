@@ -142,7 +142,7 @@ window.onload = function() {
       }).catch(error => {
         console.log(error.message);
       });
-    } catch (e) {
+    } catch(e) {
       msgSpan.innerHTML = '<span style="color:#dd1111">Failed to save because of invalid format!</span>';
     }
   }
@@ -163,7 +163,7 @@ window.onload = function() {
     if (data.lztext) {
       try {
         rawData = LZString.decompressFromUTF16(data.lztext);
-      } catch (err) {
+      } catch(err) {
         rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
       }
     }
