@@ -59,12 +59,15 @@ describe('Profile', () => {
         { profile: 'targetex', aws_account_id: '333300001112',
           role_name: 'roleex' },
         { profile: 'target4', aws_account_id: '222200001112',
-          role_name: 'role3', source_profile: 'base2' }
+          role_name: 'role3', source_profile: 'base2' },
+        { profile: 'target5', aws_account_id: '333300001113',
+          region: 'OverrideRegion', source_profile: 'base1' }
       ]);
 
       expect(profileSet.destProfiles[0].profile).to.eq('targetex');
       expect(profileSet.destProfiles[1]).to.deep.include({ profile: 'target1', region: 'DefaultRegion' });
       expect(profileSet.destProfiles[2]).to.deep.include({ profile: 'target2', region: 'DefaultRegion' });
+      expect(profileSet.destProfiles[3]).to.deep.include({ profile: 'target5', region: 'OverrideRegion' });
       expect(profileSet.excludedNames[0]).to.eq('target4');
     })
   })
