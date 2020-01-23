@@ -12,11 +12,7 @@ function extendIAMFormList() {
 
   const lastRoleKey = autoAssumeLastRole.createKey();
 
-  chrome.storage.sync.get([
-    'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
-    'autoAssumeLastRole', lastRoleKey
-  ], function(data) {
+  chrome.storage.sync.get(null, function(data) {
     var hidesHistory = data.hidesHistory || false;
     var hidesAccountId = data.hidesAccountId || false;
     var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
@@ -24,10 +20,10 @@ function extendIAMFormList() {
 
     if (data.profiles) {
       const dps = new DataProfilesSplitter();
-      const profiles = dps.profilesFromDataSet(data);
+      const aws_profiles = dps.profilesFromDataSet(data);
 
-      loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
-      attachColorLine(profiles);
+      loadProfiles(new ProfileSet(aws_profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
+      attachColorLine(aws_profiles);
     }
     // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
     autoAssumeLastRole.execute(data[lastRoleKey], list);

@@ -15,7 +15,6 @@ function saveAwsConfig(data, callback) {
 
     const dps = new DataProfilesSplitter();
     const dataSet = dps.profilesToDataSet(profiles);
-    dataSet.lztext = LZString.compressToUTF16(rawstr);
 
     chrome.storage.sync.set(dataSet,
       function() {
