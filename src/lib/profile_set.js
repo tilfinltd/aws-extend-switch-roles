@@ -1,5 +1,5 @@
 export class ProfileSet {
-  constructor(items, baseAccount, { filterByTargetRole }) {
+  constructor(items, baseAccount, entryRole, { filterByTargetRole }) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
@@ -14,13 +14,15 @@ export class ProfileSet {
         }
       } else if (item.aws_account_id && item.role_name && !item.target_role_name) {
         independentDests.push(item);
+      } else if (item.entry_role) {
+        this.srcProfileMap[item.aws_account_id + '/' + item.entry_role] = item;
       } else {
         this.srcProfileMap[item.aws_account_id] = item;
       }
     });
 
     let complexDests = [];
-    const baseProfile = this.srcProfileMap[baseAccount];
+    const baseProfile = this.srcProfileMap[baseAccount + "/" + entryRole] || this.srcProfileMap[baseAccount];
     if (baseProfile) {
       complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, filterByTargetRole);
       delete destsBySrcMap[baseProfile.profile];

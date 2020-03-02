@@ -122,8 +122,9 @@ function loadFormList(currentUrl, userInfo, tabId) {
         } = userInfo;
   
         const baseAccount = brushAccountId(loginDisplayNameAccount);
+        const entryRole = loginDisplayNameUser.split("/", 2)[0];
         const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
-        const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
+        const profileSet = new ProfileSet(profiles, baseAccount, entryRole, { filterByTargetRole });
   
         const list = document.getElementById('roleList');
         loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
