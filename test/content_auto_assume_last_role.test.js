@@ -1,9 +1,27 @@
 describe('Auto assume last assumed role on content script', () => {
+  afterEach(() => { browser.runtime.data['get-current-tab-context'] = '' })
+
   it('triggers clicking the submit button of target role form', (done) => {
     loadFixtures('awsmc-iam', 'data');
     document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
     chrome.storage.sync.data.autoAssumeLastRole = true;
     chrome.storage.sync.data.lastRole_555511112222_tilfin = '555511113333_stg-role';
+    extendIAMFormList().then(() => {
+      const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(7)')
+      form.onsubmit = () => {
+        done();
+        return false;
+      }
+    });
+  })
+
+  it('triggers clicking the submit button of target role form in a tab container', (done) => {
+    loadFixtures('awsmc-iam', 'data');
+    document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
+    browser.runtime.data['get-current-tab-context'] = 'test-context';
+    chrome.storage.sync.data.autoAssumeLastRole = true;
+    chrome.storage.sync.data['lastRole_555511112222_tilfin'] = '123456789012-role';
+    chrome.storage.sync.data['lastRole_555511112222_tilfin_test-context'] = '555511113333_stg-role';
     extendIAMFormList().then(() => {
       const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(7)')
       form.onsubmit = () => {

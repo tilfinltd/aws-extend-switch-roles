@@ -7,7 +7,7 @@ class AutoAssumeLastRole {
 
   setup() { // Promise<void>;
     return browser.runtime.sendMessage({ action: 'get-current-tab-context' })
-      .then(tabContext => { this.tabContext = tabContext });
+      .then(tabContext => { this.tabContext = (tabContext) ? `_${tabContext}` : '' });
   }
 
   execute(targetIdRole, list) {
