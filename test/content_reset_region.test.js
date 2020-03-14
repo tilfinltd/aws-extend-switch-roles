@@ -12,7 +12,7 @@ describe('Content redirect_uri', () => {
     loadFixtures('awsmc-iam', 'data');
     document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
     chrome.storage.sync.data.hidesHistory = true;
-    extendIAMFormList();
+    return extendIAMFormList();
   })
 
   context('clicking a-prod of list when base-a profile', () => {

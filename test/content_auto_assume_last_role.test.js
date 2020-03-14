@@ -4,12 +4,13 @@ describe('Auto assume last assumed role on content script', () => {
     document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
     chrome.storage.sync.data.autoAssumeLastRole = true;
     chrome.storage.sync.data.lastRole_555511112222_tilfin = '555511113333_stg-role';
-    extendIAMFormList();
-    const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(7)')
-    form.onsubmit = () => {
-      done();
-      return false;
-    }
+    extendIAMFormList().then(() => {
+      const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(7)')
+      form.onsubmit = () => {
+        done();
+        return false;
+      }
+    });
   })
 
   context('hides histories', () => {
@@ -19,12 +20,13 @@ describe('Auto assume last assumed role on content script', () => {
       chrome.storage.sync.data.hidesHistory = true;
       chrome.storage.sync.data.autoAssumeLastRole = true;
       chrome.storage.sync.data.lastRole_555511112222_tilfin = '555511113333_stg-role';
-      extendIAMFormList();
-      const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(3)')
-      form.onsubmit = () => {
-        done();
-        return false;
-      }
+      extendIAMFormList().then(() => {
+        const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(3)')
+        form.onsubmit = () => {
+          done();
+          return false;
+        }
+      });
     })
   })
 
@@ -34,13 +36,14 @@ describe('Auto assume last assumed role on content script', () => {
       document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
       chrome.storage.sync.data.autoAssumeLastRole = false;
       chrome.storage.sync.data.lastRole_555511112222_tilfin = '555511113333_stg-role';
-      extendIAMFormList();
-      const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(7)')
-      form.onsubmit = () => {
-        done('must not occurr');
-        return false;
-      }
-      done();
+      extendIAMFormList().then(() => {
+        const form = document.querySelector('#awsc-username-menu-recent-roles li:nth-child(7)')
+        form.onsubmit = () => {
+          done('must not occurr');
+          return false;
+        }
+        done();
+      });
     })
   })
 
@@ -50,14 +53,15 @@ describe('Auto assume last assumed role on content script', () => {
       document.getElementById('awsc-login-display-name-account').textContent = '5555-1111-2222';
       chrome.storage.sync.data.autoAssumeLastRole = true;
       chrome.storage.sync.data.lastRole_555511112222_tilfin = '555511113333_stg-role';
-      extendIAMFormList();
-      const form = document.getElementById('awsc-exit-role-form');
-      form.addEventListener('submit', function(e) {
-        expect(chrome.storage.sync.data.lastRole_555511112222_tilfin).to.null;
-        e.preventDefault(); 
-        done();
+      extendIAMFormList().then(() => {
+        const form = document.getElementById('awsc-exit-role-form');
+        form.addEventListener('submit', function(e) {
+          expect(chrome.storage.sync.data.lastRole_555511112222_tilfin).to.null;
+          e.preventDefault(); 
+          done();
+        });
+        form.querySelector('input[type="submit"]').click();
       });
-      form.querySelector('input[type="submit"]').click();
     })
   })
 })

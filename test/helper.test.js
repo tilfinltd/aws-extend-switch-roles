@@ -2,6 +2,14 @@ chrome = {
   extension: {
     getURL: function(){}
   },
+  runtime: {
+    sendMessage: function(message) {
+      return Promise.resolve(this.data[message.action]);
+    },
+    data: { 
+      'get-current-tab-context': ''
+    }
+  },
   storage: {
     sync: {
       get: function(names, cb){
