@@ -24,6 +24,7 @@
       ],
       "all_frames": true,
       "js": [
+        "js/browser-polyfill.js",
         "js/sanitizer.js",
         "js/content.js"
       ],
@@ -39,6 +40,7 @@
   ],
   "background": {
     "scripts": [
+      "js/browser-polyfill.js",
       "js/background.js"
     ],
     "persistent": false

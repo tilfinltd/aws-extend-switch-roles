@@ -41,6 +41,7 @@ jq -s '.[0] * .[1]' manifest.json manifest_firefox.json > dist/firefox/manifest.
 
 for brw in `ls dist`
 do
+  \cp node_modules/webextension-polyfill/dist/browser-polyfill.js dist/$brw/js/
   \cp src/csrf-setter.js dist/$brw/js/
   \cp src/sanitizer.js dist/$brw/js/
   \cp -r *.html dist/$brw/

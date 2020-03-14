@@ -2,14 +2,6 @@ chrome = {
   extension: {
     getURL: function(){}
   },
-  runtime: {
-    sendMessage: function(message) {
-      return Promise.resolve(this.data[message.action]);
-    },
-    data: { 
-      'get-current-tab-context': ''
-    }
-  },
   storage: {
     sync: {
       get: function(names, cb){
@@ -27,6 +19,16 @@ chrome = {
     }
   }
 };
+browser = {
+  runtime: {
+    sendMessage: function(message) {
+      return Promise.resolve(this.data[message.action]);
+    },
+    data: { 
+      'get-current-tab-context': ''
+    }
+  },
+}
 
 function loadFixtures(html, json) {
   const args = [`${html}.html`];
