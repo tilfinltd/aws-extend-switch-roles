@@ -1,6 +1,6 @@
 const autoAssumeLastRole = new AutoAssumeLastRole();
 
-function extendIAMFormList() {
+async function extendIAMFormList() {
   var csrf, list = elById('awsc-username-menu-recent-roles');
   if (list) {
     var firstForm = list.querySelector('#awsc-recent-role-0 form');
@@ -10,6 +10,10 @@ function extendIAMFormList() {
     csrf = '';
   }
 
+  console.log('Before await')
+  await autoAssumeLastRole.setup();
+  console.log('After await')
+  
   const lastRoleKey = autoAssumeLastRole.createKey();
 
   chrome.storage.sync.get([

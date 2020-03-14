@@ -31,6 +31,15 @@ function saveAwsConfig(data, callback) {
   }
 }
 
+chrome.runtime.onMessage.addListener(async (message, sender) => {
+  console.log(JSON.stringify(message));
+  if (message.action === 'get-current-tab-context') {
+    // const currentTab = await browser.tabs.getCurrentTab();
+    // return currentTab.cookieStoreId || ''
+    return sender.tab.cookieStoreId || '';
+  }
+})
+
 chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResponse) {
   const { action, dataType, data } = message || {};
   if (!action || !dataType || !data) return;

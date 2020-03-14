@@ -1,6 +1,12 @@
 class AutoAssumeLastRole {
   constructor() {
     this.enabled = false;
+    // this.tabContextWaiter = chrome.sendMessage({ action: "get-current-tab-context" }) // Promise<void>;
+    //   .then(tabContext => this.tabContext = tabContext)  }
+  }
+
+  async setup() { // Promise<void>;
+    this.tabContext = await chrome.runtime.sendMessage({ action: "get-current-tab-context" });
   }
 
   execute(targetIdRole, list) {
@@ -41,7 +47,7 @@ class AutoAssumeLastRole {
   createKey() {
     const accountId = getAccountId('awsc-login-display-name-account');
     const user = elById('awsc-login-display-name-user').textContent.trim().replace(/(.*)\/.*/, '$1');
-    return `lastRole_${accountId}_${user}`;
+    return `lastRole_${accountId}_${user}${this.tabContext}`;
   }
 
   hasAssumedRole() {
