@@ -1,6 +1,6 @@
 const autoAssumeLastRole = new AutoAssumeLastRole();
 
-async function extendIAMFormList() {
+function extendIAMFormList() {
   var csrf, list = elById('awsc-username-menu-recent-roles');
   if (list) {
     var firstForm = list.querySelector('#awsc-recent-role-0 form');
@@ -11,30 +11,31 @@ async function extendIAMFormList() {
   }
 
   console.log('Before await')
-  await autoAssumeLastRole.setup();
-  console.log('After await')
+  return autoAssumeLastRole.setup().then(() => {
+    console.log('After await')
   
-  const lastRoleKey = autoAssumeLastRole.createKey();
+    const lastRoleKey = autoAssumeLastRole.createKey();
 
-  chrome.storage.sync.get([
-    'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
-    'autoAssumeLastRole', lastRoleKey
-  ], function(data) {
-    var hidesHistory = data.hidesHistory || false;
-    var hidesAccountId = data.hidesAccountId || false;
-    var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
-    autoAssumeLastRole.enabled = data.autoAssumeLastRole || false;
+    chrome.storage.sync.get([
+      'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
+      'hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles',
+      'autoAssumeLastRole', lastRoleKey
+    ], function(data) {
+      var hidesHistory = data.hidesHistory || false;
+      var hidesAccountId = data.hidesAccountId || false;
+      var showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
+      autoAssumeLastRole.enabled = data.autoAssumeLastRole || false;
 
-    if (data.profiles) {
-      const dps = new DataProfilesSplitter();
-      const profiles = dps.profilesFromDataSet(data);
+      if (data.profiles) {
+        const dps = new DataProfilesSplitter();
+        const profiles = dps.profilesFromDataSet(data);
 
-      loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
-      attachColorLine(profiles);
-    }
-    // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
-    autoAssumeLastRole.execute(data[lastRoleKey], list);
+        loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list, csrf, hidesHistory, hidesAccountId);
+        attachColorLine(profiles);
+      }
+      // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
+      autoAssumeLastRole.execute(data[lastRoleKey], list);
+    });
   });
 }
 

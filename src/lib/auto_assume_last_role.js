@@ -5,8 +5,9 @@ class AutoAssumeLastRole {
     //   .then(tabContext => this.tabContext = tabContext)  }
   }
 
-  async setup() { // Promise<void>;
-    this.tabContext = await chrome.runtime.sendMessage({ action: "get-current-tab-context" });
+  setup() { // Promise<void>;
+    return chrome.runtime.sendMessage({ action: "get-current-tab-context" })
+      .then(tabContext => { this.tabContext = tabContext });
   }
 
   execute(targetIdRole, list) {
