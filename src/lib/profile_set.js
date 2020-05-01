@@ -43,6 +43,11 @@ class ProfileSet {
       if (!profile.role_name) {
         profile.role_name = baseProfile.target_role_name
       }
+
+      if (!profile.region && baseProfile.target_region) {
+        profile.region = baseProfile.target_region
+      }
+      
       return profile
     })
 
