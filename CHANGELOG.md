@@ -1,9 +1,10 @@
 Changelog
 =========
 
-## v0.14.1 (2020/01/13)
+## v0.15.0 (2020/05/16)
 
-- Support AWS China Partition
+- Support AWS China Partition (thanks to @int32bit)
+
 
 ## v0.14.0 (2019/07/24)
 
