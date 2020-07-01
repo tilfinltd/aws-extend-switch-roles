@@ -74,27 +74,37 @@ function main() {
 
 function loadFormList(currentUrl, userInfo, tabId) {
   chrome.storage.sync.get([
-    'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
+    'profileLocalStorage', 'configSenderId',
     'hidesAccountId', 'showOnlyMatchingRoles',
-  ], function(data) {
-    const hidesAccountId = data.hidesAccountId || false;
-    const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
+  ], function(settings) {
+    const hidesAccountId = settings.hidesAccountId || false;
+    const showOnlyMatchingRoles = settings.showOnlyMatchingRoles || false;
 
-    if (data.profiles) {
-      const dps = new DataProfilesSplitter();
-      const profiles = dps.profilesFromDataSet(data);
-      const {
-        loginDisplayNameAccount, loginDisplayNameUser,
-        roleDisplayNameAccount, roleDisplayNameUser, isGlobal
-      } = userInfo;
+    const storageType = settings.profileLocalStorage ? 'local' : 'sync'
+    chrome.storage[storageType].get([
+      'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'
+    ], function(data) {
+      if(data.profiles) {
+        const dps = new DataProfilesSplitter();
+        const profiles = dps.profilesFromDataSet(data);
+      }
 
-      const baseAccount = brushAccountId(loginDisplayNameAccount);
-      const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
-      const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
+      if (data.profiles) {
+        const dps = new DataProfilesSplitter();
+        const profiles = dps.profilesFromDataSet(data);
+        const {
+          loginDisplayNameAccount, loginDisplayNameUser,
+          roleDisplayNameAccount, roleDisplayNameUser, isGlobal
+        } = userInfo;
 
-      const list = document.getElementById('roleList');
-      loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
-    }
+        const baseAccount = brushAccountId(loginDisplayNameAccount);
+        const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
+        const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
+
+        const list = document.getElementById('roleList');
+        loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
+      }
+    });
   });
 }
 

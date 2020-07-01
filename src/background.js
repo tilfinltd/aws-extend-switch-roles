@@ -1,36 +1,3 @@
-function saveAwsConfig(data, callback) {
-  const rawstr = data;
-
-  try {
-    const profiles = loadAwsConfig(rawstr);
-    if (profiles.length > 200) {
-      callback({
-        result: 'failure',
-        error: {
-          message: 'The number of profiles exceeded maximum 200.'
-        }
-      });
-      return;
-    }
-
-    const dps = new DataProfilesSplitter();
-    const dataSet = dps.profilesToDataSet(profiles);
-    dataSet.lztext = LZString.compressToUTF16(rawstr);
-
-    chrome.storage.sync.set(dataSet,
-      function() {
-        callback({ result: 'success' });
-      });
-  } catch (e) {
-    callback({
-      result: 'failure',
-      error: {
-        message: e.message
-      }
-    });
-  }
-}
-
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
   let page = null;

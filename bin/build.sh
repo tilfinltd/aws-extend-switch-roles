@@ -10,7 +10,8 @@ options=dist/chrome/js/options.js
 popup=dist/chrome/js/popup.js
 background=dist/chrome/js/background.js
 
-cat src/lib/load_aws_config.js         > $options
+cat src/lib/save_aws_config.js        >  $options
+cat src/lib/load_aws_config.js        >> $options
 cat src/lib/color_picker.js           >> $options
 cat src/lib/data_profiles_splitter.js >> $options
 cat src/lib/lz-string.min.js          >> $options
@@ -20,8 +21,9 @@ cat src/lib/profile_set.js            >  $popup
 cat src/lib/data_profiles_splitter.js >> $popup
 cat src/popup.js                      >> $popup
 
-cat src/lib/data_profiles_splitter.js  > $background
+cat src/lib/save_aws_config.js        >  $background
 cat src/lib/load_aws_config.js        >> $background
+cat src/lib/data_profiles_splitter.js >> $background
 cat src/lib/lz-string.min.js          >> $background
 cat src/background.js                 >> $background
 
