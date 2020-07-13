@@ -36,7 +36,7 @@ cat src/background.js                 >> $background
 \cp -f $popup      dist/firefox/js/popup.js
 \cp -f $background dist/firefox/js/background.js
 
-\cp -f manifest.json dist/chrome/
+jq -s '.[0] * .[1]' manifest.json manifest_chrome.json > dist/chrome/manifest.json
 jq -s '.[0] * .[1]' manifest.json manifest_firefox.json > dist/firefox/manifest.json
 
 for brw in `ls dist`
