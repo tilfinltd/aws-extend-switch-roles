@@ -157,7 +157,7 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="color" value="${color}">
           <input type="hidden" name="csrf" value="${csrf}">
           <input type="hidden" name="redirect_uri" value="${redirectUri}">
-          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
+          <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="background-color: #${color}; margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
           <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
                 title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
         </li>`);
