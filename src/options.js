@@ -59,7 +59,7 @@ window.onload = function() {
     }
   }
 
-  const booleanSettings = ['hidesHistory', 'hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
+  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
   for (let key of booleanSettings) {
     elById(`${key}CheckBox`).onchange = function() {
       chrome.storage.sync.set({ [key]: this.checked });
@@ -83,6 +83,11 @@ window.onload = function() {
     elById('configSenderIdText').value = data.configSenderId || '';
     for (let key of booleanSettings) {
       elById(`${key}CheckBox`).checked = data[key] || false;
+    }
+
+    if ('hidesHistory' in data) {
+      // clean deprecated key
+      chrome.storage.sync.remove(['hidesHistory'], () => {})
     }
   });
 }

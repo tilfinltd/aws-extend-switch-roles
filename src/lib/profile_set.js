@@ -1,9 +1,10 @@
 class ProfileSet {
-  constructor(items, showOnlyMatchingRoles) {
+  constructor(items, showOnlyMatchingRoles, baseAccountId) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
     let independentDests = [];
+    this.baseAccountId = baseAccountId;
 
     items.forEach(item => {
       if (item.source_profile) {
@@ -34,8 +35,7 @@ class ProfileSet {
   }
 
   _getBaseProfile() {
-    let baseAccountId = getAccountId('awsc-login-display-name-account');
-    return this.srcProfileMap[baseAccountId];
+    return this.srcProfileMap[this.baseAccountId];
   }
 
   _decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles }) {

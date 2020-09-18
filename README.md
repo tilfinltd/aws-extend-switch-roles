@@ -115,7 +115,6 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 ## Settings
 
-- **Hide original role history** hides original role history (Show only roles in the configuration).
 - **Hide account id** hides the account_id for each profile.
 - **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
 - **Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.
