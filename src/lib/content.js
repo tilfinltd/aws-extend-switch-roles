@@ -119,6 +119,14 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
   const redirectUri = encodeURIComponent(window.location.href);
   profileSet.destProfiles.forEach(function(item) {
     var name = item.profile;
+
+    var usernameMenu = elById('nav-usernameMenu');
+    var newAwsUiBackground = '';
+
+    if (!usernameMenu.classList.contains('awsc-has-switched-role')) {
+      var newAwsUiBackground = 'border: 0px; background-color: #232f3e; color: #fff; margin: 5px 0px;'
+    }
+
     if (recentNames.indexOf(name) !== -1) return true;
     if (!hidesAccountId) name += '  |  ' + item.aws_account_id;
 
@@ -144,7 +152,7 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="redirect_uri" value="${redirectUri}">
           <label for="awsc-recent-role-switch-0" class="awsc-role-color" style="background-color: #${color};">&nbsp;</label>
           <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
-                title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
+                title="${item.role_name}@${item.aws_account_id}" style="white-space:pre;` + newAwsUiBackground + `"></form>
         </li>`);
     } else {
         list.insertAdjacentHTML('beforeend', Sanitizer.escapeHTML`<li>
@@ -159,7 +167,7 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
           <input type="hidden" name="redirect_uri" value="${redirectUri}">
           <label for="awsc-recent-role-switch-0" class="awsc-role-color"><img src=${item.image.replace(/"/g, '')} style="margin-top: -1px; margin-left: -1px; width: 17px; height: 17px"></label>
           <input type="submit" class="awsc-role-submit awsc-role-display-name" name="displayName" value="${name}"
-                title="${item.role_name}@${item.aws_account_id}" style="white-space:pre"></form>
+                title="${item.role_name}@${item.aws_account_id}" style="white-space:pre;` + newAwsUiBackground + `"></form>
         </li>`);
 
     }
@@ -219,13 +227,12 @@ function loadProfiles(profileSet, list, csrf, hidesHistory, hidesAccountId) {
 
 function attachColorLine(profiles) {
   var usernameMenu = elById('nav-usernameMenu');
+  var profileName = usernameMenu.textContent.trim().split(/\s+\|\s+/)[0];
+  const found = profiles.find(item => { return item.profile === profileName });
+  const color = found && found.color || null;
+
   if (usernameMenu.classList.contains('awsc-has-switched-role')) {
-    var profileName = usernameMenu.textContent.trim().split(/\s+\|\s+/)[0];
-
     usernameMenu.style = 'white-space:pre';
-
-    const found = profiles.find(item => { return item.profile === profileName });
-    const color = found && found.color || null;
 
     var label = usernameMenu.querySelector('.nav-elt-label');
     if (found && found.image) {
@@ -243,6 +250,9 @@ function attachColorLine(profiles) {
       barDiv.style = 'position:absolute;top:39px;width:100%;height:3px;z-index:0;background-color:#' + color;
       menubar.appendChild(barDiv);
     }
+  } else {
+    var h = elById('h');
+    h.style = 'border-bottom: 2px solid #' + color;
   }
 }
 
@@ -257,4 +267,3 @@ function needsInvertForeColorByBack(color) {
 
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
 }
-
