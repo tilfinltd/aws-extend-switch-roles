@@ -67,6 +67,13 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
     const configSenderIds = (settings.configSenderId || '').split(',');
     if (configSenderIds.includes(sender.id)) {
       saveAwsConfig(data, sendResponse)
+    } else {
+      setTimeout(() => {
+        sendResponse({
+          result: 'failure',
+          error: { message: 'Invalid sender ID' }
+        });
+      }, 1000); // delay to prevent to try scanning id
     }
   })
 })
