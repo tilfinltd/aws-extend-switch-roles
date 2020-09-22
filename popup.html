@@ -2,7 +2,11 @@
 <head>
 <style>
 html { padding: 0 }
-body { margin: 0; padding: 0 }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, Meiryo, sans-serif;
+}
 .optionMenu {
   list-style: none;
   padding: 0;
@@ -35,18 +39,19 @@ main {
   min-width: 240px;
   border-right: 1px solid #ddd;
   padding-left: 10px;
-  margin-right: 10px;
+  margin-right: 4px;
   padding-right: 10px;
 }
 #roleList {
   padding: 0;
   margin: 0;
-  overflow-y: auto;
+  overflow-x: hidden;
   max-height: 550px;
+  scrollbar-width: thin;
 }
 #roleList li {
   padding: 0;
-  margin: 4px 2px;
+  margin: 4px 10px 4px 2px;
   list-style: none;
   white-space: nowrap;
   vertical-align: middle;
@@ -74,6 +79,11 @@ main {
   font-size: 95%;
   font-weight: normal;
   margin-left: 1.25em;
+}
+p.errmsg {
+  color: #dd1111;
+  font-size: 12px;
+  padding: 10px;
 }
 </style>
 </head>

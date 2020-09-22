@@ -26,7 +26,7 @@ function executeScript(code) {
   if (window.chrome) {
     return new Promise((resolve) => {
       chrome.tabs.executeScript({ code }, (result) => {
-        resolve(result[0])
+        resolve(result && result[0])
       })
     })
   } else if (window.browser) {
@@ -66,11 +66,23 @@ window.onload = function() {
   getCurrentTab()
     .then(tab => {
       const url = new URL(tab.url)
-      if (url.host.endsWith('aws.amazon.com')
-       || url.host.endsWith('amazonaws-us-gov.com')
-       || url.host.endsWith('console.amazonaws.cn')) {
-        loadFormList(url);
-        document.querySelector('main').style.display = 'block';
+      if (url.host.endsWith('.aws.amazon.com')
+       || url.host.endsWith('.amazonaws-us-gov.com')
+       || url.host.endsWith('.amazonaws.cn')) {
+
+        executeScript(`
+          if (!window.AESR_script) {
+            window.AESR_script = document.createElement('script');
+            AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
+            document.body.appendChild(AESR_script);
+          }
+        `)
+        .then(() => {
+          setTimeout(() => {
+            loadFormList(url);
+            document.querySelector('main').style.display = 'block';
+          }, 0)
+        })
       }
     })
 }
@@ -101,6 +113,12 @@ function loadFormList(currentUrl) {
             currentUrl,
           }
           loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles, baseAccount), opts, hidesAccountId);
+        })
+        .catch(err => {
+          const p = document.createElement('p');
+          p.className = 'errmsg';
+          p.textContent = "The Console is not yet fully loaded.";
+          document.getElementById('main').appendChild(p)
         })
     }
   });
