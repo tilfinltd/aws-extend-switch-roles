@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v0.15.0 (2020/05/16)
+
+- Support AWS China Partition (thanks to @int32bit)
+
+
 ## v0.14.0 (2019/07/24)
 
 - Support Config sender extension of External API

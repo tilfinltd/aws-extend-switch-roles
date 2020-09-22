@@ -31,6 +31,18 @@ function saveAwsConfig(data, callback) {
   }
 }
 
+chrome.runtime.onInstalled.addListener(function (details) {
+  const { reason } = details;
+  let page = null;
+  if (reason === 'install' || reason === 'update') {
+    page = 'updated.html'
+  }
+  if (page) {
+    const url = chrome.extension.getURL(page)
+    chrome.tabs.create({ url }, function(){});
+  }
+})
+
 chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResponse) {
   const { action, dataType, data } = message || {};
   if (!action || !dataType || !data) return;

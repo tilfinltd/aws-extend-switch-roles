@@ -17,7 +17,7 @@ The bottom of the console header is emphasized with your specified color if you 
 
 [AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
 
-[AWS Extend Switch Roles :: Add-ons for Firefox](https://addons.mozilla.org/ja/firefox/addon/aws-extend-switch-roles3/)
+[AWS Extend Switch Roles :: Add-ons for Firefox](https://addons.mozilla.org/firefox/addon/aws-extend-switch-roles3/)
 
 ## Configuration
 
