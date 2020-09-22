@@ -144,7 +144,7 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
     anchor.dataset.account = item.aws_account_id;
     anchor.dataset.color = color;
     anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region);
-    anchor.dataset.search = item.profile + ' ' + item.aws_account_id;
+    anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
     anchor.appendChild(headSquare);
     anchor.appendChild(document.createTextNode(item.profile));
@@ -152,7 +152,7 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
     if (hidesAccountId) {
       anchor.dataset.displayname = item.profile;
     } else {
-      anchor.dataset.displayname = item.profile.toLowerCase() + '  |  ' + item.aws_account_id;
+      anchor.dataset.displayname = item.profile + '  |  ' + item.aws_account_id;
 
       const accountIdSpan = document.createElement('span');
       accountIdSpan.className = 'suffixAccountId';
@@ -173,7 +173,7 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
 
   let AWSR_firstAnchor = null;
   document.getElementById('roleFilter').onkeyup = function(e) {
-    const str = this.value;
+    const words = this.value.split(' ');
     if (e.keyCode === 13) {
       if (AWSR_firstAnchor) {
         AWSR_firstAnchor.click()
@@ -184,9 +184,8 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
       lis.forEach(li => {
         const anchor = li.querySelector('a')
         const profileName = anchor.dataset.search;
-        const hit = str ? profileName.indexOf(str) > -1 : false;
-        const shown = str ? hit : true;
-        li.style.display = shown ? 'block' : 'none';
+        const hit = words.every(it => profileName.includes(it));
+        li.style.display = hit ? 'block' : 'none';
         li.style.background = null;
         if (hit && firstHitLi === null) firstHitLi = li;
       });
