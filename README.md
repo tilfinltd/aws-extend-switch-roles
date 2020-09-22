@@ -17,7 +17,7 @@ The bottom of the console header is emphasized with your specified color if you 
 
 [AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
 
-[AWS Extend Switch Roles :: Add-ons for Firefox](https://addons.mozilla.org/ja/firefox/addon/aws-extend-switch-roles3/)
+[AWS Extend Switch Roles :: Add-ons for Firefox](https://addons.mozilla.org/firefox/addon/aws-extend-switch-roles3/)
 
 ## Configuration
 
@@ -62,6 +62,7 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 - As above, **target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name` and can optionally pass the optional parameters.
 
 - If `target_role_name` is set in **base account**, the value is provided as the default role name for each **target roles**.
+- If `target_region` is set in **base account**, the value is provided as the default region for each **target roles**.
 
 ```
 [organization1]
