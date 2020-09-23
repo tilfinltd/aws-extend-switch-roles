@@ -16,5 +16,5 @@ function appendAESRForm() {
 if (document.body) {
   setTimeout(() => {
     appendAESRForm()
-  }, 0)
+  }, 50)
 }

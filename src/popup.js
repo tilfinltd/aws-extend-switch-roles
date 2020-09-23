@@ -173,7 +173,7 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
 
   let AWSR_firstAnchor = null;
   document.getElementById('roleFilter').onkeyup = function(e) {
-    const words = this.value.split(' ');
+    const words = this.value.toLowerCase().split(' ');
     if (e.keyCode === 13) {
       if (AWSR_firstAnchor) {
         AWSR_firstAnchor.click()
