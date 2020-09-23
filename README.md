@@ -1,3 +1,8 @@
+<h1 align="center">Plugin Broken Following AWS Console UI Update</h1>
+<h2 align="center">https://github.com/tilfin/aws-extend-switch-roles/issues/156</h2>
+
+---
+
 # AWS Extend Switch Roles
 
 [![Build Status](https://travis-ci.org/tilfin/aws-extend-switch-roles.svg?branch=master)](https://travis-ci.org/tilfin/aws-extend-switch-roles)
