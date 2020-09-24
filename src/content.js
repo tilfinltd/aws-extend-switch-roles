@@ -1,10 +1,13 @@
-function appendAESRForm() {
+function appendAESRForm(tryCount) {
   let switchLink= document.querySelector('#menu--account *[data-testid="awsc-switch-roles"]');
   if (!switchLink) {
-    switchLink = document.getElementById('awsc-switch-role'); // old UI
+    if (tryCount === 2) return;
+    setTimeout(() => {
+      appendAESRForm(++tryCount);
+    }, 100);
   }
-  const actionHost = new URL(switchLink.href).host;
 
+  const actionHost = new URL(switchLink.href).host;
   const form = document.createElement('form');
   form.id = 'AESR_form';
   form.method = 'POST';
@@ -15,6 +18,6 @@ function appendAESRForm() {
 
 if (document.body) {
   setTimeout(() => {
-    appendAESRForm()
+    appendAESRForm(0)
   }, 50)
 }

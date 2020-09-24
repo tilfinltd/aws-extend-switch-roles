@@ -63,6 +63,10 @@ window.onload = function() {
     return false;
   }
 
+  main();
+}
+
+function main() {
   getCurrentTab()
     .then(tab => {
       const url = new URL(tab.url)
@@ -101,9 +105,13 @@ function loadFormList(currentUrl) {
 
       executeScript("document.getElementById('AESR_info').textContent")
         .then(infoJson => {
-          const { menuItems } = JSON.parse(infoJson);
+          const { isSwitched, menuItems, userName } = JSON.parse(infoJson);
           const menuItemValues = menuItems.map(it => valueFromMenuItem(it));
-          const [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
+          let [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
+          if (!isSwitched) {
+            // set account suffix of userName before switch
+            baseAccount = userName.split(' @ ').pop()
+          }
           const opts = {
             list: document.getElementById('roleList'),
             loggedIn,

@@ -1,23 +1,14 @@
 (function () {
   const menuAccount = document.getElementById('menu--account');
-  let lis;
-  if (menuAccount) {
-    lis = Array.from(menuAccount.querySelectorAll("li")).slice(0, 4);
-  } else {
-    // old UI
-    lis = [
-      document.getElementById('awsc-login-display-name-user'),
-      document.getElementById('awsc-login-display-name-account'),
-      document.getElementById('awsc-role-display-name-user'),
-      document.getElementById('awsc-role-display-name-account'),
-    ]
-  }
+  const lis = Array.from(menuAccount.querySelectorAll("li")).slice(0, 4);
   const menuItems = lis.map(li => li ? li.innerHTML.replace(/<\/?[^>]+>/g, ' ').trim() : '');
+  const isSwitched = document.querySelector('#menu--account input[data-testid="awsc-exit-role"]') != null;
 
   const div = document.createElement('div');
   div.id = 'AESR_info';
   div.style.display = 'none';
   const info = {
+    isSwitched,
     menuItems,
     userName: ConsoleNavService.BuilderInstance.userName,
   }
