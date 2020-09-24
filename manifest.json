@@ -34,5 +34,12 @@
   "web_accessible_resources": [
     "js/attach_target.js"
   ],
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Comma"
+      }
+    }
+  },
   "manifest_version": 2
 }
