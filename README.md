@@ -1,3 +1,8 @@
+<h1 align="center">Plugin Broken Following AWS Console UI Update</h1>
+<h2 align="center">https://github.com/tilfin/aws-extend-switch-roles/issues/156</h2>
+
+---
+
 # AWS Extend Switch Roles
 
 [![Build Status](https://travis-ci.org/tilfin/aws-extend-switch-roles.svg?branch=master)](https://travis-ci.org/tilfin/aws-extend-switch-roles)
@@ -62,6 +67,7 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 - As above, **target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name` and can optionally pass the optional parameters.
 
 - If `target_role_name` is set in **base account**, the value is provided as the default role name for each **target roles**.
+- If `target_region` is set in **base account**, the value is provided as the default region for each **target roles**.
 
 ```
 [organization1]
