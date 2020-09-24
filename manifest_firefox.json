@@ -1,9 +1,9 @@
 {
-  "version": "0.15.0",
+  "version": "2.0.3",
   "applications": {
     "gecko": {
       "id": "aws-extend-switch-roles@toshi.tilfin.com",
-      "strict_min_version": "60.0"
+      "strict_min_version": "70.0"
     }
   },
   "background": {

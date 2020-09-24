@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## v2.0.3 (2020/09/24)
+
+- Change showing the Role List UI from a browser extension menu outside the AWS Console page
+- Abolish 'Hide original role history'
+- Abolish attaching color line on the bottom of the AWS Console header
+- Abolish inserting the profile image into the AWS Console header even if the image parameter is defined
+- Abolish adjusting the color contrast of the display name in the AWS Console header
+- Disable 'Show only matching roles' temporarily
+- Disable 'Automatically assume last assumed role (Experimental)' temporarily
+- Change the color of this extension icon
+
 ## v0.15.0 (2020/05/16)
 
 - Support AWS China Partition (thanks to @int32bit)

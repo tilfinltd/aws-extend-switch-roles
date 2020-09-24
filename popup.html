@@ -1,23 +1,26 @@
 <html>
 <head>
-<script src="js/popup.js"></script>
 <style>
 html { padding: 0 }
-body { margin: 0; padding: 0 }
-ul {
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, Meiryo, sans-serif;
+}
+.optionMenu {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-li {
+.optionMenu li {
   padding: 0;
   margin: 0;
   border-top: 1px solid #ccc;
 }
-li:first-of-type {
+.optionMenu li:first-of-type {
   border-top: none;
 }
-a {
+.optionMenu a {
   color: #000;
   display: block;
   font-size: 13px;
@@ -28,23 +31,87 @@ a {
   width: 9em;
 }
 a:hover {
-  background-color: #cfe;
+  background-color: #e8fafa;
 }
 #openOptionsLink { font-weight: bold }
+main {
+  font-size: 15px;
+  min-width: 260px;
+  border-right: 1px solid #ddd;
+  padding-left: 10px;
+  margin-right: 4px;
+  padding-right: 10px;
+}
+#roleList {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  max-height: 550px;
+  scrollbar-width: thin;
+}
+#roleList li {
+  padding: 0;
+  margin: 4px 10px 4px 2px;
+  list-style: none;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+#roleList li a {
+  color: #000;
+  font-family: Arial;
+  cursor: pointer;
+  display: block;
+  line-height: 29px;
+  text-decoration: none;
+}
+#roleList li a > * {
+  vertical-align: top;
+}
+.headSquare {
+  background-size: contain;
+  display: inline-block;
+  margin: 5px 8px 5px 5px;
+  width: 20px;
+  height: 20px;
+}
+.suffixAccountId {
+  color: #666;
+  font-size: 95%;
+  font-weight: normal;
+  margin-left: 1.25em;
+}
+p.errmsg {
+  color: #dd1111;
+  font-size: 12px;
+  padding: 10px;
+}
 </style>
 </head>
 <body>
-<ul>
- <li><a href="#" id="openOptionsLink">Configuration</a></li>
- <li><a href="#" id="openUpdateNoticeLink">Update Notice</a></li>
- <li><a
-     href="https://github.com/tilfin/aws-extend-switch-roles/blob/master/CHANGELOG.md#changelog" rel="noopener noreferrer" target="_blank">Release Notes</a></li>
- <li><a href="https://github.com/tilfin/aws-extend-switch-roles#donation" rel="noopener noreferrer"
-        target="_blank">Donation</a></li>
- <li><a href="#" id="openCreditsLink">Credits</a></li>
- <li><a href="https://github.com/tilfin/aws-extend-switch-roles" rel="noopener noreferrer"
-        target="_blank">Website</a></li>
-</ul>
+<div style="display: flex">
+  <main id="main" style="display: none">
+    <div style="margin-top: 8px; padding: 8px;">
+      <span style="color: #2c2c2c">Role List</span>
+      <input id="roleFilter" type="text" placeholder="Filter"
+        style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
+    </div>
+    <ul id="roleList">
+    </ul>
+  </main>
+  <ul class="optionMenu">
+    <li><a href="#" id="openOptionsLink">Configuration</a></li>
+    <li><a href="#" id="openUpdateNoticeLink">Update Notice</a></li>
+    <li><a
+        href="https://github.com/tilfin/aws-extend-switch-roles/blob/master/CHANGELOG.md#changelog" rel="noopener noreferrer" target="_blank">Release Notes</a></li>
+    <li><a href="https://github.com/tilfin/aws-extend-switch-roles#donation" rel="noopener noreferrer"
+            target="_blank">Donation</a></li>
+    <li><a href="#" id="openCreditsLink">Credits</a></li>
+    <li><a href="https://github.com/tilfin/aws-extend-switch-roles" rel="noopener noreferrer"
+            target="_blank">Website</a></li>
+  </ul>
+</div>
+<script src="js/popup.js"></script>
+<div id="sandbox" style="display: none;"></div>
 </body>
 </head>
 </html>
