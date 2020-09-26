@@ -239,9 +239,7 @@ function sendSwitchRole(anchor) {
     form.roleName.value = "${item.rolename}";
     form.displayName.value = "${item.displayname}";
     form.redirect_uri.value = "${item.redirecturi}";
-    form.dataset.region = "${item.region}";
-    document.body.appendChild(form)
-    form.submit()
+    form.submit();
   })()`)
   .then(() => {
     window.close();
