@@ -1,5 +1,5 @@
-<h1 align="center">Plugin Broken Following AWS Console UI Update</h1>
-<h2 align="center">https://github.com/tilfin/aws-extend-switch-roles/issues/156</h2>
+### V2 that supports the new UI for AWS MC becomes to show the role list in the menu shown when you click the extension icon.
+Notice: https://github.com/tilfin/aws-extend-switch-roles/issues/156#issuecomment-698073728
 
 ---
 
