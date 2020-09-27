@@ -6,7 +6,6 @@ module.exports = function(config) {
       {
         pattern: 'test/fixtures/**/*',
       },
-      'src/sanitizer.js',
       'src/lib/*.js',
       'test/**/*.test.js'
     ],

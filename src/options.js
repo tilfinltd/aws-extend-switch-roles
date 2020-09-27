@@ -3,13 +3,13 @@ function elById(id) {
 }
 
 window.onload = function() {
-  var colorPicker = new ColorPicker(document);
+  let colorPicker = new ColorPicker(document);
 
-  var selection = [];
-  var textArea = elById('awsConfigTextArea');
+  let selection = [];
+  let textArea = elById('awsConfigTextArea');
   textArea.onselect = function() {
-    var str = this.value.substring(this.selectionStart, this.selectionEnd);
-    var r = str.match(/^([0-9a-fA-F]{6})$/);
+    let str = this.value.substring(this.selectionStart, this.selectionEnd);
+    let r = str.match(/^([0-9a-fA-F]{6})$/);
     if (r !== null) {
       colorPicker.setColor(r[1]);
       selection = [this.selectionStart, this.selectionEnd];
@@ -23,15 +23,15 @@ window.onload = function() {
     }
   }
 
-  var msgSpan = elById('msgSpan');
-  var saveButton = elById('saveButton');
+  let msgSpan = elById('msgSpan');
+  let saveButton = elById('saveButton');
   saveButton.onclick = function() {
-    var rawstr = textArea.value;
+    let rawstr = textArea.value;
 
     try {
       const profiles = loadAwsConfig(rawstr);
       if (profiles.length > 200) {
-        msgSpan.innerHTML = '<span style="color:#dd1111">Failed to save bacause the number of profiles exceeded maximum 200!</span>';
+        updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', '#dd1111');
         return;
       }
 
@@ -45,17 +45,17 @@ window.onload = function() {
         function() {
           const { lastError } = chrome.runtime || browser.runtime;
           if (lastError) {
-            msgSpan.innerHTML = Sanitizer.escapeHTML`<span style="color:#dd1111">${lastError.message}</span>`;
+            updateMessage(msgSpan, lastError.message, '#dd1111');
             return;
           }
 
-          msgSpan.innerHTML = '<span style="color:#1111dd">Configuration has been updated!</span>';
+          updateMessage(msgSpan, 'Configuration has been updated!', '#1111dd');
           setTimeout(function() {
-            msgSpan.innerHTML = '';
+            msgSpan.firstChild.remove();
           }, 2500);
         });
     } catch (e) {
-      msgSpan.innerHTML = '<span style="color:#dd1111">Failed to save because of invalid format!</span>';
+      updateMessage(msgSpan, 'Failed to save because of invalid format!', '#dd1111');
     }
   }
 
@@ -90,4 +90,16 @@ window.onload = function() {
       chrome.storage.sync.remove(['hidesHistory'], () => {})
     }
   });
+}
+
+function updateMessage(el, msg, color) {
+  const span = document.createElement('span');
+  span.style.color = color;
+  span.textContent = msg;
+  const child = el.firstChild;
+  if (child) {
+    el.replaceChild(span, child);
+  } else {
+    el.appendChild(span);
+  }
 }
