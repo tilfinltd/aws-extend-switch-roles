@@ -1,10 +1,9 @@
 class ProfileSet {
-  constructor(items, showOnlyMatchingRoles, baseAccountId) {
+  constructor(items, showOnlyMatchingRoles, { baseAccount, roleFederated }) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
     let independentDests = [];
-    this.baseAccountId = baseAccountId;
 
     items.forEach(item => {
       if (item.source_profile) {
@@ -21,24 +20,17 @@ class ProfileSet {
     });
 
     let complexDests = [];
-    let baseProfile = this._getBaseProfile();
+    const baseProfile = this.srcProfileMap[baseAccount];
     if (baseProfile) {
-      complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles })
+      complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles, roleFederated })
       delete destsBySrcMap[baseProfile.profile];
     }
 
     // To display roles on the list
     this.destProfiles = [].concat(independentDests).concat(complexDests)
-
-    // For excluding unrelated profiles from recent history
-    this.excludedNames = this._decideExcludedNames(destsBySrcMap)
   }
 
-  _getBaseProfile() {
-    return this.srcProfileMap[this.baseAccountId];
-  }
-
-  _decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles }) {
+  _decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles, roleFederated }) {
     let profiles = (destsBySrcMap[baseProfile.profile] || []).map(profile => {
       if (!profile.role_name) {
         profile.role_name = baseProfile.target_role_name
@@ -51,20 +43,9 @@ class ProfileSet {
       return profile
     })
 
-    if (showOnlyMatchingRoles && document.body.className.includes('user-type-federated')) {
-      let baseRole = getAssumedRole();
-      profiles = profiles.filter(el => el.role_name === baseRole)
+    if (showOnlyMatchingRoles && roleFederated) {
+      profiles = profiles.filter(el => el.role_name === roleFederated)
     }
     return profiles;
-  }
-
-  _decideExcludedNames(destsBySrcMap) {
-    let result = [];
-    for (let name in destsBySrcMap) {
-      destsBySrcMap[name].forEach(item => {
-        result.push(item.profile);
-      });
-    }
-    return result;
   }
 }

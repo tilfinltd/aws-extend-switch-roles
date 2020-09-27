@@ -108,9 +108,10 @@ function loadFormList(currentUrl) {
           const { isSwitched, menuItems, userName } = JSON.parse(infoJson);
           const menuItemValues = menuItems.map(it => valueFromMenuItem(it));
           let [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
+          const userInfo = parseUserName(userName)
           if (!isSwitched) {
             // set account suffix of userName before switch
-            baseAccount = userName.split(' @ ').pop()
+            baseAccount = userInfo.account
           }
           const opts = {
             list: document.getElementById('roleList'),
@@ -119,8 +120,10 @@ function loadFormList(currentUrl) {
             targetRole,
             targetAccount,
             currentUrl,
+            roleFederated: userInfo.roleFederated,
           }
-          loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles, baseAccount), opts, hidesAccountId);
+          const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
+          loadProfiles(profileSet, opts, hidesAccountId);
         })
         .catch(err => {
           const p = document.createElement('p');
@@ -208,6 +211,17 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
   }
 
   document.getElementById('roleFilter').focus()
+}
+
+function parseUserName(userName) {
+  const parts = userName.split('/', 2);
+  let roleFederated = null;
+  if (parts.length > 1) {
+    roleFederated = parts.shift();
+  }
+
+  const [user, account] = parts.shift().split(' @ ')
+  return { roleFederated, user, account }
 }
 
 function replaceRedirectURI(targetUrl, destRegion) {
