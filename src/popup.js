@@ -22,15 +22,13 @@ function getCurrentTab() {
   }
 }
 
-function executeScript(code) {
+function executeAction(tabId, action, data) {
   if (window.chrome) {
     return new Promise((resolve) => {
-      chrome.tabs.executeScript({ code }, (result) => {
-        resolve(result && result[0])
-      })
+      chrome.tabs.sendMessage(tabId, { action, data }, {}, resolve)
     })
   } else if (window.browser) {
-    return browser.tabs.executeScript({ code })
+    return browser.tabs.sendMessage(tabId, { action, data })
   }
 }
 
@@ -73,25 +71,15 @@ function main() {
       if (url.host.endsWith('.aws.amazon.com')
        || url.host.endsWith('.amazonaws-us-gov.com')
        || url.host.endsWith('.amazonaws.cn')) {
-
-        executeScript(`
-          if (!window.AESR_script) {
-            window.AESR_script = document.createElement('script');
-            AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
-            document.body.appendChild(AESR_script);
-          }
-        `)
-        .then(() => {
-          setTimeout(() => {
-            loadFormList(url);
-            document.querySelector('main').style.display = 'block';
-          }, 0)
-        })
+        executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
+          loadFormList(url, userInfo, tab.id);
+          document.querySelector('main').style.display = 'block';
+        });
       }
     })
 }
 
-function loadFormList(currentUrl) {
+function loadFormList(currentUrl, userInfo, tabId) {
   chrome.storage.sync.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
     'hidesAccountId', 'showOnlyMatchingRoles',
@@ -103,34 +91,26 @@ function loadFormList(currentUrl) {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
 
-      executeScript("document.getElementById('AESR_info').textContent")
-        .then(infoJson => {
-          const { isSwitched, menuItems, userName } = JSON.parse(infoJson);
-          const menuItemValues = menuItems.map(it => valueFromMenuItem(it));
-          let [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
-          const userInfo = parseUserName(userName)
-          if (!isSwitched) {
-            // set account suffix of userName before switch
-            baseAccount = userInfo.account
-          }
-          const opts = {
-            list: document.getElementById('roleList'),
-            loggedIn,
-            baseAccount,
-            targetRole,
-            targetAccount,
-            currentUrl,
-            roleFederated: userInfo.roleFederated,
-          }
-          const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
-          loadProfiles(profileSet, opts, hidesAccountId);
-        })
-        .catch(err => {
-          const p = document.createElement('p');
-          p.className = 'errmsg';
-          p.textContent = "The Console is not yet fully loaded.";
-          document.getElementById('main').appendChild(p)
-        })
+      const { isSwitched, menuItems, userName } = userInfo;
+      const menuItemValues = menuItems.map(it => valueFromMenuItem(it));
+      let [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
+      const user = parseUserName(userName)
+      if (!isSwitched) {
+        // set account suffix of userName before switch
+        baseAccount = user.account
+      }
+
+      const opts = {
+        list: document.getElementById('roleList'),
+        loggedIn,
+        baseAccount,
+        targetRole,
+        targetAccount,
+        currentUrl,
+        roleFederated: user.roleFederated,
+      }
+      const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
+      loadProfiles(profileSet, opts, hidesAccountId);
     }
   });
 }
@@ -245,16 +225,11 @@ function replaceRedirectURI(targetUrl, destRegion) {
 }
 
 function sendSwitchRole(anchor) {
-  const item = anchor.dataset
-  executeScript(`(function() {
-    const form = document.getElementById('AESR_form');
-    form.account.value = "${item.account}";
-    form.color.value = "${item.color}";
-    form.roleName.value = "${item.rolename}";
-    form.displayName.value = "${item.displayname}";
-    form.redirect_uri.value = "${item.redirecturi}";
-    form.submit();
-  })()`)
+  const item = anchor.dataset;
+  getCurrentTab()
+  .then(tab => {
+    return executeAction(tab.id, 'switch', item)
+  })
   .then(() => {
     window.close();
   })

@@ -4,16 +4,13 @@
   const menuItems = lis.map(li => li ? li.innerHTML.replace(/<\/?[^>]+>/g, ' ').trim() : '');
   const isSwitched = document.querySelector('#menu--account input[data-testid="awsc-exit-role"]') != null;
 
-  const div = document.createElement('div');
-  div.id = 'AESR_info';
-  div.style.display = 'none';
+  const divInfo = document.getElementById('AESR_info');
   const info = {
     isSwitched,
     menuItems,
     userName: ConsoleNavService.BuilderInstance.userName,
   }
-  div.textContent = JSON.stringify(info);
-  document.body.appendChild(div);
+  divInfo.dataset.content = JSON.stringify(info);
 
   const form = document.getElementById('AESR_form');
   form.csrf.value = AWSC.Auth.getMbtc();

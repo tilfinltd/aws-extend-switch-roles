@@ -38,27 +38,50 @@ function extractBackURL() {
   return null;
 }
 
-function appendAESRForm(tryCount) {
-  let backUrl = extractBackURL();
-  if (!backUrl) {
-    if (tryCount === 2) return;
-    setTimeout(() => {
-      appendAESRForm(++tryCount);
-    }, 100);
-  }
-
-  const actionHost = new URL(backUrl.href).host;
+function appendAESR() {
   const form = document.createElement('form');
   form.id = 'AESR_form';
   form.method = 'POST';
-  form.action = `https://${actionHost}/switchrole`;
   form.innerHTML = '<input type="hidden" name="mfaNeeded" value="0"><input type="hidden" name="action" value="switchFromBasis"><input type="hidden" name="src" value="nav"><input type="hidden" name="csrf"><input type="hidden" name="roleName"><input type="hidden" name="account"><input type="hidden" name="color"><input type="hidden" name="redirect_uri"><input type="hidden" name="displayName">';
   document.body.appendChild(form)
+
+  const divInfo = document.createElement('div');
+  divInfo.id = 'AESR_info';
+  divInfo.style.display = 'none';
+  divInfo.style.visibility = 'hidden';
+  document.body.appendChild(divInfo);
 }
 
 if (document.body) {
   adjustDisplayNameColor();
-  setTimeout(() => {
-    appendAESRForm(0)
-  }, 50)
+  appendAESR();
 }
+
+(chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
+  const { data, action } = msg;
+  if (action === 'loadInfo') {
+    if (!window.AESR_script) {
+      window.AESR_script = document.createElement('script');
+      AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
+      document.body.appendChild(AESR_script);
+      setTimeout(() => {
+        const infoJson = document.getElementById('AESR_info').dataset.content;
+        cb(JSON.parse(infoJson));
+      }, 50);
+    } else {
+      const infoJson = document.getElementById('AESR_info').dataset.content;
+      cb(JSON.parse(infoJson));
+    }
+  } else if (action === 'switch') {
+    const actionHost = new URL(extractBackURL().href).host;
+    const form = document.getElementById('AESR_form');
+    form.setAttribute('action', `https://${actionHost}/switchrole`);
+    form.account.value = data.account;
+    form.color.value = data.color;
+    form.roleName.value = data.rolename;
+    form.displayName.value = data.displayname;
+    form.redirect_uri.value = data.redirecturi;
+    form.submit();
+  }
+  return true;
+});
