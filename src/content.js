@@ -68,9 +68,11 @@ if (document.body) {
         const infoJson = document.getElementById('AESR_info').dataset.content;
         cb(JSON.parse(infoJson));
       }, 50);
+      return true;
     } else {
       const infoJson = document.getElementById('AESR_info').dataset.content;
       cb(JSON.parse(infoJson));
+      return false;
     }
   } else if (action === 'switch') {
     const actionHost = new URL(extractBackURL().href).host;
@@ -82,6 +84,6 @@ if (document.body) {
     form.displayName.value = data.displayname;
     form.redirect_uri.value = data.redirecturi;
     form.submit();
+    return false;
   }
-  return true;
 });

@@ -108,12 +108,12 @@ function loadFormList(currentUrl, userInfo, tabId) {
         roleFederated: user.roleFederated,
       }
       const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
-      loadProfiles(profileSet, opts, hidesAccountId);
+      loadProfiles(profileSet, tabId, opts, hidesAccountId);
     }
   });
 }
 
-function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
+function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
   profileSet.destProfiles.forEach(item => {
     const color = item.color || 'aaaaaa';
     const li = document.createElement('li');
@@ -154,9 +154,10 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
   });
 
   Array.from(list.querySelectorAll('li a')).forEach(anchor => {
-    anchor.onclick = function(e) {
-      sendSwitchRole(this)
-      return false
+    anchor.onclick = function() {
+      const data = { ...this.dataset }; // do not directly refer DOM data in Firefox
+      sendSwitchRole(tabId, data);
+      return false;
     }
   });
 
@@ -222,13 +223,8 @@ function replaceRedirectURI(targetUrl, destRegion) {
   return redirectUri;
 }
 
-function sendSwitchRole(anchor) {
-  const item = anchor.dataset;
-  getCurrentTab()
-  .then(tab => {
-    return executeAction(tab.id, 'switch', item)
-  })
-  .then(() => {
-    window.close();
-  })
+function sendSwitchRole(tabId, data) {
+  executeAction(tabId, 'switch', data).then(() => {
+    window.close()
+  });
 }
