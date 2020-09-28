@@ -32,7 +32,7 @@ function executeAction(tabId, action, data) {
   }
 }
 
-function valueFromMenuItem(liTxt) {
+function valueFromItem(liTxt) {
   try {
     const r = liTxt.match(/(\d{4})\-(\d{4})\-(\d{4})/);
     if (r) {
@@ -90,22 +90,20 @@ function loadFormList(currentUrl, userInfo, tabId) {
     if (data.profiles) {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
+      const {
+        isSwitched, userName, 
+        loginDisplayNameAccount, loginDisplayNameUser,
+        roleDisplayNameAccount, roleDisplayNameUser
+      } = userInfo;
 
-      const { isSwitched, menuItems, userName } = userInfo;
-      const menuItemValues = menuItems.map(it => valueFromMenuItem(it));
-      let [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
-      const user = parseUserName(userName)
-      if (!isSwitched) {
-        // set account suffix of userName before switch
-        baseAccount = user.account
-      }
+      const user = parseUserName(userName);
 
       const opts = {
         list: document.getElementById('roleList'),
-        loggedIn,
-        baseAccount,
-        targetRole,
-        targetAccount,
+        loggedIn: valueFromItem(loginDisplayNameUser),
+        baseAccount: valueFromItem(loginDisplayNameAccount),
+        targetRole: valueFromItem(roleDisplayNameUser),
+        targetAccount: valueFromItem(roleDisplayNameAccount),
         currentUrl,
         roleFederated: user.roleFederated,
       }
