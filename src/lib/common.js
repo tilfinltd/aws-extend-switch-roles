@@ -14,17 +14,3 @@ function getAccountId(elId) {
     return aid;
   }
 }
-
-function getAssumedRole() {
-  var el = elById('awsc-role-display-name-user');
-  if (el) {
-    return el.textContent.trim();
-  }
-
-  el = elById('awsc-login-display-name-user');
-  if (el) {
-    return el.textContent.trim().split("/")[0]
-  }
-
-  return null;
-}
