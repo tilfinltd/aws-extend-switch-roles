@@ -1,4 +1,4 @@
-### V2 that supports the new UI for AWS MC becomes to show the role list in the menu shown when you click the extension icon.
+### V2 that supports the new UI for AWS MC becomes to show the role list in the popup menu displayed when you click the extension icon on the browser tool bar.
 Notice: https://github.com/tilfin/aws-extend-switch-roles/issues/156#issuecomment-698073728
 
 ---
@@ -121,7 +121,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 ## Settings
 
 - **Hide account id** hides the account_id for each profile.
-- ~~**Show only matching roles** filters to only show profiles with roles that match your role in your master account.~~ **temporarily disabled**
+- **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
 - ~~**Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.~~ **temporarily disabled**
 
 ## Extension API

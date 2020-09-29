@@ -1,20 +1,22 @@
 (function () {
-  const menuAccount = document.getElementById('menu--account');
-  const lis = Array.from(menuAccount.querySelectorAll("li")).slice(0, 4);
-  const menuItems = lis.map(li => li ? li.innerHTML.replace(/<\/?[^>]+>/g, ' ').trim() : '');
-  const isSwitched = document.querySelector('#menu--account input[data-testid="awsc-exit-role"]') != null;
+  const elById = id => document.getElementById(id);
 
-  const div = document.createElement('div');
-  div.id = 'AESR_info';
-  div.style.display = 'none';
-  const info = {
-    isSwitched,
-    menuItems,
-    userName: ConsoleNavService.BuilderInstance.userName,
+  const info = { userName: ConsoleNavService.BuilderInstance.userName };
+  const accInfo = ConsoleNavService.AccountInfo;
+  if (accInfo) {
+    Object.assign(info, accInfo);
+    info.isSwitched = accInfo.roleDisplayNameUser !== undefined;
+  } else {
+    Object.assign(info, {
+      loginDisplayNameAccount: elById('awsc-login-display-name-account')?.textContent,
+      loginDisplayNameUser: elById('awsc-login-display-name-user')?.textContent,
+      roleDisplayNameAccount: elById('awsc-role-display-name-account')?.textContent,
+      roleDisplayNameUser: elById('awsc-role-display-name-user')?.textContent,
+      isSwitched: elById('awsc-exit-role-form') != null,
+    })
   }
-  div.textContent = JSON.stringify(info);
-  document.body.appendChild(div);
 
-  const form = document.getElementById('AESR_form');
-  form.csrf.value = AWSC.Auth.getMbtc();
+  elById('AESR_info').dataset.content = JSON.stringify(info);
+
+  elById('AESR_form').csrf.value = AWSC.Auth.getMbtc();
 })();

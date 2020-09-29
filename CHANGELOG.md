@@ -1,9 +1,16 @@
 Changelog
 =========
 
+## v2.0.4 (2020/09/28)
+
+- Enable 'Show only matching roles' again
+- Open the popup menu with the keyboard shortcut (default `Ctrl + Shift + ,`) (thanks to @axeleroy)
+- Refacor Refactor inner processing account and user information
+- Remove dependency on Sanitizer
+
 ## v2.0.3 (2020/09/24)
 
-- Change showing the Role List UI from a browser extension menu outside the AWS Console page
+- Significantly change to show the role list in the popup menu displayed when you click the extension icon on the browser tool bar.
 - Abolish 'Hide original role history'
 - Abolish attaching color line on the bottom of the AWS Console header
 - Abolish inserting the profile image into the AWS Console header even if the image parameter is defined

@@ -22,19 +22,17 @@ function getCurrentTab() {
   }
 }
 
-function executeScript(code) {
+function executeAction(tabId, action, data) {
   if (window.chrome) {
     return new Promise((resolve) => {
-      chrome.tabs.executeScript({ code }, (result) => {
-        resolve(result && result[0])
-      })
+      chrome.tabs.sendMessage(tabId, { action, data }, {}, resolve)
     })
   } else if (window.browser) {
-    return browser.tabs.executeScript({ code })
+    return browser.tabs.sendMessage(tabId, { action, data })
   }
 }
 
-function valueFromMenuItem(liTxt) {
+function valueFromItem(liTxt) {
   try {
     const r = liTxt.match(/(\d{4})\-(\d{4})\-(\d{4})/);
     if (r) {
@@ -73,25 +71,15 @@ function main() {
       if (url.host.endsWith('.aws.amazon.com')
        || url.host.endsWith('.amazonaws-us-gov.com')
        || url.host.endsWith('.amazonaws.cn')) {
-
-        executeScript(`
-          if (!window.AESR_script) {
-            window.AESR_script = document.createElement('script');
-            AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
-            document.body.appendChild(AESR_script);
-          }
-        `)
-        .then(() => {
-          setTimeout(() => {
-            loadFormList(url);
-            document.querySelector('main').style.display = 'block';
-          }, 0)
-        })
+        executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
+          loadFormList(url, userInfo, tab.id);
+          document.querySelector('main').style.display = 'block';
+        });
       }
     })
 }
 
-function loadFormList(currentUrl) {
+function loadFormList(currentUrl, userInfo, tabId) {
   chrome.storage.sync.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
     'hidesAccountId', 'showOnlyMatchingRoles',
@@ -102,37 +90,30 @@ function loadFormList(currentUrl) {
     if (data.profiles) {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
+      const {
+        isSwitched, userName, 
+        loginDisplayNameAccount, loginDisplayNameUser,
+        roleDisplayNameAccount, roleDisplayNameUser
+      } = userInfo;
 
-      executeScript("document.getElementById('AESR_info').textContent")
-        .then(infoJson => {
-          const { isSwitched, menuItems, userName } = JSON.parse(infoJson);
-          const menuItemValues = menuItems.map(it => valueFromMenuItem(it));
-          let [loggedIn, baseAccount, targetRole, targetAccount] = menuItemValues;
-          if (!isSwitched) {
-            // set account suffix of userName before switch
-            baseAccount = userName.split(' @ ').pop()
-          }
-          const opts = {
-            list: document.getElementById('roleList'),
-            loggedIn,
-            baseAccount,
-            targetRole,
-            targetAccount,
-            currentUrl,
-          }
-          loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles, baseAccount), opts, hidesAccountId);
-        })
-        .catch(err => {
-          const p = document.createElement('p');
-          p.className = 'errmsg';
-          p.textContent = "The Console is not yet fully loaded.";
-          document.getElementById('main').appendChild(p)
-        })
+      const user = parseUserName(userName);
+
+      const opts = {
+        list: document.getElementById('roleList'),
+        loggedIn: valueFromItem(loginDisplayNameUser),
+        baseAccount: valueFromItem(loginDisplayNameAccount),
+        targetRole: valueFromItem(roleDisplayNameUser),
+        targetAccount: valueFromItem(roleDisplayNameAccount),
+        currentUrl,
+        roleFederated: user.roleFederated,
+      }
+      const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
+      loadProfiles(profileSet, tabId, opts, hidesAccountId);
     }
   });
 }
 
-function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
+function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
   profileSet.destProfiles.forEach(item => {
     const color = item.color || 'aaaaaa';
     const li = document.createElement('li');
@@ -173,9 +154,10 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
   });
 
   Array.from(list.querySelectorAll('li a')).forEach(anchor => {
-    anchor.onclick = function(e) {
-      sendSwitchRole(this)
-      return false
+    anchor.onclick = function() {
+      const data = { ...this.dataset }; // do not directly refer DOM data in Firefox
+      sendSwitchRole(tabId, data);
+      return false;
     }
   });
 
@@ -210,6 +192,17 @@ function loadProfiles(profileSet, { list, currentUrl }, hidesAccountId) {
   document.getElementById('roleFilter').focus()
 }
 
+function parseUserName(userName) {
+  const parts = userName.split('/', 2);
+  let roleFederated = null;
+  if (parts.length > 1) {
+    roleFederated = parts.shift();
+  }
+
+  const [user, account] = parts.shift().split(' @ ')
+  return { roleFederated, user, account }
+}
+
 function replaceRedirectURI(targetUrl, destRegion) {
   if (!destRegion) return targetUrl;
 
@@ -230,20 +223,8 @@ function replaceRedirectURI(targetUrl, destRegion) {
   return redirectUri;
 }
 
-function sendSwitchRole(anchor) {
-  const item = anchor.dataset
-  executeScript(`(function() {
-    const form = document.getElementById('AESR_form');
-    form.account.value = "${item.account}";
-    form.color.value = "${item.color}";
-    form.roleName.value = "${item.rolename}";
-    form.displayName.value = "${item.displayname}";
-    form.redirect_uri.value = "${item.redirecturi}";
-    form.dataset.region = "${item.region}";
-    document.body.appendChild(form)
-    form.submit()
-  })()`)
-  .then(() => {
-    window.close();
-  })
+function sendSwitchRole(tabId, data) {
+  executeAction(tabId, 'switch', data).then(() => {
+    window.close()
+  });
 }
