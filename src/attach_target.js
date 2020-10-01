@@ -1,5 +1,6 @@
 (function () {
   const elById = id => document.getElementById(id);
+  const elTextContent = elId => typeof(elById(elId))!="undefined" ? elById(elId).textContent : null;
 
   const info = { userName: ConsoleNavService.BuilderInstance.userName };
   const accInfo = ConsoleNavService.AccountInfo;
@@ -8,10 +9,10 @@
     info.isSwitched = accInfo.roleDisplayNameUser !== undefined;
   } else {
     Object.assign(info, {
-      loginDisplayNameAccount: elById('awsc-login-display-name-account')?.textContent,
-      loginDisplayNameUser: elById('awsc-login-display-name-user')?.textContent,
-      roleDisplayNameAccount: elById('awsc-role-display-name-account')?.textContent,
-      roleDisplayNameUser: elById('awsc-role-display-name-user')?.textContent,
+      loginDisplayNameAccount: elTextContent('awsc-login-display-name-account'),
+      loginDisplayNameUser: elTextContent('awsc-login-display-name-user'),
+      roleDisplayNameAccount: elTextContent('awsc-role-display-name-account'),
+      roleDisplayNameUser: elTextContent('awsc-role-display-name-user'),
       isSwitched: elById('awsc-exit-role-form') != null,
     })
   }
