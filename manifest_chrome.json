@@ -1,5 +1,6 @@
 {
   "version": "2.0.4",
+  "minimum_chrome_version": "80",
   "background": {
     "scripts": [
       "js/background.js"
