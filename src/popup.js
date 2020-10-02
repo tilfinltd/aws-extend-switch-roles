@@ -85,7 +85,7 @@ function loadFormList(currentUrl, userInfo, tabId) {
     'hidesAccountId', 'showOnlyMatchingRoles',
   ], function(data) {
     const hidesAccountId = data.hidesAccountId || false;
-    const showOnlyMatchingRoles = /*data.showOnlyMatchingRoles ||*/ false;
+    const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
 
     if (data.profiles) {
       const dps = new DataProfilesSplitter();

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## v2.0.5 (2020/10/02)
+
+- Fix to enable 'Show only matching roles' again
+
 ## v2.0.4 (2020/09/28)
 
 - Enable 'Show only matching roles' again
