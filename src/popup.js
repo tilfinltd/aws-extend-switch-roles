@@ -85,7 +85,7 @@ function loadFormList(currentUrl, userInfo, tabId) {
       const profiles = dps.profilesFromDataSet(data);
       const {
         loginDisplayNameAccount, loginDisplayNameUser,
-        roleDisplayNameAccount, roleDisplayNameUser
+        roleDisplayNameAccount, roleDisplayNameUser, isGlobal
       } = userInfo;
 
       const baseAccount = brushAccountId(loginDisplayNameAccount);
@@ -93,12 +93,12 @@ function loadFormList(currentUrl, userInfo, tabId) {
       const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
 
       const list = document.getElementById('roleList');
-      loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId);
+      loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
     }
   });
 }
 
-function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
+function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId) {
   profileSet.destProfiles.forEach(item => {
     const color = item.color || 'aaaaaa';
     const li = document.createElement('li');
@@ -117,7 +117,7 @@ function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
     anchor.dataset.rolename = item.role_name;
     anchor.dataset.account = item.aws_account_id;
     anchor.dataset.color = color;
-    anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region);
+    anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region, isGlobal);
     anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
     anchor.appendChild(headSquare);
@@ -177,19 +177,21 @@ function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
   document.getElementById('roleFilter').focus()
 }
 
-function replaceRedirectURI(targetUrl, destRegion) {
-  if (!destRegion) return targetUrl;
+function replaceRedirectURI(currentURL, destRegion, isGlobal) {
+  if (!destRegion) return currentURL;
 
-  let redirectUri = decodeURIComponent(targetUrl);
-  const md = redirectUri.match(/region=([a-z\-1-9]+)/);
+  let redirectUri = decodeURIComponent(currentURL);
+  const md = currentURL.search.match(/region=([a-z\-1-9]+)/);
   if (md) {
     const currentRegion = md[1];
     if (currentRegion !== destRegion) {
       redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
-      if (currentRegion === 'us-east-1') {
-        redirectUri = redirectUri.replace('://', `://${destRegion}.`);
-      } else if (destRegion === 'us-east-1') {
-        redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
+      if (!isGlobal) {
+        if (currentRegion === 'us-east-1') {
+          redirectUri = redirectUri.replace('://', `://${destRegion}.`);
+        } else if (destRegion === 'us-east-1') {
+          redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
+        }
       }
     }
     redirectUri = encodeURIComponent(redirectUri);

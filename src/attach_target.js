@@ -6,12 +6,14 @@
   const accInfo = ConsoleNavService.AccountInfo;
   if (accInfo) {
     Object.assign(info, accInfo);
+    info.isGlobal = document.querySelector('#menu--regions li a') == null;
   } else {
     Object.assign(info, {
       loginDisplayNameAccount: trimTxtCtn(elById('awsc-login-display-name-account')),
       loginDisplayNameUser: trimTxtCtn(('awsc-login-display-name-user')),
       roleDisplayNameAccount: trimTxtCtn(('awsc-role-display-name-account')),
       roleDisplayNameUser: trimTxtCtn(('awsc-role-display-name-user')),
+      isGlobal: document.querySelector('#regionMenuContent a') == null,
     })
   }
 
