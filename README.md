@@ -1,8 +1,3 @@
-### V2 that supports the new UI for AWS MC becomes to show the role list in the popup menu displayed when you click the extension icon on the browser tool bar.
-Notice: https://github.com/tilfin/aws-extend-switch-roles/issues/156#issuecomment-698073728
-
----
-
 # AWS Extend Switch Roles
 
 [![Build Status](https://travis-ci.org/tilfin/aws-extend-switch-roles.svg?branch=master)](https://travis-ci.org/tilfin/aws-extend-switch-roles)
@@ -16,6 +11,14 @@ Switch roll history does not remain only 5 maximum on the AWS Management Console
 This extension give you show all of switch roles from a browse menu by loading your aws configuration.
 
 - Supports Chrome Sync
+
+### Development and Distribution Guideline
+
+##### Minimize required permissions and operating the page of Console
+A browser plug-in goes with security risks. AWS Management Console allows you to manipulate your essential data.
+
+##### Support the only latest version for each official build browser
+It does not restrict the use of other compatible browsers. The version restrictions are based on JavaScript language features used.
 
 ## Install
 
