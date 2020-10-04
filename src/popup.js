@@ -1,11 +1,11 @@
 function openOptions() {
   if (window.chrome) {
     chrome.runtime.openOptionsPage(err => {
-      console.log(`Error: ${error}`);
+      console.error(`Error: ${err}`);
     });
   } else if (window.browser) {
     window.browser.runtime.openOptionsPage().catch(err => {
-      console.log(`Error: ${error}`);
+      console.error(`Error: ${err}`);
     });
   }
 }
