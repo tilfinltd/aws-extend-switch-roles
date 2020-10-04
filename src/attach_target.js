@@ -1,18 +1,19 @@
 (function () {
   const elById = id => document.getElementById(id);
+  const trimTxtCtn = el => el ? el.textContent.trim() : '';
 
-  const info = { userName: ConsoleNavService.BuilderInstance.userName };
+  const info = {};
   const accInfo = ConsoleNavService.AccountInfo;
   if (accInfo) {
     Object.assign(info, accInfo);
-    info.isSwitched = accInfo.roleDisplayNameUser !== undefined;
+    info.isGlobal = document.querySelector('#menu--regions li a') == null;
   } else {
     Object.assign(info, {
-      loginDisplayNameAccount: elById('awsc-login-display-name-account')?.textContent,
-      loginDisplayNameUser: elById('awsc-login-display-name-user')?.textContent,
-      roleDisplayNameAccount: elById('awsc-role-display-name-account')?.textContent,
-      roleDisplayNameUser: elById('awsc-role-display-name-user')?.textContent,
-      isSwitched: elById('awsc-exit-role-form') != null,
+      loginDisplayNameAccount: trimTxtCtn(elById('awsc-login-display-name-account')),
+      loginDisplayNameUser: trimTxtCtn(elById('awsc-login-display-name-user')),
+      roleDisplayNameAccount: trimTxtCtn(elById('awsc-role-display-name-account')),
+      roleDisplayNameUser: trimTxtCtn(elById('awsc-role-display-name-user')),
+      isGlobal: document.querySelector('#regionMenuContent a') == null,
     })
   }
 

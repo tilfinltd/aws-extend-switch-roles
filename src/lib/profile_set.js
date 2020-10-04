@@ -1,5 +1,5 @@
 class ProfileSet {
-  constructor(items, showOnlyMatchingRoles, { baseAccount, roleFederated }) {
+  constructor(items, baseAccount, { filterByTargetRole }) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
@@ -22,7 +22,7 @@ class ProfileSet {
     let complexDests = [];
     const baseProfile = this.srcProfileMap[baseAccount];
     if (baseProfile) {
-      complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles, roleFederated })
+      complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, filterByTargetRole);
       delete destsBySrcMap[baseProfile.profile];
     }
 
@@ -30,7 +30,7 @@ class ProfileSet {
     this.destProfiles = [].concat(independentDests).concat(complexDests)
   }
 
-  _decideComplexDestProfiles(baseProfile, destsBySrcMap, { showOnlyMatchingRoles, roleFederated }) {
+  _decideComplexDestProfiles(baseProfile, destsBySrcMap, filterByTargetRole) {
     let profiles = (destsBySrcMap[baseProfile.profile] || []).map(profile => {
       if (!profile.role_name) {
         profile.role_name = baseProfile.target_role_name
@@ -43,8 +43,8 @@ class ProfileSet {
       return profile
     })
 
-    if (showOnlyMatchingRoles && roleFederated) {
-      profiles = profiles.filter(el => el.role_name === roleFederated)
+    if (filterByTargetRole) {
+      profiles = profiles.filter(el => el.role_name === filterByTargetRole);
     }
     return profiles;
   }

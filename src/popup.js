@@ -1,11 +1,11 @@
 function openOptions() {
   if (window.chrome) {
     chrome.runtime.openOptionsPage(err => {
-      console.log(`Error: ${error}`);
+      console.error(`Error: ${err}`);
     });
   } else if (window.browser) {
     window.browser.runtime.openOptionsPage().catch(err => {
-      console.log(`Error: ${error}`);
+      console.error(`Error: ${err}`);
     });
   }
 }
@@ -32,17 +32,10 @@ function executeAction(tabId, action, data) {
   }
 }
 
-function valueFromItem(liTxt) {
-  try {
-    const r = liTxt.match(/(\d{4})\-(\d{4})\-(\d{4})/);
-    if (r) {
-      return r[1] + r[2] + r[3];
-    } else {
-      return liTxt.split(/\s+/).pop()
-    }
-  } catch (err) {
-    return null
-  }
+function brushAccountId(val) {
+  const r = val.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
+  if (!r) return val;
+  return r[1] + r[2] + r[3];
 }
 
 window.onload = function() {
@@ -85,35 +78,27 @@ function loadFormList(currentUrl, userInfo, tabId) {
     'hidesAccountId', 'showOnlyMatchingRoles',
   ], function(data) {
     const hidesAccountId = data.hidesAccountId || false;
-    const showOnlyMatchingRoles = /*data.showOnlyMatchingRoles ||*/ false;
+    const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
 
     if (data.profiles) {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
       const {
-        isSwitched, userName, 
         loginDisplayNameAccount, loginDisplayNameUser,
-        roleDisplayNameAccount, roleDisplayNameUser
+        roleDisplayNameAccount, roleDisplayNameUser, isGlobal
       } = userInfo;
 
-      const user = parseUserName(userName);
+      const baseAccount = brushAccountId(loginDisplayNameAccount);
+      const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
+      const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
 
-      const opts = {
-        list: document.getElementById('roleList'),
-        loggedIn: valueFromItem(loginDisplayNameUser),
-        baseAccount: valueFromItem(loginDisplayNameAccount),
-        targetRole: valueFromItem(roleDisplayNameUser),
-        targetAccount: valueFromItem(roleDisplayNameAccount),
-        currentUrl,
-        roleFederated: user.roleFederated,
-      }
-      const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
-      loadProfiles(profileSet, tabId, opts, hidesAccountId);
+      const list = document.getElementById('roleList');
+      loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
     }
   });
 }
 
-function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
+function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId) {
   profileSet.destProfiles.forEach(item => {
     const color = item.color || 'aaaaaa';
     const li = document.createElement('li');
@@ -132,7 +117,7 @@ function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
     anchor.dataset.rolename = item.role_name;
     anchor.dataset.account = item.aws_account_id;
     anchor.dataset.color = color;
-    anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region);
+    anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region, isGlobal);
     anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
     anchor.appendChild(headSquare);
@@ -192,30 +177,21 @@ function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
   document.getElementById('roleFilter').focus()
 }
 
-function parseUserName(userName) {
-  const parts = userName.split('/', 2);
-  let roleFederated = null;
-  if (parts.length > 1) {
-    roleFederated = parts.shift();
-  }
+function replaceRedirectURI(currentURL, destRegion, isGlobal) {
+  if (!destRegion) return currentURL;
 
-  const [user, account] = parts.shift().split(' @ ')
-  return { roleFederated, user, account }
-}
-
-function replaceRedirectURI(targetUrl, destRegion) {
-  if (!destRegion) return targetUrl;
-
-  let redirectUri = decodeURIComponent(targetUrl);
-  const md = redirectUri.match(/region=([a-z\-1-9]+)/);
+  let redirectUri = decodeURIComponent(currentURL);
+  const md = currentURL.search.match(/region=([a-z\-1-9]+)/);
   if (md) {
     const currentRegion = md[1];
     if (currentRegion !== destRegion) {
       redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
-      if (currentRegion === 'us-east-1') {
-        redirectUri = redirectUri.replace('://', `://${destRegion}.`);
-      } else if (destRegion === 'us-east-1') {
-        redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
+      if (!isGlobal) {
+        if (currentRegion === 'us-east-1') {
+          redirectUri = redirectUri.replace('://', `://${destRegion}.`);
+        } else if (destRegion === 'us-east-1') {
+          redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
+        }
       }
     }
     redirectUri = encodeURIComponent(redirectUri);

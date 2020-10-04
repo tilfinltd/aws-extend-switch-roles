@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v2.0.5 (2020/10/04)
+
+- Fix 'Show only matching roles'
+- Fix broken switch if the destination region is specified when you show AWS global service page
+- Fix to work on old AWS Console Nav UI for AWS GovCloud and China partition
+
 ## v2.0.4 (2020/09/28)
 
 - Enable 'Show only matching roles' again
