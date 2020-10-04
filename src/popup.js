@@ -32,17 +32,10 @@ function executeAction(tabId, action, data) {
   }
 }
 
-function valueFromItem(liTxt) {
-  try {
-    const r = liTxt.match(/(\d{4})\-(\d{4})\-(\d{4})/);
-    if (r) {
-      return r[1] + r[2] + r[3];
-    } else {
-      return liTxt.split(/\s+/).pop()
-    }
-  } catch (err) {
-    return null
-  }
+function brushAccountId(val) {
+  const r = val.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
+  if (!r) return val;
+  return r[1] + r[2] + r[3];
 }
 
 window.onload = function() {
@@ -91,29 +84,21 @@ function loadFormList(currentUrl, userInfo, tabId) {
       const dps = new DataProfilesSplitter();
       const profiles = dps.profilesFromDataSet(data);
       const {
-        isSwitched, userName, 
         loginDisplayNameAccount, loginDisplayNameUser,
         roleDisplayNameAccount, roleDisplayNameUser
       } = userInfo;
 
-      const user = parseUserName(userName);
+      const baseAccount = brushAccountId(loginDisplayNameAccount);
+      const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
+      const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
 
-      const opts = {
-        list: document.getElementById('roleList'),
-        loggedIn: valueFromItem(loginDisplayNameUser),
-        baseAccount: valueFromItem(loginDisplayNameAccount),
-        targetRole: valueFromItem(roleDisplayNameUser),
-        targetAccount: valueFromItem(roleDisplayNameAccount),
-        currentUrl,
-        roleFederated: user.roleFederated,
-      }
-      const profileSet = new ProfileSet(profiles, showOnlyMatchingRoles,  opts);
-      loadProfiles(profileSet, tabId, opts, hidesAccountId);
+      const list = document.getElementById('roleList');
+      loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId);
     }
   });
 }
 
-function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
+function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
   profileSet.destProfiles.forEach(item => {
     const color = item.color || 'aaaaaa';
     const li = document.createElement('li');
@@ -190,17 +175,6 @@ function loadProfiles(profileSet, tabId, { list, currentUrl }, hidesAccountId) {
   }
 
   document.getElementById('roleFilter').focus()
-}
-
-function parseUserName(userName) {
-  const parts = userName.split('/', 2);
-  let roleFederated = null;
-  if (parts.length > 1) {
-    roleFederated = parts.shift();
-  }
-
-  const [user, account] = parts.shift().split(' @ ')
-  return { roleFederated, user, account }
 }
 
 function replaceRedirectURI(targetUrl, destRegion) {
