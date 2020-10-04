@@ -10,9 +10,9 @@
   } else {
     Object.assign(info, {
       loginDisplayNameAccount: trimTxtCtn(elById('awsc-login-display-name-account')),
-      loginDisplayNameUser: trimTxtCtn(('awsc-login-display-name-user')),
-      roleDisplayNameAccount: trimTxtCtn(('awsc-role-display-name-account')),
-      roleDisplayNameUser: trimTxtCtn(('awsc-role-display-name-user')),
+      loginDisplayNameUser: trimTxtCtn(elById('awsc-login-display-name-user')),
+      roleDisplayNameAccount: trimTxtCtn(elById('awsc-role-display-name-account')),
+      roleDisplayNameUser: trimTxtCtn(elById('awsc-role-display-name-user')),
       isGlobal: document.querySelector('#regionMenuContent a') == null,
     })
   }
