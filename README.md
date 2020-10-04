@@ -12,6 +12,14 @@ This extension give you show all of switch roles from a browse menu by loading y
 
 - Supports Chrome Sync
 
+### Development and Distribution Guideline
+
+##### Minimize required permissions and operating the page of Console
+A browser plug-in goes with security risks. AWS Management Console allows you to manipulate your essential data.
+
+##### Support the only latest version for each official build browser
+It does not restrict the use of other compatible browsers. The version restrictions are based on JavaScript language features used.
+
 ## Install
 
 [AWS Extend Switch Roles - Chrome Web Store](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
