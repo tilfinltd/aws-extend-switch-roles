@@ -16,7 +16,6 @@ cat src/lib/data_profiles_splitter.js >> $options
 cat src/lib/lz-string.min.js          >> $options
 cat src/options.js                    >> $options
 
-cat src/lib/common.js                  > $popup
 cat src/lib/profile_set.js            >> $popup
 cat src/lib/data_profiles_splitter.js >> $popup
 cat src/popup.js                      >> $popup
