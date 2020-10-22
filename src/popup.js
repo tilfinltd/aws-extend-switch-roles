@@ -117,7 +117,7 @@ function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccoun
     anchor.dataset.rolename = item.role_name;
     anchor.dataset.account = item.aws_account_id;
     anchor.dataset.color = color;
-    anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region, isGlobal);
+    anchor.dataset.redirecturi = createRedirectURI(currentUrl, item.region, isGlobal);
     anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
     anchor.appendChild(headSquare);
@@ -177,10 +177,10 @@ function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccoun
   document.getElementById('roleFilter').focus()
 }
 
-function replaceRedirectURI(currentURL, destRegion, isGlobal) {
-  if (!destRegion) return currentURL;
+function createRedirectURI(currentURL, destRegion, isGlobal) {
+  if (!destRegion) return encodeURIComponent(currentURL.href);
 
-  let redirectUri = decodeURIComponent(currentURL);
+  let redirectUri = currentURL.href;
   const md = currentURL.search.match(/region=([a-z\-1-9]+)/);
   if (md) {
     const currentRegion = md[1];
@@ -194,9 +194,8 @@ function replaceRedirectURI(currentURL, destRegion, isGlobal) {
         }
       }
     }
-    redirectUri = encodeURIComponent(redirectUri);
   }
-  return redirectUri;
+  return encodeURIComponent(redirectUri);
 }
 
 function sendSwitchRole(tabId, data) {
