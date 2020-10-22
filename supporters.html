@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Supporters Program | AWS Extend Switch Roles</title>
+  <style>
+  html { padding: 10px 40px }
+  body {
+    background-color: #fafafa;
+    color: #2d2d2d;
+    font-size: 14px;
+    line-height: 1.75;
+    padding: 0;
+    margin: 0;
+  }
+  a { text-decoration: none }
+  h1, h2, h3, p { margin: .5em 0 }
+  h2 { font-size: 18px; }
+  h3 { font-size: 15px; }
+  section { margin: 30px 0 }
+  code {
+    color: #222;
+    font-weight: bold;
+  }
+  ul > li { padding-left: .25em; }
+  ol > li { padding-left: .5em }
+  .buttons {
+    margin: 1.5em 0;
+  }
+  .sponsorButton {
+    border: 1px solid #bbb;
+    border-radius: .5em;
+    padding: .3em .8em .5em;
+    font-family: -apple-system,BlinkMacSystemFont, "Segoe UI", Helvetica, Arial;
+    font-weight: 500;
+    color: #111;
+  }
+  #textareaKeyCode {
+    border: 1px solid #bbb;
+    font-size: 14px;
+    font-family: monospace;
+    padding: .5em;
+    line-height: 1.25;
+  }
+  </style>
+</head>
+<body>
+  <h1>Supporters Program</h1>
+
+  <p>
+    <b>AWS Extend Switch Roles</b> is hereinafter referred to as the <b>AESR</b>.
+    The "I" below refers to Toshimitsu Takahashi, who produces AESR.
+  </p>
+
+  <section>
+    <h2>Background</h2>
+    <p>
+      I believe that power users of AESR are saving a reasonable amount of business time.
+      I am painful that it isn't fair to get donations from a few users.
+      I have received no monetary or equivalent benefit from AWS for the production or distribution of AESR.
+    </p>
+  </section>
+
+  <section>
+    <h2>Points to be checked</h2>
+    <ul>
+      <li>It does not provide individual supports for your issues of AESR.</li>
+      <li>It does not grant a commercial license of AESR.</li>
+      <li>It does not affect the feature implementation or maintenance advantages of AESR whatsoever.</li>
+      <li>It does not make any additional features of AESR available.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to support as an organization</h2>
+    <p>
+      Tilfin Ltd. has multiple tiers of GitHub Sponsors depending on the number of users in your team or company. Tilfin Ltd. is a small company run by me.
+      Your organization can join the GitHub Sponsors. You don't need to count precisely the number of AESR installations, but you have to apply the number of users you use regularly.
+      I publish your AESR Golden Key code as a thank-you for your organization.
+      I post your company logo on particular pages if your organization is a company and joins above a certain tier ($75 a month) of GitHub Sponsors.
+    </p>
+    <div class="buttons">
+      <a class="sponsorButton" title="Sponsor @tilfinltd" target="_blank" rel="noopener" href="https://github.com/sponsors/tilfinltd">GitHub Sponsor</a>
+      <span style="color:#a00; font-size: small; margin-left: 2em">
+        I do not accept support from individuals.
+      </span>
+    </div>
+
+    <section>
+      <h3>To those who have donated before</h3>
+      <p>
+        If you have already donated, please contact me at <b>toshi@tilfin.com</b> with <b>the date,
+        the way and the amount</b>. I will email you the <b>AESR Golden Key</b> code as a thank-you.
+      </p>
+    </section>
+  </section>
+
+  <section>
+    <h2>Registration AESR Golden Key code</h2>
+    <p>Paste your key code in the below box.</p>
+    <div style="display: flex">
+      <textarea id="textareaKeyCode" spellcheck="false" style="width: 62ex; height: 27em"></textarea>
+      <div style="margin-left: 20px">
+        <p id="keyCodeValid" style="display: none">The key code has been registered ✅.<br>Thank you for your support.</p>
+        <p id="keyCodeInvalid" style="display: none">The key code is invalid ❌.</p>
+      </div>
+    </div>
+  </section>
+<script src="js/supporters.js"></script>
+</body>
+</html>

@@ -39,6 +39,8 @@ function brushAccountId(val) {
 }
 
 window.onload = function() {
+  const MANY_SWITCH_COUNT = 7;
+
   document.getElementById('openOptionsLink').onclick = function(e) {
     openOptions();
     return false;
@@ -54,6 +56,18 @@ window.onload = function() {
     return false;
   }
 
+  document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
+    chrome.tabs.create({ url: chrome.extension.getURL('supporters.html')}, function(tab){});
+    return false;
+  }
+
+  const hasGoldenKey = localStorage.getItem('hasGoldenKey');
+  const swcnt = localStorage.getItem('switchCount') || 0;
+  if (hasGoldenKey) {
+    document.getElementById('goldenkey').style.display = 'block';
+  } else if (swcnt > MANY_SWITCH_COUNT) {
+    document.getElementById('supportComment').style.display = 'block';
+  }
   main();
 }
 
@@ -213,6 +227,8 @@ function createRedirectURI(currentURL, destRegion, isGlobal) {
 
 function sendSwitchRole(tabId, data) {
   executeAction(tabId, 'switch', data).then(() => {
+    let swcnt = localStorage.getItem('switchCount') || 0;
+    localStorage.setItem('switchCount', ++swcnt);
     window.close()
   });
 }

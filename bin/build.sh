@@ -9,6 +9,7 @@ mkdir -p dist/firefox/js
 options=dist/chrome/js/options.js
 popup=dist/chrome/js/popup.js
 background=dist/chrome/js/background.js
+supporters=dist/chrome/js/supporters.js
 
 cat src/lib/load_aws_config.js         > $options
 cat src/lib/color_picker.js           >> $options
@@ -23,11 +24,16 @@ cat src/popup.js                      >> $popup
 cat src/lib/data_profiles_splitter.js  > $background
 cat src/lib/load_aws_config.js        >> $background
 cat src/lib/lz-string.min.js          >> $background
+cat src/lib/verify_jwt.js             >> $background
 cat src/background.js                 >> $background
+
+cat src/lib/verify_jwt.js             >  $supporters
+cat src/supporters.js                 >> $supporters
 
 \cp -f $options    dist/firefox/js/options.js
 \cp -f $popup      dist/firefox/js/popup.js
 \cp -f $background dist/firefox/js/background.js
+\cp -f $supporters dist/firefox/js/supporters.js
 
 jq -s '.[0] * .[1]' manifest.json manifest_chrome.json > dist/chrome/manifest.json
 jq -s '.[0] * .[1]' manifest.json manifest_firefox.json > dist/firefox/manifest.json
