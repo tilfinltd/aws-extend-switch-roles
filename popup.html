@@ -1,12 +1,15 @@
 <html>
 <head>
 <style>
+* { box-sizing: border-box }
 html { padding: 0 }
 body {
   background-color: #fff;
   margin: 0;
   padding: 0;
   font-family: "Segoe UI", Arial, Meiryo, sans-serif;
+  max-width: 600px;
+  max-height: 600px;
 }
 .optionMenu {
   list-style: none;
@@ -44,12 +47,13 @@ a:hover {
 }
 #main {
   font-size: 15px;
+  padding-bottom: 5px;
 }
 #roleList {
   padding: 0;
   margin: 0;
   overflow-x: hidden;
-  max-height: 550px;
+  max-height: 516px;
   scrollbar-width: thin;
 }
 #roleList li {
@@ -94,7 +98,7 @@ a:hover {
 <div style="display: flex">
   <div class="mainPane" style="min-width: 280px">
     <div id="main" style="display: none">
-      <div style="margin-top: 8px; padding: 8px;">
+      <div style="padding: 12px 6px 6px;">
         <span style="color: #2c2c2c">Role List</span>
         <input id="roleFilter" type="text" placeholder="Filter"
           style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
