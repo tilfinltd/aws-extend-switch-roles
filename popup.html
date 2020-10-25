@@ -35,13 +35,15 @@ a:hover {
   background-color: #e8fafa;
 }
 #openOptionsLink { font-weight: bold }
-main {
-  font-size: 15px;
-  min-width: 260px;
+
+.mainPane {
   border-right: 1px solid #ddd;
   padding-left: 10px;
   margin-right: 4px;
   padding-right: 10px;
+}
+#main {
+  font-size: 15px;
 }
 #roleList {
   padding: 0;
@@ -81,24 +83,29 @@ main {
   font-weight: normal;
   margin-left: 1.25em;
 }
-p.errmsg {
-  color: #dd1111;
+#noMain p {
   font-size: 12px;
-  padding: 10px;
+  margin: 12px 5px 5px 5px;
+  line-height: 1.66;
 }
 </style>
 </head>
 <body>
 <div style="display: flex">
-  <main id="main" style="display: none">
-    <div style="margin-top: 8px; padding: 8px;">
-      <span style="color: #2c2c2c">Role List</span>
-      <input id="roleFilter" type="text" placeholder="Filter"
-        style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
+  <div class="mainPane" style="min-width: 280px">
+    <div id="main" style="display: none">
+      <div style="margin-top: 8px; padding: 8px;">
+        <span style="color: #2c2c2c">Role List</span>
+        <input id="roleFilter" type="text" placeholder="Filter"
+          style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
+      </div>
+      <ul id="roleList">
+      </ul>
     </div>
-    <ul id="roleList">
-    </ul>
-  </main>
+    <div id="noMain" style="display: none;">
+      <p></p>
+    </div>
+  </div>
   <ul class="optionMenu">
     <li><a href="#" id="openOptionsLink">Configuration</a></li>
     <li><a href="#" id="openUpdateNoticeLink">Update Notice</a></li>

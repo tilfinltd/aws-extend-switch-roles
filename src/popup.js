@@ -66,8 +66,19 @@ function main() {
        || url.host.endsWith('.amazonaws.cn')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           loadFormList(url, userInfo, tab.id);
-          document.querySelector('main').style.display = 'block';
-        });
+          document.getElementById('main').style.display = 'block';
+        }).catch(err => {
+          const noMain = document.getElementById('noMain');
+          const p = noMain.querySelector('p');
+          p.textContent = 'Failed to fetch user info from the AWS Management Console page';
+          p.style.color = '#d11';
+          noMain.style.display = 'block';
+        })
+      } else {
+        const p = noMain.querySelector('p');
+        p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
+        p.style.color = '#666';
+        noMain.style.display = 'block';
       }
     })
 }
