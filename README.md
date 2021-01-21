@@ -131,14 +131,6 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 - **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
 
-## Donation
-
-Would you like to support this extension? I gladly accept small donations.
-
-[![Donate $5 via PayPal.Me](https://img.shields.io/badge/Donate-%245%20via%20PayPal.Me-blue.svg?longCache=true&style=popout&logo=paypal)](https://www.paypal.me/toshitilfin/5USD)
-
-![Donate with bitcoin](https://img.shields.io/badge/Donate-bitcoin-orange.svg?longCache=true&style=plastic&logo=bitcoin) [Bitcoin: 1C346W5vXaH7DjCyUUYeCj4GuXMTbNbLjk](bitcoin:1C346W5vXaH7DjCyUUYeCj4GuXMTbNbLjk)
-
 ## Appearance
 
 ![Screen Shot 1](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_1.png)
