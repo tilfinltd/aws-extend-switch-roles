@@ -5,7 +5,7 @@ Changelog
 
 - Fix encoding redirect URI in the particular AWS Console pages
 - Fix double scrollbars of the popup menu
-- Add supporters program and golden key feature
+- Add supporters program and golden key feature instead of donations
 - Change left pane in the popup menu to always be visible
 
 ## v2.0.5 (2020/10/04)
