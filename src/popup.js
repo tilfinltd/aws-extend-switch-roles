@@ -39,6 +39,8 @@ function brushAccountId(val) {
 }
 
 window.onload = function() {
+  const MANY_SWITCH_COUNT = 7;
+
   document.getElementById('openOptionsLink').onclick = function(e) {
     openOptions();
     return false;
@@ -54,6 +56,18 @@ window.onload = function() {
     return false;
   }
 
+  document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
+    chrome.tabs.create({ url: chrome.extension.getURL('supporters.html')}, function(tab){});
+    return false;
+  }
+
+  const hasGoldenKey = localStorage.getItem('hasGoldenKey');
+  const swcnt = localStorage.getItem('switchCount') || 0;
+  if (hasGoldenKey) {
+    document.getElementById('goldenkey').style.display = 'block';
+  } else if (swcnt > MANY_SWITCH_COUNT) {
+    document.getElementById('supportComment').style.display = 'block';
+  }
   main();
 }
 
@@ -65,9 +79,22 @@ function main() {
        || url.host.endsWith('.amazonaws-us-gov.com')
        || url.host.endsWith('.amazonaws.cn')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
-          loadFormList(url, userInfo, tab.id);
-          document.querySelector('main').style.display = 'block';
-        });
+          if (userInfo) {
+            loadFormList(url, userInfo, tab.id);
+            document.getElementById('main').style.display = 'block';
+          } else {
+            const noMain = document.getElementById('noMain');
+            const p = noMain.querySelector('p');
+            p.textContent = 'Failed to fetch user info from the AWS Management Console page';
+            p.style.color = '#d11';
+            noMain.style.display = 'block';
+          }
+        })
+      } else {
+        const p = noMain.querySelector('p');
+        p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
+        p.style.color = '#666';
+        noMain.style.display = 'block';
       }
     })
 }
@@ -117,7 +144,7 @@ function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccoun
     anchor.dataset.rolename = item.role_name;
     anchor.dataset.account = item.aws_account_id;
     anchor.dataset.color = color;
-    anchor.dataset.redirecturi = replaceRedirectURI(currentUrl, item.region, isGlobal);
+    anchor.dataset.redirecturi = createRedirectURI(currentUrl, item.region, isGlobal);
     anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
     anchor.appendChild(headSquare);
@@ -177,10 +204,10 @@ function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccoun
   document.getElementById('roleFilter').focus()
 }
 
-function replaceRedirectURI(currentURL, destRegion, isGlobal) {
-  if (!destRegion) return currentURL;
+function createRedirectURI(currentURL, destRegion, isGlobal) {
+  if (!destRegion) return encodeURIComponent(currentURL.href);
 
-  let redirectUri = decodeURIComponent(currentURL);
+  let redirectUri = currentURL.href;
   const md = currentURL.search.match(/region=([a-z\-1-9]+)/);
   if (md) {
     const currentRegion = md[1];
@@ -194,13 +221,14 @@ function replaceRedirectURI(currentURL, destRegion, isGlobal) {
         }
       }
     }
-    redirectUri = encodeURIComponent(redirectUri);
   }
-  return redirectUri;
+  return encodeURIComponent(redirectUri);
 }
 
 function sendSwitchRole(tabId, data) {
   executeAction(tabId, 'switch', data).then(() => {
+    let swcnt = localStorage.getItem('switchCount') || 0;
+    localStorage.setItem('switchCount', ++swcnt);
     window.close()
   });
 }

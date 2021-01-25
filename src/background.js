@@ -31,6 +31,20 @@ function saveAwsConfig(data, callback) {
   }
 }
 
+function initScript() {
+  localStorage.setItem('switchCount', 0);
+
+  chrome.storage.sync.get(['goldenKeyExpire'], function(data) {
+    const { goldenKeyExpire } = data;
+    if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
+      localStorage.setItem('hasGoldenKey', 't');
+      chrome.browserAction.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
+    }
+  })
+}
+
+chrome.runtime.onStartup.addListener(function () { initScript() })
+
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
   let page = null;
@@ -41,6 +55,8 @@ chrome.runtime.onInstalled.addListener(function (details) {
     const url = chrome.extension.getURL(page)
     chrome.tabs.create({ url }, function(){});
   }
+
+  initScript();
 })
 
 chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResponse) {

@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## v2.0.6 (2021/01/25)
+
+- Fix encoding redirect URI in the particular AWS Console pages
+- Fix double scrollbars of the popup menu
+- Add supporters program and golden key feature
+- Change left pane in the popup menu to always be visible
+
 ## v2.0.5 (2020/10/04)
 
 - Fix 'Show only matching roles'
