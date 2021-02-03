@@ -131,6 +131,10 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 - **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
 
+## Supporters
+
+<a href="https://classmethod.jp/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/classmethod.png" width="208" height="90"></a>
+
 ## Appearance
 
 ![Screen Shot 1](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_1.png)
