@@ -1,6 +1,6 @@
 {
   "name": "aws-extend-switch-roles",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Extend your AWS IAM switching roles by Chrome extension",
   "main": "index.js",
   "directories": {
