@@ -1,3 +1,7 @@
+import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
+import { loadAwsConfig } from './lib/load_aws_config.js'
+import { LZString } from './lib/lz-string.min.js'
+
 function saveAwsConfig(data, callback) {
   const rawstr = data;
 

@@ -9,7 +9,7 @@
   "scripts": {
     "archive": "./bin/build.sh; ./bin/archive.sh",
     "build": "./bin/build.sh",
-    "test": "mocha --timeout 10000 test/sample.test.js",
+    "test": "mocha --timeout 10000 test/lib/data_profiles_splitter.test.js",
     "test_ci": "",
     "coverage": "codecov"
   },
@@ -26,6 +26,8 @@
   "devDependencies": {
     "chai": "^4.3.0",
     "mocha": "^8.2.1",
-    "playwright": "^1.8.0"
-  }
+    "playwright": "^1.8.0",
+    "rollup": "^2.38.5"
+  },
+  "type": "module"
 }

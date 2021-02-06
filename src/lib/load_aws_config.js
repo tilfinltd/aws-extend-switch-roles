@@ -20,7 +20,7 @@ function brushProfile(item) {
 }
 
 
-function loadAwsConfig(text) {
+export function loadAwsConfig(text) {
   var profiles = [];
   var lines = text.split(/\r\n|\r|\n/);
 

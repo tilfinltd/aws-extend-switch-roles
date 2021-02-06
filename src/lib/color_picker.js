@@ -1,4 +1,4 @@
-function ColorPicker(doc) {
+export function ColorPicker(doc) {
   var colorPicker = doc.getElementById('colorPicker');
   var colorValue = doc.getElementById('colorValue');
   this.onpick = null;

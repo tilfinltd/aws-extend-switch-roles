@@ -1,3 +1,6 @@
+import { expect } from 'chai'
+import { DataProfilesSplitter } from '../../src/lib/data_profiles_splitter.js'
+
 describe('DataProfilesSplitter', () => {
   const dps = new DataProfilesSplitter();
 

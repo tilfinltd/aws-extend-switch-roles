@@ -1,3 +1,5 @@
+import { validateKeyCode } from './lib/verify_jwt'
+
 function updateKeyExpire(exp) {
   chrome.storage.sync.set({ goldenKeyExpire: exp });
   localStorage.setItem('hasGoldenKey', exp ? exp : '');
