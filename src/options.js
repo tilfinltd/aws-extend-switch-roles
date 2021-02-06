@@ -2,10 +2,14 @@ import { loadAwsConfig } from './lib/load_aws_config.js'
 import { ColorPicker } from './lib/color_picker.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { LZString } from './lib/lz-string.min.js'
+import { SyncStorageRepository } from './lib/storage_repository.js'
 
 function elById(id) {
   return document.getElementById(id);
 }
+
+const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+const configStorageRepo = new SyncStorageRepository(chrome || browser)
 
 window.onload = function() {
   let colorPicker = new ColorPicker(document);
@@ -46,19 +50,16 @@ window.onload = function() {
       const dataSet = dps.profilesToDataSet(profiles);
       dataSet.lztext = LZString.compressToUTF16(rawstr);
 
-      chrome.storage.sync.set(dataSet,
-        function() {
-          const { lastError } = chrome.runtime || browser.runtime;
-          if (lastError) {
-            updateMessage(msgSpan, lastError.message, '#dd1111');
-            return;
-          }
-
-          updateMessage(msgSpan, 'Configuration has been updated!', '#1111dd');
-          setTimeout(function() {
-            msgSpan.firstChild.remove();
-          }, 2500);
-        });
+      configStorageRepo.set(dataSet)
+      .then(() => {
+        updateMessage(msgSpan, 'Configuration has been updated!', '#1111dd');
+        setTimeout(() => {
+          msgSpan.firstChild.remove();
+        }, 2500);
+      })
+      .catch(lastError => {
+        updateMessage(msgSpan, lastError.message, '#dd1111');
+      });
     } catch (e) {
       updateMessage(msgSpan, 'Failed to save because of invalid format!', '#dd1111');
     }
@@ -67,15 +68,16 @@ window.onload = function() {
   const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
   for (let key of booleanSettings) {
     elById(`${key}CheckBox`).onchange = function() {
-      chrome.storage.sync.set({ [key]: this.checked });
+      syncStorageRepo.set({ [key]: this.checked });
     }
   }
 
   elById('configSenderIdText').onchange = function() {
-    chrome.storage.sync.set({ configSenderId: this.value });
+    syncStorageRepo.set({ configSenderId: this.value });
   }
 
-  chrome.storage.sync.get(['lztext', 'configSenderId'].concat(booleanSettings), function(data) {
+  syncStorageRepo.get(['lztext', 'configSenderId'].concat(booleanSettings))
+  .then(data => {
     let rawData = localStorage['rawdata'];
     if (data.lztext) {
       try {
@@ -92,7 +94,7 @@ window.onload = function() {
 
     if ('hidesHistory' in data) {
       // clean deprecated key
-      chrome.storage.sync.remove(['hidesHistory'], () => {})
+      syncStorageRepo.delete(['hidesHistory']).catch(() => {})
     }
   });
 }

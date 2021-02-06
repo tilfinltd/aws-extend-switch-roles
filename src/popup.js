@@ -1,5 +1,6 @@
 import { ProfileSet } from './lib/profile_set.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
+import { SyncStorageRepository } from './lib/storage_repository.js'
 
 function openOptions() {
   if (window.chrome) {
@@ -103,10 +104,12 @@ function main() {
 }
 
 function loadFormList(currentUrl, userInfo, tabId) {
-  chrome.storage.sync.get([
+  const storageRepo = new SyncStorageRepository(chrome || browser)
+  storageRepo.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
     'hidesAccountId', 'showOnlyMatchingRoles',
-  ], function(data) {
+  ])
+  .then(data => {
     const hidesAccountId = data.hidesAccountId || false;
     const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
 

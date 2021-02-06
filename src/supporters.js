@@ -1,9 +1,14 @@
 import { validateKeyCode } from './lib/verify_jwt'
+import { SyncStorageRepository } from './lib/storage_repository'
+
+const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 
 function updateKeyExpire(exp) {
-  chrome.storage.sync.set({ goldenKeyExpire: exp });
-  localStorage.setItem('hasGoldenKey', exp ? exp : '');
-  chrome.browserAction.setIcon({ path: `icons/Icon_48x48${exp ? '_g' : ''}.png` });
+  syncStorageRepo.set({ goldenKeyExpire: exp })
+  .then(() => {
+    localStorage.setItem('hasGoldenKey', exp ? exp : '');
+    chrome.browserAction.setIcon({ path: `icons/Icon_48x48${exp ? '_g' : ''}.png` });
+  })
 }
 
 function setEventHandler() {
@@ -59,7 +64,8 @@ window.onload = function() {
   
 ----------- END ------- AESR GOLDEN KEY ----------`;
 
-  chrome.storage.sync.get(['goldenKeyExpire'], function (data) {
+  syncStorageRepo.get(['goldenKeyExpire'])
+  .then(data => {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
       document.getElementById('keyCodeValid').style.display = 'block';
