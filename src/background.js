@@ -1,8 +1,11 @@
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { loadAwsConfig } from './lib/load_aws_config.js'
 import { LZString } from './lib/lz-string.min.js'
+import { SyncStorageRepository } from './lib/storage_repository.js'
 
-function saveAwsConfig(data, callback) {
+const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+
+function saveAwsConfig(data, callback, storageRepo) {
   const rawstr = data;
 
   try {
@@ -21,10 +24,10 @@ function saveAwsConfig(data, callback) {
     const dataSet = dps.profilesToDataSet(profiles);
     dataSet.lztext = LZString.compressToUTF16(rawstr);
 
-    chrome.storage.sync.set(dataSet,
-      function() {
-        callback({ result: 'success' });
-      });
+    storageRepo.set(dataSet)
+    .then(() => {
+      callback({ result: 'success' });
+    });
   } catch (e) {
     callback({
       result: 'failure',
@@ -38,7 +41,8 @@ function saveAwsConfig(data, callback) {
 function initScript() {
   localStorage.setItem('switchCount', 0);
 
-  chrome.storage.sync.get(['goldenKeyExpire'], function(data) {
+  syncStorageRepo.get(['goldenKeyExpire'])
+  .then(data => {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
       localStorage.setItem('hasGoldenKey', 't');
@@ -83,10 +87,12 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
     return;
   }
 
-  chrome.storage.sync.get(['configSenderId'], function(settings) {
+  syncStorageRepo.get(['configSenderId'])
+  .then(settings => {
+    const configStorageRepo = new StorageRepository(chrome || browser, 'sync');
     const configSenderIds = (settings.configSenderId || '').split(',');
     if (configSenderIds.includes(sender.id)) {
-      saveAwsConfig(data, sendResponse)
+      saveAwsConfig(data, sendResponse, configStorageRepo)
     } else {
       setTimeout(() => {
         sendResponse({
