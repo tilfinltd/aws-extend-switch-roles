@@ -9,7 +9,7 @@
   "scripts": {
     "archive": "./bin/build.sh; ./bin/archive.sh",
     "build": "./bin/build.sh",
-    "test": "",
+    "test": "mocha --timeout 10000 test/sample.test.js",
     "test_ci": "",
     "coverage": "codecov"
   },
