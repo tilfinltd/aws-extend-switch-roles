@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "archive": "./bin/build.sh; ./bin/archive.sh",
+    "archive": "npm run build; ./bin/archive.sh",
     "build": "./bin/build.sh",
     "test": "mocha --timeout 10000 test/lib/data_profiles_splitter.test.js",
     "test_ci": "",
