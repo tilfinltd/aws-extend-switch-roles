@@ -1,4 +1,4 @@
-class DataProfilesSplitter {
+export class DataProfilesSplitter {
   constructor(by) {
     this.by = by || 40;
   }

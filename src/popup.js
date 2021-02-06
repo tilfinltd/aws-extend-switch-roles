@@ -1,3 +1,6 @@
+import { ProfileSet } from './lib/profile_set.js'
+import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
+
 function openOptions() {
   if (window.chrome) {
     chrome.runtime.openOptionsPage(err => {

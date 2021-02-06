@@ -1,3 +1,8 @@
+import { loadAwsConfig } from './lib/load_aws_config.js'
+import { ColorPicker } from './lib/color_picker.js'
+import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
+import { LZString } from './lib/lz-string.min.js'
+
 function elById(id) {
   return document.getElementById(id);
 }

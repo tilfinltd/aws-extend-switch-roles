@@ -1,4 +1,4 @@
-class ProfileSet {
+export class ProfileSet {
   constructor(items, baseAccount, { filterByTargetRole }) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};

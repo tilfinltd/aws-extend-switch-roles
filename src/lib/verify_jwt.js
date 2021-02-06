@@ -40,7 +40,7 @@ async function verifyJWT(token, key) {
   return data;
 }
 
-async function validateKeyCode(keyCode) {
+export async function validateKeyCode(keyCode) {
   const lines = keyCode.split('\n');
   const contents = lines.slice(1, -1);
   const metadatas = {};

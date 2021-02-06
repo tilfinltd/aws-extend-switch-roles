@@ -11,24 +11,10 @@ popup=dist/chrome/js/popup.js
 background=dist/chrome/js/background.js
 supporters=dist/chrome/js/supporters.js
 
-cat src/lib/load_aws_config.js         > $options
-cat src/lib/color_picker.js           >> $options
-cat src/lib/data_profiles_splitter.js >> $options
-cat src/lib/lz-string.min.js          >> $options
-cat src/options.js                    >> $options
-
-cat src/lib/profile_set.js            >  $popup
-cat src/lib/data_profiles_splitter.js >> $popup
-cat src/popup.js                      >> $popup
-
-cat src/lib/data_profiles_splitter.js  > $background
-cat src/lib/load_aws_config.js        >> $background
-cat src/lib/lz-string.min.js          >> $background
-cat src/lib/verify_jwt.js             >> $background
-cat src/background.js                 >> $background
-
-cat src/lib/verify_jwt.js             >  $supporters
-cat src/supporters.js                 >> $supporters
+rollup src/options.js --file $options
+rollup src/popup.js --file $popup
+rollup src/background.js --file $background
+rollup src/supporters.js --file $supporters
 
 \cp -f $options    dist/firefox/js/options.js
 \cp -f $popup      dist/firefox/js/popup.js
