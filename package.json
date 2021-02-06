@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/tilfin/aws-extend-switch-roles.git"
   },
-  "author": "Toshimitsu Takahashi",
+  "author": "Toshimitsu Takahashi (Tilfin Ltd.)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tilfin/aws-extend-switch-roles/issues"
