@@ -1,6 +1,6 @@
 import { ProfileSet } from './lib/profile_set.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
-import { SyncStorageRepository } from './lib/storage_repository.js'
+import { StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
 function openOptions() {
   if (window.chrome) {
@@ -105,29 +105,30 @@ function main() {
 
 function loadFormList(currentUrl, userInfo, tabId) {
   const storageRepo = new SyncStorageRepository(chrome || browser)
-  storageRepo.get([
-    'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
-    'hidesAccountId', 'showOnlyMatchingRoles',
-  ])
+  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea'])
   .then(data => {
     const hidesAccountId = data.hidesAccountId || false;
     const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
+    const configStorageArea = data.configStorageArea || 'sync';
 
-    if (data.profiles) {
-      const dps = new DataProfilesSplitter();
-      const profiles = dps.profilesFromDataSet(data);
-      const {
-        loginDisplayNameAccount, loginDisplayNameUser,
-        roleDisplayNameAccount, roleDisplayNameUser, isGlobal
-      } = userInfo;
-
-      const baseAccount = brushAccountId(loginDisplayNameAccount);
-      const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
-      const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
-
-      const list = document.getElementById('roleList');
-      loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
-    }
+    new StorageRepository(chrome || browser, configStorageArea).get(['profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'])
+    .then(data => {
+      if (data.profiles) {
+        const dps = new DataProfilesSplitter();
+        const profiles = dps.profilesFromDataSet(data);
+        const {
+          loginDisplayNameAccount, loginDisplayNameUser,
+          roleDisplayNameAccount, roleDisplayNameUser, isGlobal
+        } = userInfo;
+  
+        const baseAccount = brushAccountId(loginDisplayNameAccount);
+        const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
+        const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
+  
+        const list = document.getElementById('roleList');
+        loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
+      }
+    })
   });
 }
 

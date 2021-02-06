@@ -113,6 +113,11 @@ code {
     <li><label for="hidesAccountIdCheckBox"><input type="checkbox" id="hidesAccountIdCheckBox">Hide account id</label></li>
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
     <li><s><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </s> (temporarily disabled) </li>
+    <li>
+      Configuration storage:
+      <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
+      <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
+    </li>
   </ul>
  </section>
  <section id="api">
@@ -216,12 +221,16 @@ source_profile = Org2-BaseAccount
    <li><b>Hide account id</b> hides the account_id for each profile.</li>
    <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
    <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
+   <li><b>Configuration storage</b> specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles.
+    'Local' is the exact opposite of 'Sync.'</li>
   </ul>
  </section>
  <section>
   <h3>Extension API</h3>
   <ul>
-   <li><b>Config sender extension</b> allowed by the **ID** can send your switch roles configuration to this extension. <a href="https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension" target="_blank" rel="noopener noreferrer">See</a> how to make your config sender extension.</li>
+   <li><b>Config sender extension</b> allowed by the <b>ID</b> can send your switch roles configuration to this extension.
+     <strong style="color:#d00">'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.</strong>
+     <a href="https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension" target="_blank" rel="noopener noreferrer">See</a> how to make your config sender extension.</li>
   </ul>
  </section>
 </div>
