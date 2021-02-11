@@ -43,7 +43,7 @@ function brushAccountId(val) {
 }
 
 window.onload = function() {
-  const MANY_SWITCH_COUNT = 7;
+  const MANY_SWITCH_COUNT = 4;
 
   document.getElementById('openOptionsLink').onclick = function(e) {
     openOptions();

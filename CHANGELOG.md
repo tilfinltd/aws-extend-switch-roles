@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 2.1.0 (2021/XX/XX)
+
+- Implement 'Configuration storage' setting to select 'Sync' or 'Local'
+- Change the configuration by Config Sender API saving to 'Local' storage
+- Strictly validate the AWS Configuration and change the error message distinct
+
 ## v2.0.6 (2021/01/25)
 
 - Fix encoding redirect URI in the particular AWS Console pages
