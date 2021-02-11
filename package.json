@@ -9,7 +9,7 @@
   "scripts": {
     "archive": "npm run build; ./bin/archive.sh",
     "build": "./bin/build.sh",
-    "test": "mocha --timeout 10000 test/lib/data_profiles_splitter.test.js",
+    "test": "mocha --timeout 10000 test/lib/*.test.js",
     "test_ci": "",
     "coverage": "codecov"
   },
