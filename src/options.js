@@ -61,7 +61,7 @@ window.onload = function() {
         updateMessage(msgSpan, lastError.message, '#dd1111');
       });
     } catch (e) {
-      updateMessage(msgSpan, 'Failed to save because of invalid format!', '#dd1111');
+      updateMessage(msgSpan, `Failed to save because ${e.message}`, '#dd1111');
     }
   }
 
