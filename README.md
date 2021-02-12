@@ -125,10 +125,11 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 - **Hide account id** hides the account_id for each profile.
 - **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
 - ~~**Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.~~ **temporarily disabled**
+- **Configuration storage** specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles. 'Local' is the exact opposite of 'Sync.'
 
 ## Extension API
 
-- **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
+- **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. **'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.** [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
 
 ## Supporters
 
