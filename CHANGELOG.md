@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 2.1.0 (2021/02/XX)
+## 2.1.0 (2021/02/12)
 
 - Implement 'Configuration storage' setting to select 'Sync' or 'Local' (thanks to @reegnz)
 - Change the configuration by Config Sender API saving to 'Local' storage
