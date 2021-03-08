@@ -1,3 +1,14 @@
+# Dear my early donators and current supporters ![Golden Key](./icons/Icon_48x48_g.png)
+You have a ticket to get the AESR Golden Key code. If you have not got it yet, please contact me.
+
+### for my early donator via PayPal or Bitcoin
+Please check *To those who have donated before* section of **Supporters** in the AESR pop-up menu of your browser.
+
+### for current supporters (GitHub Sponsors)
+Please check **Request for Contact Information** in https://github.com/sponsors/tilfinltd.
+
+---
+
 # AWS Extend Switch Roles
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jpmkfafbacpgapdghgdpembnojdlgkdl.svg)](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
