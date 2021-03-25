@@ -39,8 +39,7 @@ It does not restrict the use of other compatible browsers. The version restricti
 ## Configuration
 
 Click Browser button, edit your profile settings to text area in popup form and save.
-
-Supports ~/.aws/config format and like ~/.aws/credentials
+You can write the configuration in INI format like `~/.aws/config` and `~/.aws/credentials`.
 
 ### Simple Configuration
 The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name`.
