@@ -144,6 +144,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 ## Supporters
 
 <a href="https://classmethod.jp/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/classmethod.png" width="208" height="90"></a>
+<a href="https://www.doit-intl.com/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/doitintl.png" width="208" height="90"></a>
 
 ## Appearance
 
