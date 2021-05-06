@@ -38,9 +38,8 @@ This extension does not restrict the use of other compatible browsers. The versi
 
 ## Configuration
 
-Click Browser button, edit your profile settings to text area in popup form and save.
-You can write the configuration in INI format like `~/.aws/config` and `~/.aws/credentials`.
-You can enter the configuration directly in the browser extension and click "SAVE".
+Left-click the extension, click "Configure", enter your configuration in the text box, and click "Save".
+You can write the configuration in INI format like `~/.aws/config` or `~/.aws/credentials`.
 
 ### Simple Configuration
 The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name`.
