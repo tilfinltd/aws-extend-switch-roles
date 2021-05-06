@@ -1,5 +1,5 @@
-# Dear my early donators and current supporters ![Golden Key](./icons/Icon_48x48_g.png)
-You have a ticket to get the AESR Golden Key code. If you have not got it yet, please contact me.
+# Dear early donators and current supporters ![Golden Key](./icons/Icon_48x48_g.png)
+You have a ticket to get the AESR Golden Key code. If you don't have it yet, please contact me.
 
 ### for my early donator via PayPal or Bitcoin
 Please check *To those who have donated before* section of **Supporters** in the AESR pop-up menu of your browser.
@@ -17,8 +17,8 @@ Please check **Request for Contact Information** in https://github.com/sponsors/
 
 Extend your AWS IAM switching roles by Chrome extension, Firefox add-on, or Edge add-on
 
-Switch roll history does not remain only 5 maximum on the AWS Management Console.
-This extension give you show all of switch roles from a browse menu by loading your aws configuration.
+Switch roll history only stores the last 5 roles (maximum) on the AWS Management Console.
+This extension shows a menu of roles that you can configure manually.
 
 - Supports Chrome Sync
 
@@ -40,6 +40,7 @@ It does not restrict the use of other compatible browsers. The version restricti
 
 Click Browser button, edit your profile settings to text area in popup form and save.
 You can write the configuration in INI format like `~/.aws/config` and `~/.aws/credentials`.
+You can enter the configuration directly in the browser extension and click "SAVE".
 
 ### Simple Configuration
 The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name`.
