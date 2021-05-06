@@ -18,7 +18,7 @@ Please check **Request for Contact Information** in https://github.com/sponsors/
 Extend your AWS IAM switching roles by Chrome extension, Firefox add-on, or Edge add-on
 
 Switch roll history only stores the last 5 roles (maximum) on the AWS Management Console.
-This extension shows a menu of roles that you can configure manually.
+This extension shows a menu of switchable roles that you can configure manually.
 
 - Supports Chrome Sync
 
@@ -27,7 +27,7 @@ This extension shows a menu of roles that you can configure manually.
 ##### Minimizes required permissions and operates only on AWS Console pages
 A browser plug-in goes with security risks. AWS Management Console allows you to manipulate your essential data.
 
-##### Supports only the  latest version for each official browser
+##### Supports only the  latest version of each official browser
 This extension does not restrict the use of other compatible browsers. The version restrictions are only due to the JavaScript language features used.
 
 ## Install
