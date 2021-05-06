@@ -24,11 +24,11 @@ This extension shows a menu of roles that you can configure manually.
 
 ### Development and Distribution Guideline
 
-##### Minimize required permissions and operating the page of Console
+##### Minimizes required permissions and operates only on AWS Console pages
 A browser plug-in goes with security risks. AWS Management Console allows you to manipulate your essential data.
 
-##### Support the only latest version for each official build browser
-It does not restrict the use of other compatible browsers. The version restrictions are based on JavaScript language features used.
+##### Supports only the  latest version for each official browser
+This extension does not restrict the use of other compatible browsers. The version restrictions are only due to the JavaScript language features used.
 
 ## Install
 
