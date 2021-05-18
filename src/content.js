@@ -43,6 +43,8 @@ function appendAESR() {
   const form = document.createElement('form');
   form.id = 'AESR_form';
   form.method = 'POST';
+  form.target = '_top';
+  form.action = 'https://signin.aws.amazon.com/switchrole';
   form.innerHTML = '<input type="hidden" name="mfaNeeded" value="0"><input type="hidden" name="action" value="switchFromBasis"><input type="hidden" name="src" value="nav"><input type="hidden" name="csrf"><input type="hidden" name="roleName"><input type="hidden" name="account"><input type="hidden" name="color"><input type="hidden" name="redirect_uri"><input type="hidden" name="displayName">';
   document.body.appendChild(form)
 
@@ -78,7 +80,7 @@ if (document.body) {
   } else if (action === 'switch') {
     const actionHost = extractBackURL().host;
     const form = document.getElementById('AESR_form');
-    form.setAttribute('action', `https://${actionHost}/switchrole`);
+    
     form.account.value = data.account;
     form.color.value = data.color;
     form.roleName.value = data.rolename;

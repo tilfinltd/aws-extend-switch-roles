@@ -220,13 +220,6 @@ function createRedirectURI(currentURL, destRegion, isGlobal) {
     const currentRegion = md[1];
     if (currentRegion !== destRegion) {
       redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
-      if (!isGlobal) {
-        if (currentRegion === 'us-east-1') {
-          redirectUri = redirectUri.replace('://', `://${destRegion}.`);
-        } else if (destRegion === 'us-east-1') {
-          redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
-        }
-      }
     }
   }
   return encodeURIComponent(redirectUri);
