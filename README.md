@@ -1,5 +1,5 @@
-# Dear my early donators and current supporters ![Golden Key](./icons/Icon_48x48_g.png)
-You have a ticket to get the AESR Golden Key code. If you have not got it yet, please contact me.
+# Dear early donators and current supporters ![Golden Key](./icons/Icon_48x48_g.png)
+You have a ticket to get the AESR Golden Key code. If you don't have it yet, please contact me.
 
 ### for my early donator via PayPal or Bitcoin
 Please check *To those who have donated before* section of **Supporters** in the AESR pop-up menu of your browser.
@@ -17,18 +17,18 @@ Please check **Request for Contact Information** in https://github.com/sponsors/
 
 Extend your AWS IAM switching roles by Chrome extension, Firefox add-on, or Edge add-on
 
-Switch roll history does not remain only 5 maximum on the AWS Management Console.
-This extension give you show all of switch roles from a browse menu by loading your aws configuration.
+Switch roll history only stores the last 5 roles (maximum) on the AWS Management Console.
+This extension shows a menu of switchable roles that you can configure manually.
 
 - Supports Chrome Sync
 
 ### Development and Distribution Guideline
 
-##### Minimize required permissions and operating the page of Console
+##### Minimizes required permissions and operates only on AWS Console pages
 A browser plug-in goes with security risks. AWS Management Console allows you to manipulate your essential data.
 
-##### Support the only latest version for each official build browser
-It does not restrict the use of other compatible browsers. The version restrictions are based on JavaScript language features used.
+##### Supports only the  latest version of each official browser
+This extension does not restrict the use of other compatible browsers. The version restrictions are only due to the JavaScript language features used.
 
 ## Install
 
@@ -38,8 +38,8 @@ It does not restrict the use of other compatible browsers. The version restricti
 
 ## Configuration
 
-Click Browser button, edit your profile settings to text area in popup form and save.
-You can write the configuration in INI format like `~/.aws/config` and `~/.aws/credentials`.
+Left-click the extension, click "Configure", enter your configuration in the text box, and click "Save".
+You can write the configuration in INI format like `~/.aws/config` or `~/.aws/credentials`.
 
 ### Simple Configuration
 The simplest configuration is for multiple **target roles** when you always intend to show the whole list.  **Target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name`.
