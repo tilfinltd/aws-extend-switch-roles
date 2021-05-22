@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0",
+  "version": "2.1.1",
   "applications": {
     "gecko": {
       "id": "aws-extend-switch-roles@toshi.tilfin.com",

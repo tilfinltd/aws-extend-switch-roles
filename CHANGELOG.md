@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.1.1 (2021/05/22)
+
+- Fix switching region broken by a strict change in the CSP of AWS Console
+
 ## 2.1.0 (2021/02/12)
 
 - Implement 'Configuration storage' setting to select 'Sync' or 'Local' (thanks to @reegnz)
