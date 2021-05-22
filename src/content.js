@@ -43,6 +43,7 @@ function appendAESR() {
   const form = document.createElement('form');
   form.id = 'AESR_form';
   form.method = 'POST';
+  form.target = '_top';
   form.innerHTML = '<input type="hidden" name="mfaNeeded" value="0"><input type="hidden" name="action" value="switchFromBasis"><input type="hidden" name="src" value="nav"><input type="hidden" name="csrf"><input type="hidden" name="roleName"><input type="hidden" name="account"><input type="hidden" name="color"><input type="hidden" name="redirect_uri"><input type="hidden" name="displayName">';
   document.body.appendChild(form)
 

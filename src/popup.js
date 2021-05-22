@@ -151,7 +151,7 @@ function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccoun
     anchor.dataset.rolename = item.role_name;
     anchor.dataset.account = item.aws_account_id;
     anchor.dataset.color = color;
-    anchor.dataset.redirecturi = createRedirectURI(currentUrl, item.region, isGlobal);
+    anchor.dataset.redirecturi = createRedirectURI(currentUrl, item.region);
     anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
     anchor.appendChild(headSquare);
@@ -211,7 +211,7 @@ function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccoun
   document.getElementById('roleFilter').focus()
 }
 
-function createRedirectURI(currentURL, destRegion, isGlobal) {
+function createRedirectURI(currentURL, destRegion) {
   if (!destRegion) return encodeURIComponent(currentURL.href);
 
   let redirectUri = currentURL.href;
@@ -219,14 +219,7 @@ function createRedirectURI(currentURL, destRegion, isGlobal) {
   if (md) {
     const currentRegion = md[1];
     if (currentRegion !== destRegion) {
-      redirectUri = redirectUri.replace(new RegExp(currentRegion, 'g'), destRegion);
-      if (!isGlobal) {
-        if (currentRegion === 'us-east-1') {
-          redirectUri = redirectUri.replace('://', `://${destRegion}.`);
-        } else if (destRegion === 'us-east-1') {
-          redirectUri = redirectUri.replace(/:\/\/[^.]+\./, '://');
-        }
-      }
+      redirectUri = redirectUri.replace('region=' + currentRegion, 'region=' + destRegion);
     }
   }
   return encodeURIComponent(redirectUri);
