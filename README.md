@@ -20,7 +20,8 @@ Extend your AWS IAM switching roles by Chrome extension, Firefox add-on, or Edge
 Switch roll history only stores the last 5 roles (maximum) on the AWS Management Console.
 This extension shows a menu of switchable roles that you can configure manually.
 
-- Supports Chrome Sync
+- Supports the Sync feature on all sorts of browsers
+- Not support switching between AWS accounts you sign into with AWS SSO or SAML solution providers directly
 
 ### Development and Distribution Guideline
 
