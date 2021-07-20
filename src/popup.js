@@ -85,7 +85,7 @@ function main() {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           if (userInfo) {
             loadFormList(url, userInfo, tab.id);
-            document.getElementById('main').style.display = 'block';
+            document.getElementById('main').style.display = 'flex';
           } else {
             const noMain = document.getElementById('noMain');
             const p = noMain.querySelector('p');
