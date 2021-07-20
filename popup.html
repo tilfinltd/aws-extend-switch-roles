@@ -10,6 +10,7 @@ body {
   font-family: "Segoe UI", Arial, Meiryo, sans-serif;
   max-width: 600px;
   max-height: 600px;
+  min-height: 480px;
 }
 .optionMenu {
   list-style: none;
@@ -45,6 +46,8 @@ a:hover {
 #main {
   font-size: 15px;
   padding-bottom: 5px;
+  height: 100%;
+  flex-direction: column;
 }
 #roleList {
   padding: 0;
@@ -97,7 +100,7 @@ a:hover {
 </style>
 </head>
 <body>
-<div style="display: flex">
+<div style="display: flex; height: 100%">
   <div class="mainPane" style="min-width: 280px">
     <div id="main" style="display: none">
       <div style="padding: 12px 6px 6px;">
