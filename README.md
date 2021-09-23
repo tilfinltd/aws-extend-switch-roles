@@ -70,13 +70,13 @@ image = "https://via.placeholder.com/150"
 ### Complex Configuration
 More complex configurations involve multiple AWS accounts and/or organizations.
 
-- A profile that has only `aws_account_id` (without a `role_name`) is defined as **base account**.
+- A profile specified by the `source_profile` of the others is defined as a **base account**.
 
 - **If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.**
 
-- If an `entry_role` is specified in a **base account** it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS.
+- If an `role_name` is specified in a **base account** it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS.
 
-- A **target role** is associated with a **base account** by the **target role** specifying a `source_profile`.
+- A **target role** is associated with a **base account** by its `source_profile` specifying the profile name of the base account.
 
 - As above, **target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name` and can optionally pass the optional parameters.
 
