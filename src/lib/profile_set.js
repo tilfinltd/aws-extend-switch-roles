@@ -6,7 +6,7 @@ export function createProfileSet(profiles, userInfo, settings) {
   const { showOnlyMatchingRoles } = settings;
 
   const baseAccount = brushAccountId(loginDisplayNameAccount);
-  const loginRole = loginDisplayNameUser.split("/", 2)[0]
+  const loginRole = extractLoginRoleFromSSO(loginDisplayNameUser.split("/", 2)[0])
   const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginRole) : null;
 
   return new ProfileSet(profiles, baseAccount, { loginRole, filterByTargetRole });
@@ -77,4 +77,13 @@ function brushAccountId(val) {
   const r = val.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
   if (!r) return val;
   return r[1] + r[2] + r[3];
+}
+
+const awsSsoReserved = "AWSReservedSSO_";
+function extractLoginRoleFromSSO(loginRole) {
+  if (loginRole.startsWith(awsSsoReserved)) {
+    var lastUnderscore = loginRole.lastIndexOf('_');
+    loginRole = loginRole.substr(awsSsoReserved.length, lastUnderscore-awsSsoReserved.length);
+  }
+  return loginRole
 }
