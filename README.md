@@ -74,6 +74,8 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 
 - **If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.**
 
+- If an `role_name` is specified in a **base account** it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS.
+
 - A **target role** is associated with a **base account** by its `source_profile` specifying the profile name of the base account.
 
 - As above, **target roles** can be expressed with a `role_arn` or with both `aws_account_id` and `role_name` and can optionally pass the optional parameters.
@@ -125,6 +127,27 @@ source_profile = Org2-BaseAccount
 aws_account_id = 222200002222
 role_name = Manager ; overrides target role name
 source_profile = Org2-BaseAccount
+
+;
+; entry_role example
+;
+[Org3-BaseAccount1]
+aws_account_id = 333300000000
+entry_role = Entry-Role-1
+
+[Org3-BaseAccount2]
+aws_account_id = 333300000000
+entry_role = Entry-Role-2
+
+[Org3-Account1-Role1]
+aws_account_id = 333300001111
+role_name = Role1
+source_profile = Org3-BaseAccount1
+
+[Org2-Account2-Role2]
+aws_account_id = 222200002222
+role_name = Role2
+source_profile = Org3-BaseAccount2
 ```
 
 If you sign-in a base account, target roles of the other base accounts are excluded.

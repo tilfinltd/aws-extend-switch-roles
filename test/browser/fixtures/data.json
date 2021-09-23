@@ -10,6 +10,12 @@
     { "profile": "b-prod", "aws_account_id": "666611114444", "role_name": "prod-role", "source_profile": "base-b", "color": "ffcc333" },
     { "profile": "b-renpou", "aws_account_id": "666611115555", "role_name": "renpou", "source_profile": "base-b" },
     { "profile": "a-stg-image",  "aws_account_id": "555511113333", "role_name": "stg-role-image", "source_profile": "base-a", "image": "not-found.png" },
-    { "profile": "b-prod-image", "aws_account_id": "666611114444", "role_name": "prod-role-image", "source_profile": "base-b", "image": "not-found.png" }
+    { "profile": "b-prod-image", "aws_account_id": "666611114444", "role_name": "prod-role-image", "source_profile": "base-b", "image": "not-found.png" },
+    { "profile": "base-c-1", "aws_account_id": "777711112222", "entry_role": "entry-role-c-1" },
+    { "profile": "c-1-stg",  "aws_account_id": "888811113333", "role_name": "stg-role", "source_profile": "base-c-1", "color": "00ddff" },
+    { "profile": "c-1-prod", "aws_account_id": "888811114444", "role_name": "prod-role", "source_profile": "base-c-1", "region": "ap-northwest-1" },
+    { "profile": "base-c-2", "aws_account_id": "777711112222", "entry_role": "entry-role-c-2" },
+    { "profile": "c-2-stg",  "aws_account_id": "999911113333", "role_name": "stg-role", "source_profile": "base-c-2", "color": "00ddff" },
+    { "profile": "c-2-prod", "aws_account_id": "999911114444", "role_name": "prod-role", "source_profile": "base-c-2", "region": "ap-northwest-1" }
   ]
 }

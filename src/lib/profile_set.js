@@ -6,13 +6,14 @@ export function createProfileSet(profiles, userInfo, settings) {
   const { showOnlyMatchingRoles } = settings;
 
   const baseAccount = brushAccountId(loginDisplayNameAccount);
-  const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
+  const loginRole = loginDisplayNameUser.split("/", 2)[0]
+  const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginRole) : null;
 
-  return new ProfileSet(profiles, baseAccount, { filterByTargetRole });
+  return new ProfileSet(profiles, baseAccount, { loginRole, filterByTargetRole });
 }
 
 export class ProfileSet {
-  constructor(items, baseAccount, { filterByTargetRole }) {
+  constructor(items, baseAccount, { loginRole, filterByTargetRole }) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
@@ -33,14 +34,16 @@ export class ProfileSet {
 
     independentOrSrcProfiles.forEach(item => {
       if (item.profile in destsBySrcMap) {
-        this.srcProfileMap[item.aws_account_id] = item;
+        let key = item.aws_account_id;
+        if (item.role_name) key += item.role_name;
+        this.srcProfileMap[key] = item;
       } else {
         independentDests.push(item)
       }
     });
 
     let complexDests = [];
-    const baseProfile = this.srcProfileMap[baseAccount];
+    const baseProfile = this.srcProfileMap[baseAccount + "/" + loginRole] || this.srcProfileMap[baseAccount];
     if (baseProfile) {
       complexDests = this._decideComplexDestProfiles(baseProfile, destsBySrcMap, filterByTargetRole);
       delete destsBySrcMap[baseProfile.profile];
