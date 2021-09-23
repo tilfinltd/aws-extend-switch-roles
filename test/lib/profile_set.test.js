@@ -342,6 +342,68 @@ describe('createProfileSet', () => {
         role_name: 'prod-role',
       });
     });
+
+    it('base account has role_name that is AWS SSO permission set', () => {
+      const profiles = [
+        { profile: 'base-a', aws_account_id: '555511112222' },
+        {
+          profile: 'a-stg',
+          aws_account_id: '555511113333',
+          role_name: 'stg-role',
+          source_profile: 'base-a',
+          color: '00ddff',
+        },
+        {
+          profile: 'base-c-1',
+          aws_account_id: '777711112222',
+          role_name: 'custom_permssion-set',
+        },
+        {
+          profile: 'c-1-stg',
+          aws_account_id: '888811113333',
+          role_name: 'stg-role',
+          source_profile: 'base-c-1',
+          color: '00ddff',
+        },
+        {
+          profile: 'c-1-prod',
+          aws_account_id: '888811114444',
+          role_name: 'prod-role',
+          source_profile: 'base-c-1',
+          region: 'ap-northwest-1',
+        },
+        {
+          profile: 'base-c-2',
+          aws_account_id: '777711112222',
+          role_name: 'AdministratorAccess',
+        },
+        {
+          profile: 'c-2-stg',
+          aws_account_id: '999911113333',
+          role_name: 'stg-role',
+          source_profile: 'base-c-2',
+          color: '00ddff',
+        },
+      ];
+      const userInfo = {
+        loginDisplayNameAccount: '7777-1111-2222',
+        loginDisplayNameUser: 'AWSReservedSSO_custom_permssion-set_0123456789abcdef/tilfin-sso',
+        roleDisplayNameAccount: undefined,
+        roleDisplayNameUser: undefined,
+      };
+      const settings = { showOnlyMatchingRoles: false };
+
+      const profileSet = createProfileSet(profiles, userInfo, settings);
+      expect(profileSet.destProfiles.length).to.eq(2);
+      expect(profileSet.destProfiles[0]).to.deep.include({
+        profile: 'c-1-stg',
+        role_name: 'stg-role',
+      });
+      expect(profileSet.destProfiles[1]).to.deep.include({
+        profile: 'c-1-prod',
+        role_name: 'prod-role',
+      });
+    });
   });
 
   describe('when userInfo is on switched', () => {

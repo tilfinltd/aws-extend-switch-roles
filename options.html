@@ -162,6 +162,9 @@ image = "https://via.placeholder.com/150"
   <ul>
    <li>A profile specified by the <code>source_profile</code> of the others is defined as <b>base account</b></li>
    <li><b>If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.</b></li>
+   <li>If an <code>role_name</code> is specified in a <b>base account</b> it will also check for the role that is used to login to AWS.
+    This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS. If a role name starts with <i>AWSReservedSSO_</i>, the value should be only the <b>permission set</b>>** name.
+  </li>
    <li>A <b>target role</b> is associated with a <b>base account</b> by its <code>source_profile</code> specifying the profile name of the base account.</li>
    <li>As above, <b>target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code> and can pass the optional parameters.</li>
    <li>If <code>target_role_name</code> is set in <b>base account</b>, the value is provided as the default role name for each <b>target roles</b>.</li>
@@ -211,6 +214,27 @@ source_profile = Org2-BaseAccount
 aws_account_id = 222200002222
 role_name = Manager ; overrides target role name
 source_profile = Org2-BaseAccount
+
+;
+; base account with role_name example
+;
+[Org3-BaseAccount1]
+aws_account_id = 333300000000
+role_name = Entry-Role-1 ; Role for Federated Login, or User to login
+
+[Org3-BaseAccount2]
+aws_account_id = 333300000000
+role_name = custom_permission-set ; DO NOT set AWSReservedSSO_custom_permission-set_0123456890abcdef
+
+[Org3-Account1-Role1]
+aws_account_id = 333300001111
+role_name = Role1
+source_profile = Org3-BaseAccount1
+
+[Org2-Account2-Role2]
+aws_account_id = 222200002222
+role_name = Role2
+source_profile = Org3-BaseAccount2
   </pre>
   <p>If you sign-in a base account, target roles of the other base accounts are excluded.</p>
   <p>The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite.  Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts.  Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown.  You won't see roles that your current role can't actually assume.</p>

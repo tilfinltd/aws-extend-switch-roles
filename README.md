@@ -74,7 +74,7 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 
 - **If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.**
 
-- If an `role_name` is specified in a **base account** it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS.
+- If an `role_name` is specified in a **base account** it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS. If a role name starts with *AWSReservedSSO_*, the value should be only the **permission set** name.
 
 - A **target role** is associated with a **base account** by its `source_profile` specifying the profile name of the base account.
 
@@ -133,11 +133,11 @@ source_profile = Org2-BaseAccount
 ;
 [Org3-BaseAccount1]
 aws_account_id = 333300000000
-role_name = Entry-Role-1
+role_name = Entry-Role-1 ; Role for Federated Login, or User to login
 
 [Org3-BaseAccount2]
 aws_account_id = 333300000000
-role_name = Entry-Role-2
+role_name = custom_permission-set ; DO NOT set AWSReservedSSO_custom_permission-set_0123456890abcdef
 
 [Org3-Account1-Role1]
 aws_account_id = 333300001111
