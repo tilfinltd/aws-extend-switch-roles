@@ -257,6 +257,91 @@ describe('createProfileSet', () => {
         role_name: 'roleA',
       });
     });
+
+    it('base account has role_name', () => {
+      const profiles = [
+        {
+          profile: 'independence',
+          aws_account_id: '111122223333',
+          role_name: 'independence_role',
+        },
+        { profile: 'base-a', aws_account_id: '555511112222' },
+        {
+          profile: 'a-stg',
+          aws_account_id: '555511113333',
+          role_name: 'stg-role',
+          source_profile: 'base-a',
+          color: '00ddff',
+        },
+        { profile: 'base-b', aws_account_id: '666611112222' },
+        {
+          profile: 'b-stg',
+          aws_account_id: '666611113333',
+          role_name: 'stg-role',
+          source_profile: 'base-b',
+        },
+        {
+          profile: 'b-prod',
+          aws_account_id: '666611114444',
+          role_name: 'prod-role',
+          source_profile: 'base-b',
+          color: 'ffcc333',
+        },
+        {
+          profile: 'base-c-1',
+          aws_account_id: '777711112222',
+          role_name: 'entry-role-c-1',
+        },
+        {
+          profile: 'c-1-stg',
+          aws_account_id: '888811113333',
+          role_name: 'stg-role',
+          source_profile: 'base-c-1',
+          color: '00ddff',
+        },
+        {
+          profile: 'c-1-prod',
+          aws_account_id: '888811114444',
+          role_name: 'prod-role',
+          source_profile: 'base-c-1',
+          region: 'ap-northwest-1',
+        },
+        {
+          profile: 'base-c-2',
+          aws_account_id: '777711112222',
+          role_name: 'entry-role-c-2',
+        },
+        {
+          profile: 'c-2-stg',
+          aws_account_id: '999911113333',
+          role_name: 'stg-role',
+          source_profile: 'base-c-2',
+          color: '00ddff',
+        },
+      ];
+      const userInfo = {
+        loginDisplayNameAccount: '7777-1111-2222',
+        loginDisplayNameUser: 'entry-role-c-1/a-user',
+        roleDisplayNameAccount: undefined,
+        roleDisplayNameUser: undefined,
+      };
+      const settings = { showOnlyMatchingRoles: false };
+
+      const profileSet = createProfileSet(profiles, userInfo, settings);
+      expect(profileSet.destProfiles.length).to.eq(3);
+      expect(profileSet.destProfiles[0]).to.deep.include({
+        profile: 'independence',
+        role_name: 'independence_role',
+      });
+      expect(profileSet.destProfiles[1]).to.deep.include({
+        profile: 'c-1-stg',
+        role_name: 'stg-role',
+      });
+      expect(profileSet.destProfiles[2]).to.deep.include({
+        profile: 'c-1-prod',
+        role_name: 'prod-role',
+      });
+    });
   });
 
   describe('when userInfo is on switched', () => {

@@ -35,7 +35,7 @@ export class ProfileSet {
     independentOrSrcProfiles.forEach(item => {
       if (item.profile in destsBySrcMap) {
         let key = item.aws_account_id;
-        if (item.role_name) key += item.role_name;
+        if (item.role_name) key += '/' + item.role_name;
         this.srcProfileMap[key] = item;
       } else {
         independentDests.push(item)

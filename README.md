@@ -129,15 +129,15 @@ role_name = Manager ; overrides target role name
 source_profile = Org2-BaseAccount
 
 ;
-; entry_role example
+; base account with role_name example
 ;
 [Org3-BaseAccount1]
 aws_account_id = 333300000000
-entry_role = Entry-Role-1
+role_name = Entry-Role-1
 
 [Org3-BaseAccount2]
 aws_account_id = 333300000000
-entry_role = Entry-Role-2
+role_name = Entry-Role-2
 
 [Org3-Account1-Role1]
 aws_account_id = 333300001111
