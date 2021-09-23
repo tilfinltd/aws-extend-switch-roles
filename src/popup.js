@@ -1,4 +1,4 @@
-import { ProfileSet } from './lib/profile_set.js'
+import { createProfileSet } from './lib/profile_set.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
@@ -34,12 +34,6 @@ function executeAction(tabId, action, data) {
   } else if (window.browser) {
     return browser.tabs.sendMessage(tabId, { action, data })
   }
-}
-
-function brushAccountId(val) {
-  const r = val.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
-  if (!r) return val;
-  return r[1] + r[2] + r[3];
 }
 
 window.onload = function() {
@@ -116,17 +110,10 @@ function loadFormList(currentUrl, userInfo, tabId) {
       if (data.profiles) {
         const dps = new DataProfilesSplitter();
         const profiles = dps.profilesFromDataSet(data);
-        const {
-          loginDisplayNameAccount, loginDisplayNameUser,
-          roleDisplayNameAccount, roleDisplayNameUser, isGlobal
-        } = userInfo;
-  
-        const baseAccount = brushAccountId(loginDisplayNameAccount);
-        const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
-        const profileSet = new ProfileSet(profiles, baseAccount, { filterByTargetRole });
-  
+        const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
+
         const list = document.getElementById('roleList');
-        loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId);
+        loadProfiles(profileSet, tabId, list, currentUrl, userInfo.isGlobal, hidesAccountId);
       }
     })
   });

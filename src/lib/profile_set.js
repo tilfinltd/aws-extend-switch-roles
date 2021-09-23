@@ -1,8 +1,22 @@
+export function createProfileSet(profiles, userInfo, settings) {
+  const {
+    loginDisplayNameAccount, loginDisplayNameUser,
+    roleDisplayNameAccount, roleDisplayNameUser,
+  } = userInfo;
+  const { showOnlyMatchingRoles } = settings;
+
+  const baseAccount = brushAccountId(loginDisplayNameAccount);
+  const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginDisplayNameUser.split("/", 2)[0]) : null;
+
+  return new ProfileSet(profiles, baseAccount, { filterByTargetRole });
+}
+
 export class ProfileSet {
   constructor(items, baseAccount, { filterByTargetRole }) {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
+    let independentOrSrcProfiles = [];
     let independentDests = [];
 
     items.forEach(item => {
@@ -12,10 +26,16 @@ export class ProfileSet {
         } else {
           destsBySrcMap[item.source_profile] = [item];
         }
-      } else if (item.aws_account_id && item.role_name && !item.target_role_name) {
-        independentDests.push(item);
       } else {
+        independentOrSrcProfiles.push(item);
+      }
+    });
+
+    independentOrSrcProfiles.forEach(item => {
+      if (item.profile in destsBySrcMap) {
         this.srcProfileMap[item.aws_account_id] = item;
+      } else {
+        independentDests.push(item)
       }
     });
 
@@ -48,4 +68,10 @@ export class ProfileSet {
     }
     return profiles;
   }
+}
+
+function brushAccountId(val) {
+  const r = val.match(/^(\d{4})\-(\d{4})\-(\d{4})$/);
+  if (!r) return val;
+  return r[1] + r[2] + r[3];
 }
