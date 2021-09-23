@@ -16,6 +16,7 @@ export class ProfileSet {
     // Map that has entries { <awsAccountId>: <Profile> }
     this.srcProfileMap = {};
     let destsBySrcMap = {}; // { <srcProfileName>: [<destProfile>... ] }
+    let independentOrSrcProfiles = [];
     let independentDests = [];
 
     items.forEach(item => {
@@ -25,10 +26,16 @@ export class ProfileSet {
         } else {
           destsBySrcMap[item.source_profile] = [item];
         }
-      } else if (item.aws_account_id && item.role_name && !item.target_role_name) {
-        independentDests.push(item);
       } else {
+        independentOrSrcProfiles.push(item);
+      }
+    });
+
+    independentOrSrcProfiles.forEach(item => {
+      if (item.profile in destsBySrcMap) {
         this.srcProfileMap[item.aws_account_id] = item;
+      } else {
+        independentDests.push(item)
       }
     });
 
