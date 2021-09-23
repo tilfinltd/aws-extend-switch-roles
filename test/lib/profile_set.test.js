@@ -236,8 +236,8 @@ describe('createProfileSet', () => {
       const userInfo = {
         loginDisplayNameAccount: '5555-1111-2222',
         loginDisplayNameUser: 'roleA/a-user',
-        roleDisplayNameAccount: '5555-1111-4444',
-        roleDisplayNameUser: 'roleA',
+        roleDisplayNameAccount: undefined,
+        roleDisplayNameUser: undefined,
       };
       const settings = { showOnlyMatchingRoles: true };
 
