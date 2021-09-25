@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.2.0 (2021/09/25)
+
+- Support 'role_name' parameter that expresses the name of role at login, on base account (thanks to @AKoetsier)
+
 ## 2.1.1 (2021/05/22)
 
 - Fix switching region broken by a strict change in the CSP of AWS Console
