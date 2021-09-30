@@ -1,11 +1,11 @@
 export function createProfileSet(profiles, userInfo, settings) {
   const {
-    loginDisplayNameAccount, loginDisplayNameUser,
+    userAccountNumber, loginDisplayNameUser,
     roleDisplayNameAccount, roleDisplayNameUser,
   } = userInfo;
   const { showOnlyMatchingRoles } = settings;
 
-  const baseAccount = brushAccountId(loginDisplayNameAccount);
+  const baseAccount = brushAccountId(userAccountNumber);
   const loginRole = extractLoginRole(loginDisplayNameUser.split("/", 2)[0]);
   const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginRole) : null;
 
