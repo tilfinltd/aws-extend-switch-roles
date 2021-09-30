@@ -6,7 +6,7 @@ export function createProfileSet(profiles, userInfo, settings) {
   const { showOnlyMatchingRoles } = settings;
 
   const baseAccount = brushAccountId(loginDisplayNameAccount);
-  const loginRole = extractLoginRoleFromSSO(loginDisplayNameUser.split("/", 2)[0])
+  const loginRole = extractLoginRole(loginDisplayNameUser.split("/", 2)[0]);
   const filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || loginRole) : null;
 
   return new ProfileSet(profiles, baseAccount, { loginRole, filterByTargetRole });
@@ -79,11 +79,12 @@ function brushAccountId(val) {
   return r[1] + r[2] + r[3];
 }
 
-const awsSsoReserved = "AWSReservedSSO_";
-function extractLoginRoleFromSSO(loginRole) {
-  if (loginRole.startsWith(awsSsoReserved)) {
-    var lastUnderscore = loginRole.lastIndexOf('_');
-    loginRole = loginRole.substr(awsSsoReserved.length, lastUnderscore-awsSsoReserved.length);
+const RESERVED_SSO_PREFIX = "AWSReservedSSO_";
+function extractLoginRole(role) {
+  if (role.startsWith(RESERVED_SSO_PREFIX)) {
+    // extract permission set from SSO role
+    const lastUnderscore = role.lastIndexOf('_');
+    return role.substr(RESERVED_SSO_PREFIX.length, lastUnderscore - RESERVED_SSO_PREFIX.length);
   }
-  return loginRole
+  return role;
 }
