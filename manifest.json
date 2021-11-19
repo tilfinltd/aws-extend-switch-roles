@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.2.1",
   "name": "AWS Extend Switch Roles",
   "description": "Extend your AWS IAM switching roles. You can set the configuration like aws config format",
   "short_name": "Extend SwitchRole",

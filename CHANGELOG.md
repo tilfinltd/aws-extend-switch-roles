@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.2.1 (2021/11/20)
+
+- Fix to work on new AWS Console Nav UI
+
 ## 2.2.0 (2021/09/25)
 
 - Support 'role_name' parameter that expresses the name of role at login, on base account (thanks to @AKoetsier)
