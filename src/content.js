@@ -27,10 +27,7 @@ function adjustDisplayNameColor() {
 }
 
 function extractBackURL() {
-  let swLink = document.querySelector('#menu--account *[data-testid="awsc-switch-roles"]');
-  if (swLink) return new URL(swLink.href);
-  
-  let swLink = document.querySelector('#menu--account *[data-testid="awsc-switch-role"]');
+  let swLink = document.querySelector('#menu--account *[data-testid^="awsc-switch-role"]');
   if (swLink) return new URL(swLink.href);
 
   swLink = document.getElementById('awsc-exit-role-form');
