@@ -26,19 +26,6 @@ function adjustDisplayNameColor() {
   }
 }
 
-function extractBackURL() {
-  let swLink = document.querySelector('#menu--account *[data-testid="awsc-switch-roles"]');
-  if (swLink) return new URL(swLink.href);
-
-  swLink = document.getElementById('awsc-exit-role-form');
-  if (swLink) return new URL(swLink.getAttribute('action'));
-
-  swLink = document.getElementById('awsc-switch-role');
-  if (swLink) return new URL(swLink.href);
-
-  return null;
-}
-
 function appendAESR() {
   const form = document.createElement('form');
   form.id = 'AESR_form';
@@ -77,7 +64,8 @@ if (document.body) {
       return false;
     }
   } else if (action === 'switch') {
-    const actionHost = extractBackURL().host;
+    const metaASE = document.querySelector('meta#awsc-signin-endpoint');
+    const actionHost = metaASE ? metaASE.getAttribute('content') : 'signin.aws.amazon.com';
     const form = document.getElementById('AESR_form');
     form.setAttribute('action', `https://${actionHost}/switchrole`);
     form.account.value = data.account;
