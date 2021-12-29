@@ -122,7 +122,7 @@ function loadFormList(curURL, userInfo, tabId) {
 function renderRoleList(profiles, tabId, curURL, options) {
   const { url, region } = getCurrentUrlandRegion(curURL)
   const listItemOnSelect = function(data) {
-    sendSwitchRole(tabId, data);
+    sendSwitchRole(tabId, Object.assign(data, { actionSubdomain: region }));
   }
   const list = document.getElementById('roleList');
   profiles.forEach(item => {
