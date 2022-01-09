@@ -113,13 +113,13 @@ function loadFormList(currentUrl, userInfo, tabId) {
         const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
 
         const list = document.getElementById('roleList');
-        loadProfiles(profileSet, tabId, list, currentUrl, userInfo.isGlobal, hidesAccountId);
+        loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId);
       }
     })
   });
 }
 
-function loadProfiles(profileSet, tabId, list, currentUrl, isGlobal, hidesAccountId) {
+function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
   profileSet.destProfiles.forEach(item => {
     const color = item.color || 'aaaaaa';
     const li = document.createElement('li');
