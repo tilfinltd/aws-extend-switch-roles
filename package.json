@@ -25,6 +25,7 @@
   "homepage": "https://github.com/tilfin/aws-extend-switch-roles#readme",
   "devDependencies": {
     "chai": "^4.3.0",
+    "jsdom": "^19.0.0",
     "mocha": "^8.2.1",
     "playwright": "^1.8.0",
     "rollup": "^2.38.5"
