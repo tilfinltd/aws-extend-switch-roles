@@ -65,7 +65,11 @@ if (document.body) {
     }
   } else if (action === 'switch') {
     const metaASE = document.querySelector('meta#awsc-signin-endpoint');
-    const actionHost = metaASE ? metaASE.getAttribute('content') : 'signin.aws.amazon.com';
+    let actionHost = metaASE ? metaASE.getAttribute('content') : 'signin.aws.amazon.com';
+    const { actionSubdomain } = data;
+    if (actionSubdomain && actionHost === 'signin.aws.amazon.com') {
+      actionHost = actionSubdomain + '.' + actionHost;
+    }
     const form = document.getElementById('AESR_form');
     form.setAttribute('action', `https://${actionHost}/switchrole`);
     form.account.value = data.account;

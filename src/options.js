@@ -71,6 +71,15 @@ window.onload = function() {
       syncStorageRepo.set({ [key]: this.checked });
     }
   }
+  const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
+  if (localStorage.getItem('hasGoldenKey')) {
+    signinEndpointInHereCheckBox.onchange = function() {
+      syncStorageRepo.set({ signinEndpointInHere: this.checked });
+    }
+  } else {
+    signinEndpointInHereCheckBox.disabled = true;
+  }
+  booleanSettings.push('signinEndpointInHere')
 
   elById('configSenderIdText').onchange = function() {
     syncStorageRepo.set({ configSenderId: this.value });
