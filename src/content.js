@@ -55,11 +55,11 @@ if (document.body) {
     if (!window.AESR_script) {
       window.AESR_script = document.createElement('script');
       AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
-      document.body.appendChild(AESR_script);
-      setTimeout(() => {
+      AESR_script.onload = () => {
         const infoJson = document.getElementById('AESR_info').dataset.content;
         cb(JSON.parse(infoJson));
-      }, 50);
+      };
+      document.body.appendChild(AESR_script);
       return true;
     } else {
       const infoJson = document.getElementById('AESR_info').dataset.content;
