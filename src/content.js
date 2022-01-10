@@ -47,6 +47,9 @@ if (document.body) {
 }
 
 (chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
+  const metaASE = document.querySelector('meta#awsc-signin-endpoint');
+  if (!metaASE) return false;
+
   const { data, action } = msg;
   if (action === 'loadInfo') {
     if (!window.AESR_script) {
@@ -64,8 +67,7 @@ if (document.body) {
       return false;
     }
   } else if (action === 'switch') {
-    const metaASE = document.querySelector('meta#awsc-signin-endpoint');
-    let actionHost = metaASE ? metaASE.getAttribute('content') : 'signin.aws.amazon.com';
+    let actionHost = metaASE.getAttribute('content');
     const { actionSubdomain } = data;
     if (actionSubdomain && actionHost === 'signin.aws.amazon.com') {
       actionHost = actionSubdomain + '.' + actionHost;
