@@ -1,3 +1,4 @@
+import { createRoleListItem } from './lib/create_role_list_item.js'
 import { createProfileSet } from './lib/profile_set.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
@@ -111,64 +112,29 @@ function loadFormList(currentUrl, userInfo, tabId) {
         const dps = new DataProfilesSplitter();
         const profiles = dps.profilesFromDataSet(data);
         const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
-
-        const list = document.getElementById('roleList');
-        loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId);
+        renderRoleList(profileSet.destProfiles, tabId, currentUrl, { hidesAccountId });
+        setupRoleFilter();
       }
     })
   });
 }
 
-function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
-  profileSet.destProfiles.forEach(item => {
-    const color = item.color || 'aaaaaa';
-    const li = document.createElement('li');
-    const headSquare = document.createElement('span');
-    headSquare.textContent = ' ';
-    headSquare.className = 'headSquare';
-    headSquare.style = `background-color: #${color}`
-    if (item.image) {
-      headSquare.style += `; background-image: url('${item.image.replace(/"/g, '')}');`
-    }
-
-    const anchor = document.createElement('a');
-    anchor.href = "#";
-    anchor.title = item.role_name + '@' + item.aws_account_id;
-    anchor.dataset.profile = item.profile;
-    anchor.dataset.rolename = item.role_name;
-    anchor.dataset.account = item.aws_account_id;
-    anchor.dataset.color = color;
-    anchor.dataset.redirecturi = createRedirectURI(currentUrl, item.region);
-    anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
-
-    anchor.appendChild(headSquare);
-    anchor.appendChild(document.createTextNode(item.profile));
-
-    if (hidesAccountId) {
-      anchor.dataset.displayname = item.profile;
-    } else {
-      anchor.dataset.displayname = item.profile + '  |  ' + item.aws_account_id;
-
-      const accountIdSpan = document.createElement('span');
-      accountIdSpan.className = 'suffixAccountId';
-      accountIdSpan.textContent = item.aws_account_id;
-      anchor.appendChild(accountIdSpan);
-    }
-
-    li.appendChild(anchor);
+function renderRoleList(profiles, tabId, currentUrl, options) {
+  const listItemOnSelect = function(data) {
+    sendSwitchRole(tabId, data);
+  }
+  const list = document.getElementById('roleList');
+  profiles.forEach(item => {
+    const li = createRoleListItem(document, item, currentUrl, options, listItemOnSelect)
     list.appendChild(li);
   });
+}
 
-  Array.from(list.querySelectorAll('li a')).forEach(anchor => {
-    anchor.onclick = function() {
-      const data = { ...this.dataset }; // do not directly refer DOM data in Firefox
-      sendSwitchRole(tabId, data);
-      return false;
-    }
-  });
+function setupRoleFilter() {
+  const roleFilter = document.getElementById('roleFilter');
 
   let AWSR_firstAnchor = null;
-  document.getElementById('roleFilter').onkeyup = function(e) {
+  roleFilter.onkeyup = function(e) {
     const words = this.value.toLowerCase().split(' ');
     if (e.keyCode === 13) {
       if (AWSR_firstAnchor) {
@@ -195,21 +161,7 @@ function loadProfiles(profileSet, tabId, list, currentUrl, hidesAccountId) {
     }
   }
 
-  document.getElementById('roleFilter').focus()
-}
-
-function createRedirectURI(currentURL, destRegion) {
-  if (!destRegion) return encodeURIComponent(currentURL.href);
-
-  let redirectUri = currentURL.href;
-  const md = currentURL.search.match(/region=([a-z\-1-9]+)/);
-  if (md) {
-    const currentRegion = md[1];
-    if (currentRegion !== destRegion) {
-      redirectUri = redirectUri.replace('region=' + currentRegion, 'region=' + destRegion);
-    }
-  }
-  return encodeURIComponent(redirectUri);
+  roleFilter.focus()
 }
 
 function sendSwitchRole(tabId, data) {
