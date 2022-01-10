@@ -47,16 +47,19 @@ if (document.body) {
 }
 
 (chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
+  const metaASE = document.getElementById('awsc-signin-endpoint');
+  if (!metaASE) return false;
+
   const { data, action } = msg;
   if (action === 'loadInfo') {
     if (!window.AESR_script) {
       window.AESR_script = document.createElement('script');
       AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
-      document.body.appendChild(AESR_script);
-      setTimeout(() => {
+      AESR_script.onload = () => {
         const infoJson = document.getElementById('AESR_info').dataset.content;
         cb(JSON.parse(infoJson));
-      }, 50);
+      };
+      document.body.appendChild(AESR_script);
       return true;
     } else {
       const infoJson = document.getElementById('AESR_info').dataset.content;
@@ -64,8 +67,7 @@ if (document.body) {
       return false;
     }
   } else if (action === 'switch') {
-    const metaASE = document.querySelector('meta#awsc-signin-endpoint');
-    let actionHost = metaASE ? metaASE.getAttribute('content') : 'signin.aws.amazon.com';
+    let actionHost = metaASE.getAttribute('content');
     const { actionSubdomain } = data;
     if (actionSubdomain && actionHost === 'signin.aws.amazon.com') {
       actionHost = actionSubdomain + '.' + actionHost;
