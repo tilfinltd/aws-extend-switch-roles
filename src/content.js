@@ -47,7 +47,7 @@ if (document.body) {
 }
 
 (chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
-  const metaASE = document.querySelector('meta#awsc-signin-endpoint');
+  const metaASE = document.getElementById('awsc-signin-endpoint');
   if (!metaASE) return false;
 
   const { data, action } = msg;
