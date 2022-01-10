@@ -23,10 +23,10 @@ describe('createRoleListItem', () => {
         aws_account_id: '222233334444',
         role_name: 'roleA',
       }
-      const currentUrl = new URL('https://console.aws.amazonaws.com/?region=ap-northeast-1');
+      const url = 'https://console.aws.amazonaws.com/';
       const options = {};
       let handlerData = null;
-      const li = createRoleListItem(window.document, item, currentUrl, options, (data) => { handlerData = data });
+      const li = createRoleListItem(window.document, item, url, '', options, (data) => { handlerData = data });
 
       const a = li.querySelector('a')
       expect(a.href).to.eq('http://localhost/#');
@@ -36,7 +36,7 @@ describe('createRoleListItem', () => {
       expect(a.dataset.account).to.eq('222233334444');
       expect(a.dataset.displayname).to.eq('profileA  |  222233334444');
       expect(a.dataset.color).to.eq('aaaaaa');
-      expect(a.dataset.redirecturi).to.eq('https%3A%2F%2Fconsole.aws.amazonaws.com%2F%3Fregion%3Dap-northeast-1');
+      expect(a.dataset.redirecturi).to.eq('https%3A%2F%2Fconsole.aws.amazonaws.com%2F');
       expect(a.dataset.search).to.eq('profilea 222233334444');
       expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(170, 170, 170);"> \
 </span>profileA<span class="suffixAccountId">222233334444</span>`);
@@ -49,7 +49,7 @@ describe('createRoleListItem', () => {
         color: 'aaaaaa',
         displayname: 'profileA  |  222233334444',
         search: 'profilea 222233334444',
-        redirecturi: 'https%3A%2F%2Fconsole.aws.amazonaws.com%2F%3Fregion%3Dap-northeast-1',
+        redirecturi: 'https%3A%2F%2Fconsole.aws.amazonaws.com%2F',
       });
     });
   });
@@ -62,8 +62,8 @@ describe('createRoleListItem', () => {
         role_name: 'role-b',
         color: 'ffaa99',
       }
-      const currentUrl = new URL('https://console.aws.amazonaws.com/?region=us-east-1')
-      const li = createRoleListItem(window.document, item, currentUrl, {}, () => {});
+      const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
+      const li = createRoleListItem(window.document, item, url, {}, () => {});
 
       const a = li.querySelector('a')
       expect(a.title).to.eq('role-b@000011115555');
@@ -87,8 +87,8 @@ describe('createRoleListItem', () => {
         role_name: 'img-role',
         image: '"https://www.exapmle.com/icon.png"',
       }
-      const currentUrl = new URL('https://console.aws.amazonaws.com/?region=us-east-1')
-      const li = createRoleListItem(window.document, item, currentUrl, {}, () => {});
+      const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, () => {});
 
       const a = li.querySelector('a')
       expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(170, 170, 170); \
@@ -104,8 +104,8 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
         role_name: 'role-foo',
         region: 'us-west-2',
       }
-      const currentUrl = new URL('https://console.aws.amazonaws.com/?region=ap-southeast-1')
-      const li = createRoleListItem(window.document, item, currentUrl, {}, () => {});
+      const url = 'https://console.aws.amazonaws.com/?region=ap-southeast-1';
+      const li = createRoleListItem(window.document, item, url, 'ap-southeast-1', {}, () => {});
 
       const a = li.querySelector('a')
       expect(a.dataset.redirecturi).to.eq('https%3A%2F%2Fconsole.aws.amazonaws.com%2F%3Fregion%3Dus-west-2');
@@ -119,9 +119,9 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
         aws_account_id: '000011117777',
         role_name: 'role-C',
       }
-      const currentUrl = new URL('https://console.aws.amazonaws.com/?region=us-east-1')
+      const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
       const options = { hidesAccountId: true }
-      const li = createRoleListItem(window.document, item, currentUrl, options, () => {});
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', options, () => {});
 
       const a = li.querySelector('a')
       expect(a.title).to.eq('role-C@000011117777');

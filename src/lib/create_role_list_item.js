@@ -1,4 +1,4 @@
-export function createRoleListItem(document, item, currentUrl, { hidesAccountId }, selectHandler) {
+export function createRoleListItem(document, item, url, region, { hidesAccountId }, selectHandler) {
   const color = item.color || 'aaaaaa';
   const li = document.createElement('li');
   const headSquare = document.createElement('span');
@@ -17,7 +17,7 @@ export function createRoleListItem(document, item, currentUrl, { hidesAccountId 
   anchor.dataset.rolename = item.role_name;
   anchor.dataset.account = item.aws_account_id;
   anchor.dataset.color = color;
-  anchor.dataset.redirecturi = createRedirectURI(currentUrl, item.region);
+  anchor.dataset.redirecturi = createRedirectUri(url, region, item.region);
   anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
   anchor.appendChild(headSquare);
@@ -45,16 +45,10 @@ export function createRoleListItem(document, item, currentUrl, { hidesAccountId 
   return li
 }
 
-function createRedirectURI(currentURL, destRegion) {
-  if (!destRegion) return encodeURIComponent(currentURL.href);
-
-  let redirectUri = currentURL.href;
-  const md = currentURL.search.match(/region=([a-z\-1-9]+)/);
-  if (md) {
-    const currentRegion = md[1];
-    if (currentRegion !== destRegion) {
-      redirectUri = redirectUri.replace('region=' + currentRegion, 'region=' + destRegion);
-    }
+function createRedirectUri(currentUrl, curRegion, destRegion) {
+  let redirectUri = currentUrl;
+  if (curRegion && destRegion && curRegion !== destRegion) {
+    redirectUri = redirectUri.replace('region=' + curRegion, 'region=' + destRegion);
   }
   return encodeURIComponent(redirectUri);
 }

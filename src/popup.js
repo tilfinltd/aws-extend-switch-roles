@@ -98,7 +98,7 @@ function main() {
     })
 }
 
-function loadFormList(currentUrl, userInfo, tabId) {
+function loadFormList(curURL, userInfo, tabId) {
   const storageRepo = new SyncStorageRepository(chrome || browser)
   storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea'])
   .then(data => {
@@ -112,20 +112,21 @@ function loadFormList(currentUrl, userInfo, tabId) {
         const dps = new DataProfilesSplitter();
         const profiles = dps.profilesFromDataSet(data);
         const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
-        renderRoleList(profileSet.destProfiles, tabId, currentUrl, { hidesAccountId });
+        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId });
         setupRoleFilter();
       }
     })
   });
 }
 
-function renderRoleList(profiles, tabId, currentUrl, options) {
+function renderRoleList(profiles, tabId, curURL, options) {
+  const { url, region } = getCurrentUrlandRegion(curURL)
   const listItemOnSelect = function(data) {
     sendSwitchRole(tabId, data);
   }
   const list = document.getElementById('roleList');
   profiles.forEach(item => {
-    const li = createRoleListItem(document, item, currentUrl, options, listItemOnSelect)
+    const li = createRoleListItem(document, item, url, region, options, listItemOnSelect)
     list.appendChild(li);
   });
 }
@@ -170,4 +171,12 @@ function sendSwitchRole(tabId, data) {
     localStorage.setItem('switchCount', ++swcnt);
     window.close()
   });
+}
+
+function getCurrentUrlandRegion(aURL) {
+  const url = aURL.href;
+  let region = '';
+  const md = aURL.search.match(/region=([a-z\-1-9]+)/);
+  if (md) region = md[1];
+  return { url, region }
 }
