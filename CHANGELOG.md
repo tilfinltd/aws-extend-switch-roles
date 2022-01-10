@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 2.3.0 (2022/01/11)
+
+- Implement 'Sign-in endpoint in current region' setting (Experimental, Supporters only)
+- Fix how to get sign-in endpoint from AWS Console page
+- Fix that switching sometimes fails on new experience pages
+
 ## 2.2.0 (2021/09/25)
 
 - Support 'role_name' parameter that expresses the name of role at login, on base account (thanks to @AKoetsier)
