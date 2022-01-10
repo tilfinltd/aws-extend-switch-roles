@@ -17,7 +17,7 @@ Please check **Request for Contact Information** in https://github.com/sponsors/
 
 Extend your AWS IAM switching roles by Chrome extension, Firefox add-on, or Edge add-on
 
-Switch roll history only stores the last 5 roles (maximum) on the AWS Management Console.
+Switch role history only stores the last 5 roles (maximum) on the AWS Management Console.
 This extension shows a menu of switchable roles that you can configure manually.
 
 - Supports the Sync feature on all sorts of browsers
@@ -158,6 +158,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 - **Hide account id** hides the account_id for each profile.
 - **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
+- **Sign-in endpoint in current region (Experimental, Supporters only)** instead of *signin.aws.amazon.com* when you browse a non-global page in AWS Management Console. For those working geographically far from Virginia, the switch role may be a little faster.
 - ~~**Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.~~ **temporarily disabled**
 - **Configuration storage** specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles. 'Local' is the exact opposite of 'Sync.'
 

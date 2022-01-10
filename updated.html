@@ -28,9 +28,18 @@
 </head>
 <body>
   <h1 style="margin:0">AWS Extend Switch Roles - Update Notice</h1>
-  <p style="font-size: 125%">New version <strong>2.2.0</strong></p>
 
   <section>
+    <h2>2.3.0 &nbsp;<span style="color: rgb(221, 63, 0)">New version!</span></h2>
+    <ul>
+      <li><b>Implement 'Sign-in endpoint in current region' setting (Experimental, Supporters only)</b><br>
+        The 'Switch role' requests to the sign-in endpoint in the current region instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console.
+        For those working geographically far from Virginia, the switch roll may be a little faster.
+      </li>
+      <li>Fix how to get sign-in endpoint from AWS Console page</li>
+      <li>Fix that switching sometimes fails on new experience pages</li>
+    </ul>
+    <hr>
     <h2>2.2.0</h2>
     <ul>
       <li><b>Support 'role_name' parameter that expresses the name of role at login, on base account</b></li>
