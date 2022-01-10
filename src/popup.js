@@ -100,11 +100,12 @@ function main() {
 
 function loadFormList(curURL, userInfo, tabId) {
   const storageRepo = new SyncStorageRepository(chrome || browser)
-  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea'])
+  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea', 'signinEndpointInHere'])
   .then(data => {
     const hidesAccountId = data.hidesAccountId || false;
     const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
     const configStorageArea = data.configStorageArea || 'sync';
+    const signinEndpointInHere = data.signinEndpointInHere || false;
 
     new StorageRepository(chrome || browser, configStorageArea).get(['profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'])
     .then(data => {
@@ -112,7 +113,7 @@ function loadFormList(curURL, userInfo, tabId) {
         const dps = new DataProfilesSplitter();
         const profiles = dps.profilesFromDataSet(data);
         const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
-        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId });
+        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
         setupRoleFilter();
       }
     })
@@ -120,9 +121,10 @@ function loadFormList(curURL, userInfo, tabId) {
 }
 
 function renderRoleList(profiles, tabId, curURL, options) {
-  const { url, region } = getCurrentUrlandRegion(curURL)
+  const { url, region, notGlobal } = getCurrentUrlandRegion(curURL)
   const listItemOnSelect = function(data) {
-    sendSwitchRole(tabId, Object.assign(data, { actionSubdomain: region }));
+    if (options.signinEndpointInHere && notGlobal) data.actionSubdomain = region;
+    sendSwitchRole(tabId, data);
   }
   const list = document.getElementById('roleList');
   profiles.forEach(item => {
@@ -178,5 +180,6 @@ function getCurrentUrlandRegion(aURL) {
   let region = '';
   const md = aURL.search.match(/region=([a-z\-1-9]+)/);
   if (md) region = md[1];
-  return { url, region }
+  const notGlobal = /^[a-z]{2}\-[a-z]+\-[1-9]\.console\.aws/.test(aURL.host);
+  return { url, region, notGlobal }
 }

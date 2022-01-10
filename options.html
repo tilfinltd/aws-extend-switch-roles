@@ -112,6 +112,7 @@ code {
   <ul>
     <li><label for="hidesAccountIdCheckBox"><input type="checkbox" id="hidesAccountIdCheckBox">Hide account id</label></li>
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
+    <li><label for="signinEndpointInHereCheckBox"><input type="checkbox" id="signinEndpointInHereCheckBox">Sign-in endpoint in current region</label> (Experimental, Supporters only) </li>
     <li><s><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </s> (temporarily disabled) </li>
     <li>
       Configuration storage:
@@ -244,6 +245,7 @@ source_profile = Org3-BaseAccount2
   <ul>
    <li><b>Hide account id</b> hides the account_id for each profile.</li>
    <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
+   <li><b>Sign-in endpoint in current region (Experimental, Supporters only)</b> instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console. For those working geographically far from Virginia, the switch role may be a little faster.</li>
    <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
    <li><b>Configuration storage</b> specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles.
     'Local' is the exact opposite of 'Sync.'</li>
