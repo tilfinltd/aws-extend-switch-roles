@@ -91,7 +91,25 @@ describe('createRoleListItem', () => {
       const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, () => {});
 
       const a = li.querySelector('a')
-      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(170, 170, 170); \
+      expect(a.innerHTML).to.eq(`<span class="headSquare" style="\
+background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
+    });
+  });
+
+  describe('profile has color and image', () => {
+    it('returns li element', () => {
+      const item = {
+        profile: 'prf',
+        aws_account_id: '333344441111',
+        role_name: 'img-role',
+        color: 'ffaa22',
+        image: '"https://www.exapmle.com/icon.png"',
+      }
+      const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, () => {});
+
+      const a = li.querySelector('a')
+      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(255, 170, 34); \
 background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
     });
   });

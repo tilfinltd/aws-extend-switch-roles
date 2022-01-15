@@ -1,13 +1,16 @@
 export function createRoleListItem(document, item, url, region, { hidesAccountId }, selectHandler) {
-  const color = item.color || 'aaaaaa';
   const li = document.createElement('li');
   const headSquare = document.createElement('span');
   headSquare.textContent = ' ';
   headSquare.className = 'headSquare';
-  {
-    let hsStyle = `background-color: #${color}`;
-    if (item.image) hsStyle += `; background-image: url('${item.image.replace(/"/g, '')}');`
-    headSquare.style = hsStyle;
+  if (item.color) {
+    headSquare.style.backgroundColor = `#${item.color}`;
+  } else if (!item.image) {
+    // set gray if both color and image are undefined
+    headSquare.style.backgroundColor = '#aaaaaa';
+  }
+  if (item.image) {
+    headSquare.style.backgroundImage = `url('${item.image.replace(/"/g, '')}')`;
   }
 
   const anchor = document.createElement('a');
@@ -16,7 +19,7 @@ export function createRoleListItem(document, item, url, region, { hidesAccountId
   anchor.dataset.profile = item.profile;
   anchor.dataset.rolename = item.role_name;
   anchor.dataset.account = item.aws_account_id;
-  anchor.dataset.color = color;
+  anchor.dataset.color = item.color || 'aaaaaa';
   anchor.dataset.redirecturi = createRedirectUri(url, region, item.region);
   anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
 
