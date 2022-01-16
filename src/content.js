@@ -41,45 +41,54 @@ function appendAESR() {
   document.body.appendChild(divInfo);
 }
 
-if (document.body) {
-  adjustDisplayNameColor();
-  appendAESR();
-}
-
-(chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
-  const metaASE = document.getElementById('awsc-signin-endpoint');
-  if (!metaASE) return false;
-
-  const { data, action } = msg;
-  if (action === 'loadInfo') {
-    if (!window.AESR_script) {
-      window.AESR_script = document.createElement('script');
-      AESR_script.src = chrome.extension.getURL('/js/attach_target.js');
-      AESR_script.onload = () => {
-        const infoJson = document.getElementById('AESR_info').dataset.content;
-        cb(JSON.parse(infoJson));
-      };
-      document.body.appendChild(AESR_script);
-      return true;
-    } else {
-      const infoJson = document.getElementById('AESR_info').dataset.content;
-      cb(JSON.parse(infoJson));
-      return false;
-    }
-  } else if (action === 'switch') {
-    let actionHost = metaASE.getAttribute('content');
-    const { actionSubdomain } = data;
-    if (actionSubdomain && actionHost === 'signin.aws.amazon.com') {
-      actionHost = actionSubdomain + '.' + actionHost;
-    }
-    const form = document.getElementById('AESR_form');
-    form.setAttribute('action', `https://${actionHost}/switchrole`);
-    form.account.value = data.account;
-    form.color.value = data.color;
-    form.roleName.value = data.rolename;
-    form.displayName.value = data.displayname;
-    form.redirect_uri.value = data.redirecturi;
-    form.submit();
+let accountInfo = null;
+function loadInfo(cb) {
+  if (!accountInfo) {
+    const script = document.createElement('script');
+    script.src = chrome.extension.getURL('/js/attach_target.js');
+    script.onload = function() {
+      const json = document.getElementById('AESR_info').dataset.content;
+      accountInfo = JSON.parse(json);
+      cb(accountInfo);
+      this.remove();
+    };
+    document.body.appendChild(script);
+    return true;
+  } else {
+    cb(accountInfo);
     return false;
   }
-});
+}
+
+function setupMessageListener(metaASE) {
+  (chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
+    const { data, action } = msg;
+    if (action === 'loadInfo') {
+      return loadInfo(cb);
+    } else if (action === 'switch') {
+      let actionHost = metaASE.getAttribute('content');
+      const { actionSubdomain } = data;
+      if (actionSubdomain && actionHost === 'signin.aws.amazon.com') {
+        actionHost = actionSubdomain + '.' + actionHost;
+      }
+      const form = document.getElementById('AESR_form');
+      form.setAttribute('action', `https://${actionHost}/switchrole`);
+      form.account.value = data.account;
+      form.color.value = data.color;
+      form.roleName.value = data.rolename;
+      form.displayName.value = data.displayname;
+      form.redirect_uri.value = data.redirecturi;
+      form.submit();
+      return false;
+    }
+  })
+}
+
+if (document.body) {
+  const metaASE = document.getElementById('awsc-signin-endpoint');
+  if (metaASE) {
+    adjustDisplayNameColor();
+    appendAESR();
+    setupMessageListener(metaASE);
+  }
+}
