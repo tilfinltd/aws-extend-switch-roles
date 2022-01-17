@@ -1,14 +1,3 @@
-# Dear early donators and current supporters ![Golden Key](./icons/Icon_48x48_g.png)
-You have a ticket to get the AESR Golden Key code. If you don't have it yet, please contact me.
-
-### for my early donator via PayPal or Bitcoin
-Please check *To those who have donated before* section of **Supporters** in the AESR pop-up menu of your browser.
-
-### for current supporters (GitHub Sponsors)
-Please check **Request for Contact Information** in https://github.com/sponsors/tilfinltd.
-
----
-
 # AWS Extend Switch Roles
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jpmkfafbacpgapdghgdpembnojdlgkdl.svg)](https://chrome.google.com/webstore/detail/aws-extend-switch-roles/jpmkfafbacpgapdghgdpembnojdlgkdl?utm_source=github)
@@ -23,12 +12,17 @@ This extension shows a menu of switchable roles that you can configure manually.
 - Supports the Sync feature on all sorts of browsers
 - Not support switching between AWS accounts you sign into with AWS SSO or SAML solution providers directly
 
-### Development and Distribution Guideline
+## Large Supporters
 
-##### Minimizes required permissions and operates only on AWS Console pages
+<a href="https://classmethod.jp/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/classmethod.png" width="208" height="90"></a>
+<a href="https://www.doit-intl.com/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/doitintl.png" width="208" height="90"></a>
+
+## Development and Distribution Guideline
+
+#### Minimizes required permissions and operates only on AWS Console pages
 A browser plug-in goes with security risks. AWS Management Console allows you to manipulate your essential data.
 
-##### Supports only the  latest version of each official browser
+#### Supports only the  latest version of each official browser
 This extension does not restrict the use of other compatible browsers. The version restrictions are only due to the JavaScript language features used.
 
 ## Install
@@ -165,11 +159,6 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 ## Extension API
 
 - **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. **'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.** [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
-
-## Supporters
-
-<a href="https://classmethod.jp/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/classmethod.png" width="208" height="90"></a>
-<a href="https://www.doit-intl.com/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/doitintl.png" width="208" height="90"></a>
 
 ## Appearance
 
