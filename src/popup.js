@@ -121,9 +121,9 @@ function loadFormList(curURL, userInfo, tabId) {
 }
 
 function renderRoleList(profiles, tabId, curURL, options) {
-  const { url, region, notGlobal } = getCurrentUrlandRegion(curURL)
+  const { url, region, isLocal } = getCurrentUrlandRegion(curURL)
   const listItemOnSelect = function(data) {
-    if (options.signinEndpointInHere && notGlobal) data.actionSubdomain = region;
+    if (options.signinEndpointInHere && isLocal) data.actionSubdomain = region;
     sendSwitchRole(tabId, data);
   }
   const list = document.getElementById('roleList');
@@ -180,6 +180,13 @@ function getCurrentUrlandRegion(aURL) {
   let region = '';
   const md = aURL.search.match(/region=([a-z\-1-9]+)/);
   if (md) region = md[1];
-  const notGlobal = /^[a-z]{2}\-[a-z]+\-[1-9]\.console\.aws/.test(aURL.host);
-  return { url, region, notGlobal }
+
+  let isLocal = false;
+  const mdsd = aURL.host.match(/^(([a-z]{2}\-[a-z]+\-[1-9])\.)?console\.aws/);
+  if (mdsd) {
+    const [,, cr = 'us-east-1'] = mdsd;
+    if (cr === region) isLocal = true;
+  }
+
+  return { url, region, isLocal }
 }
