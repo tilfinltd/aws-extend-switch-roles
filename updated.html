@@ -14,8 +14,9 @@
     margin: 0;
   }
   a { text-decoration: none }
-  h1, h2, p { margin: .5em 0 }
+  h1, h2, h3, p { margin: .5em 0 }
   h2 { font-size: 18px; }
+  h3 { font-size: 16px; }
   section { margin: 20px 0 }
   code {
     color: #222;
@@ -30,16 +31,28 @@
   <h1 style="margin:0">AWS Extend Switch Roles - Update Notice</h1>
 
   <section>
-    <h2>2.3.0 &nbsp;<span style="color: rgb(221, 63, 0)">New version!</span></h2>
+    <h2 style="color:#0099f2">Recent main updates</h2>
+    <h3>'Sign-in endpoint in current region' setting (Experimental, Supporters only)</h3>
+    <p>
+      The 'Switch role' requests to the sign-in endpoint in the current region instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console.
+      For those working geographically far from Virginia, the switch roll may be a little faster.
+    </p>
+
+    <hr style="margin:18px 0">
+
+    <h2>2.3.1 <span style="margin-left:0.75em; color:rgb(221, 63, 0)">New version!</span></h2>
     <ul>
-      <li><b>Implement 'Sign-in endpoint in current region' setting (Experimental, Supporters only)</b><br>
-        The 'Switch role' requests to the sign-in endpoint in the current region instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console.
-        For those working geographically far from Virginia, the switch roll may be a little faster.
-      </li>
+      <li>Fix that 'Sign-in endpoint in current region' breaks a switch role on some page like Chatbot</li>
+      <li>Fix that the icon's background becomes gray if it is transparent</li>
+    </ul>
+
+    <h2>2.3.0</h2>
+    <ul>
+      <li><b>Implement 'Sign-in endpoint in current region' setting (Experimental, Supporters only)</b></li>
       <li>Fix how to get sign-in endpoint from AWS Console page</li>
       <li>Fix that switching sometimes fails on new experience pages</li>
     </ul>
-    <hr>
+
     <h2>2.2.0</h2>
     <ul>
       <li><b>Support 'role_name' parameter that expresses the name of role at login, on base account</b></li>

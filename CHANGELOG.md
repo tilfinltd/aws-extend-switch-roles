@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 2.3.1 (2022/01/30)
+
+- Fix that 'Sign-in endpoint in current region' breaks a switch role on some page like Chatbot
+- Fix that the icon's background becomes gray if it is transparent
+
 ## 2.3.0 (2022/01/11)
 
 - Implement 'Sign-in endpoint in current region' setting (Experimental, Supporters only)
