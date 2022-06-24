@@ -1,7 +1,7 @@
 {
-  "name": "aws-extend-switch-roles",
-  "version": "2.3.1",
-  "description": "Extend your AWS IAM switching roles by Chrome extension",
+  "name": "quick-open-aws",
+  "version": "0.1.0",
+  "description": "Quick open AWS",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tilfin/aws-extend-switch-roles.git"
+    "url": "git+https://github.com/gforien/quick-open-aws.git"
   },
-  "author": "Toshimitsu Takahashi (Tilfin Ltd.)",
+  "author": "Gabriel Forien",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tilfin/aws-extend-switch-roles/issues"
+    "url": "https://github.com/gforien/quick-open-aws/issues"
   },
-  "homepage": "https://github.com/tilfin/aws-extend-switch-roles#readme",
+  "homepage": "https://github.com/gforien/quick-open-aws#readme",
   "devDependencies": {
     "chai": "^4.3.4",
     "jsdom": "^19.0.0",
