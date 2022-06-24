@@ -18,7 +18,7 @@ function extendIAMFormList() {
 
       loadProfiles(new ProfileSet(profiles, showOnlyMatchingRoles), list);
     }
-    // console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
+    console.log("Last role from '"+vlastRoleKey+"' was '"+lastRole+"'");
     autoAssumeLastRole.execute(data[lastRoleKey], list);
   });
 }
