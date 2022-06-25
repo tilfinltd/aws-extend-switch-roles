@@ -29,9 +29,8 @@ function getCurrentTab() {
 
 function executeAction(tabId, action, data) {
   if (window.chrome) {
-    console.error('executeAction return new Promise');
     return new Promise((resolve) => {
-      console.error('executeAction sendMessage');
+      console.debug(`chrome.tab.sendMessage(${tabId}, 'loadInfo', {})`);
       chrome.tabs.sendMessage(tabId, { action, data }, {}, resolve)
     })
   } else if (window.browser) {
@@ -79,8 +78,9 @@ function main() {
       if (url.host.endsWith('.aws.amazon.com')
        || url.host.endsWith('.amazonaws-us-gov.com')
        || url.host.endsWith('.amazonaws.cn')) {
-        console.error('executeAction loadInfo');
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
+          console.log(`<- returned ${userInfo}`);
+
           if (userInfo) {
             loadFormList(url, userInfo, tab.id);
             document.getElementById('main').style.display = 'block';
