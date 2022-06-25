@@ -127,12 +127,33 @@ function renderRoleList(profiles, tabId, curURL, options) {
   const { url, region, isLocal } = getCurrentUrlandRegion(curURL)
   const listItemOnSelect = function(data) {
     if (options.signinEndpointInHere && isLocal) data.actionSubdomain = region;
-    sendSwitchRole(tabId, data);
+    switchServiceAndRole(tabId, data);
   }
   const list = document.getElementById('roleList');
   profiles.forEach(item => {
     const li = createRoleListItem(document, item, url, region, options, listItemOnSelect)
     list.appendChild(li);
+  });
+}
+
+function switchServiceAndRole(tabId, data) {
+  // switch to the next pane
+  document.getElementById('roleList').style.display = 'none';
+  document.getElementById('serviceList').style.display = 'block';
+
+  // overload the callback
+  serviceList = document.querySelectorAll('a[serviceName]');
+  serviceList.forEach(element => {
+    element.onclick = () => {
+      let oldURI = decodeURIComponent(data.redirecturi)
+      let newURI = oldURI.replace('console/', element.attributes["serviceName"].value+'/');
+      data.redirecturi = encodeURIComponent(newURI);
+
+      console.debug(`changed ${oldURI}\nto      ${newURI}`);
+      // console.debug(`oldURI= ${oldURI}`);
+      // console.debug(`replacing console/ with ${element.attributes["serviceName"].value}/`);
+      sendSwitchRole(tabId, data);
+    }
   });
 }
 

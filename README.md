@@ -6,7 +6,7 @@
 - [x] Build and load extension
 - [x] Open an account
 - [x] Switch accounts
-- [ ] Open `iam.console.aws` instead of `console.aws`
+- [x] Open URI `console.aws/ec2/` instead of `console.aws/`
 
 ### How does AESR work ?
 - popup.js
