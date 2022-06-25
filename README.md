@@ -19,6 +19,12 @@
           - .then(userInfo)
             - if (userInfo)
               - loadFormList(tab.url, userInfo, tab.id)
+                - charge des profiles
+                - appelle renderRoleList()
+                  - appelle getCurrentURL()
+                  - on définit le callback `listItemOnSelect()`
+                    - qui appelle `sendSwitchRole(tabId, data)`
+                      - qui `executeAction()` sur notre `tabId` avec l'event `'switch'` et les `{data}`
               - document.getElementById('main').style.display = 'block'
                 → displays anchor `main` from `popup.html`
 
