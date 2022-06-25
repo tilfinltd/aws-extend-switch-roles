@@ -60,6 +60,14 @@ window.onload = function() {
     chrome.tabs.create({ url: chrome.extension.getURL('supporters.html')}, function(tab){});
     return false;
   }
+  
+  const storageRepo = new SyncStorageRepository(chrome || browser);
+  storageRepo.get(['hidesSidebar']).then(data => {
+    const hidesSidebar = data.hidesSidebar || false;
+    if (hidesSidebar) {
+      document.getElementById('sidebar').style.display = 'none';
+    }
+  });
 
   const hasGoldenKey = localStorage.getItem('hasGoldenKey');
   const swcnt = localStorage.getItem('switchCount') || 0;
