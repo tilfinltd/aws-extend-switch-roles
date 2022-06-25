@@ -7,6 +7,9 @@
 - [x] Open an account
 - [x] Switch accounts
 - [x] Open URI `console.aws/ec2/` instead of `console.aws/`
+- [x] Unit tests still pass after my edit
+- [x] Remove the update notice
+- [x] Add debug logs
 
 ### How does AESR work ?
 - popup.js
@@ -37,10 +40,7 @@
     - anchor `roleList` (ul)
 
 ### For later:
-- [ ] Run tests
 - [ ] Remove golden key configuration, redirect to AESR
 - [ ] Allow auto-assume last role
 - [ ] Simplify UI
-- [ ] Edit icons
-- [ ] Remove the update notice
-- [ ] Write logs
+- [ ] Add icons for the list of services
