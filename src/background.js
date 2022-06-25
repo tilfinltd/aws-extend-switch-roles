@@ -54,16 +54,6 @@ function initScript() {
 chrome.runtime.onStartup.addListener(function () { initScript() })
 
 chrome.runtime.onInstalled.addListener(function (details) {
-  const { reason } = details;
-  let page = null;
-  if (reason === 'install' || reason === 'update') {
-    page = 'updated.html'
-  }
-  if (page) {
-    const url = chrome.extension.getURL(page)
-    chrome.tabs.create({ url }, function(){});
-  }
-
   initScript();
 })
 
