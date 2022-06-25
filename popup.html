@@ -46,21 +46,21 @@ a:hover {
   font-size: 15px;
   padding-bottom: 5px;
 }
-#roleList {
+#roleList, #serviceList {
   padding: 0;
   margin: 0;
   overflow-x: hidden;
   max-height: 516px;
   scrollbar-width: thin;
 }
-#roleList li {
+#roleList li, #serviceList li {
   padding: 0;
   margin: 4px 10px 4px 2px;
   list-style: none;
   white-space: nowrap;
   vertical-align: middle;
 }
-#roleList li a {
+#roleList li a, #serviceList li a {
   color: #000;
   font-family: Arial;
   cursor: pointer;
@@ -68,7 +68,7 @@ a:hover {
   line-height: 29px;
   text-decoration: none;
 }
-#roleList li a > * {
+#roleList li a > *, #serviceList li a > * {
   vertical-align: top;
 }
 .headSquare {
@@ -106,6 +106,20 @@ a:hover {
           style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
       </div>
       <ul id="roleList">
+      </ul>
+      <ul id="serviceList" style="display: none">
+        <li>
+          <a href="#" title="iam"><span class="headSquare" style="background-color: rgb(255, 0, 0);"></span>
+          IAM</a>
+        </li>
+        <li>
+          <a href="#" title="iam"><span class="headSquare" style="background-color: rgb(255, 153, 0);"></span>
+          EC2</a>
+        </li>
+        <li>
+          <a href="#" title="iam"><span class="headSquare" style="background-color: rgb(3, 166, 0);"></span>
+          S3</a>
+        </li>
       </ul>
     </div>
     <div id="noMain" style="display: none;">
