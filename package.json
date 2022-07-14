@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tilfin/aws-extend-switch-roles.git"
+    "url": "git+https://github.com/tilfinltd/aws-extend-switch-roles.git"
   },
   "author": "Toshimitsu Takahashi (Tilfin Ltd.)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tilfin/aws-extend-switch-roles/issues"
+    "url": "https://github.com/tilfinltd/aws-extend-switch-roles/issues"
   },
-  "homepage": "https://github.com/tilfin/aws-extend-switch-roles#readme",
+  "homepage": "https://github.com/tilfinltd/aws-extend-switch-roles#readme",
   "devDependencies": {
     "chai": "^4.3.4",
     "jsdom": "^19.0.0",
