@@ -53,7 +53,7 @@ color = ffaaee
 [anotheraccount]
 aws_account_id = 987654321987
 role_name = anotherrole
-region=ap-northeast-1
+region = ap-northeast-1
 
 [athirdaccount]
 aws_account_id = 987654321988
