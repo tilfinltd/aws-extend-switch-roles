@@ -1,13 +1,30 @@
 {
+  "version": "2.3.1",
   "applications": {
     "gecko": {
       "id": "aws-extend-switch-roles@toshi.tilfin.com",
       "strict_min_version": "74.0"
     }
   },
+  "browser_action": {
+    "default_title": "AWS Extend Switch Roles",
+    "default_icon": "icons/Icon_38x38.png",
+    "default_popup": "popup.html"
+  },
   "background": {
     "scripts": [
       "js/background.js"
     ]
-  }
+  },
+  "web_accessible_resources": [
+    "js/attach_target.js"
+  ],
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Comma"
+      }
+    }
+  },
+  "manifest_version": 2
 }
