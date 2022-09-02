@@ -2,13 +2,14 @@ import { loadAwsConfig } from './lib/load_aws_config.js'
 import { ColorPicker } from './lib/color_picker.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { LZString } from './lib/lz-string.min.js'
-import { StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { LocalStorageRepository, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
 function elById(id) {
   return document.getElementById(id);
 }
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+const localStorageRepo = new LocalStorageRepository(chrome || browser)
 
 window.onload = function() {
   let configStorageArea = 'sync';
@@ -44,7 +45,7 @@ window.onload = function() {
         return;
       }
 
-      localStorage['rawdata'] = rawstr;
+      localStorageRepo.set({ rawdata: rawstr }).then(() => {})
 
       const dps = new DataProfilesSplitter(configStorageArea === 'sync' ? 40 : 400);
       const dataSet = dps.profilesToDataSet(profiles);
@@ -72,61 +73,64 @@ window.onload = function() {
     }
   }
   const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
-  if (localStorage.getItem('hasGoldenKey')) {
-    signinEndpointInHereCheckBox.onchange = function() {
-      syncStorageRepo.set({ signinEndpointInHere: this.checked });
-    }
-  } else {
-    signinEndpointInHereCheckBox.disabled = true;
-  }
-  booleanSettings.push('signinEndpointInHere')
-
-  elById('configSenderIdText').onchange = function() {
-    syncStorageRepo.set({ configSenderId: this.value });
-  }
-
-  elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function() {
-    configStorageArea = this.value;
-    syncStorageRepo.set({ configStorageArea: this.value }).then(() => {
-      saveButton.click();
-    });
-  }
-
-  syncStorageRepo.get(['configSenderId', 'configStorageArea'].concat(booleanSettings))
-  .then(data => {
-    elById('configSenderIdText').value = data.configSenderId || '';
-    for (let key of booleanSettings) {
-      elById(`${key}CheckBox`).checked = data[key] || false;
-    }
-
-    configStorageArea = data.configStorageArea || 'sync'
-    switch (configStorageArea) {
-      case 'sync':
-        elById('configStorageSyncRadioButton').checked = true
-        break;
-      case 'local':
-        elById('configStorageLocalRadioButton').checked = true
-        break;
-    }
-
-    if ('hidesHistory' in data) {
-      // clean deprecated key
-      syncStorageRepo.delete(['hidesHistory']).catch(() => {})
-    }
-
-    new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])
+  localStorageRepo.get(['hasGoldenKey'])
     .then(data => {
-      let rawData = '';
-      if (data.lztext) {
-        try {
-          rawData = LZString.decompressFromUTF16(data.lztext);
-        } catch(err) {
-          rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
+      if (data.hasGoldenKey) {
+        signinEndpointInHereCheckBox.onchange = function() {
+          syncStorageRepo.set({ signinEndpointInHere: this.checked });
         }
+      } else {
+        signinEndpointInHereCheckBox.disabled = true;
       }
-      textArea.value = rawData;
-    });
-  });
+      booleanSettings.push('signinEndpointInHere')
+
+      elById('configSenderIdText').onchange = function() {
+        syncStorageRepo.set({ configSenderId: this.value });
+      }
+
+      elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function() {
+        configStorageArea = this.value;
+        syncStorageRepo.set({ configStorageArea: this.value }).then(() => {
+          saveButton.click();
+        });
+      }
+
+      syncStorageRepo.get(['configSenderId', 'configStorageArea'].concat(booleanSettings))
+        .then(data => {
+          elById('configSenderIdText').value = data.configSenderId || '';
+          for (let key of booleanSettings) {
+            elById(`${key}CheckBox`).checked = data[key] || false;
+          }
+
+          configStorageArea = data.configStorageArea || 'sync'
+          switch (configStorageArea) {
+            case 'sync':
+              elById('configStorageSyncRadioButton').checked = true
+              break;
+            case 'local':
+              elById('configStorageLocalRadioButton').checked = true
+              break;
+          }
+
+          if ('hidesHistory' in data) {
+            // clean deprecated key
+            syncStorageRepo.delete(['hidesHistory']).catch(() => {})
+          }
+
+          new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])
+            .then(data => {
+              let rawData = '';
+              if (data.lztext) {
+                try {
+                  rawData = LZString.decompressFromUTF16(data.lztext);
+                } catch(err) {
+                  rawData = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
+                }
+              }
+              textArea.value = rawData;
+            });
+        });
+    })
 }
 
 function updateMessage(el, msg, color) {

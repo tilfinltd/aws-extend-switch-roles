@@ -4,6 +4,7 @@ import { LZString } from './lib/lz-string.min.js'
 import { LocalStorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+const localStorageRepo = new LocalStorageRepository(chrome || browser)
 
 function saveAwsConfig(data, callback, storageRepo) {
   const rawstr = data;
@@ -39,14 +40,18 @@ function saveAwsConfig(data, callback, storageRepo) {
 }
 
 function initScript() {
-  localStorage.setItem('switchCount', 0);
+  localStorageRepo.set({ switchCount: 0 }).then(() => {})
 
   syncStorageRepo.get(['goldenKeyExpire'])
   .then(data => {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-      localStorage.setItem('hasGoldenKey', 't');
-      chrome.browserAction.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
+      localStorageRepo.set({ hasGoldenKey: 't' }).then(() => {})
+      if (chrome.action) {
+        chrome.action.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
+      } else {
+        chrome.browserAction.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
+      }
     }
   })
 }
@@ -60,7 +65,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
     page = 'updated.html'
   }
   if (page) {
-    const url = chrome.extension.getURL(page)
+    const url = chrome.runtime.getURL(page)
     chrome.tabs.create({ url }, function(){});
   }
 

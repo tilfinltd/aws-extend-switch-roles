@@ -1,13 +1,18 @@
 import { validateKeyCode } from './lib/verify_jwt'
-import { SyncStorageRepository } from './lib/storage_repository'
+import { LocalStorageRepository, SyncStorageRepository } from './lib/storage_repository'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+const localStorageRepo = new LocalStorageRepository(chrome || browser)
 
 function updateKeyExpire(exp) {
   syncStorageRepo.set({ goldenKeyExpire: exp })
   .then(() => {
-    localStorage.setItem('hasGoldenKey', exp ? exp : '');
-    chrome.browserAction.setIcon({ path: `icons/Icon_48x48${exp ? '_g' : ''}.png` });
+    localStorageRepo.set({ hasGoldenKey: exp ? exp : '' }).then(() => {})
+    if (chrome.action) {
+      chrome.action.setIcon({ path: `icons/Icon_48x48${exp ? '_g' : ''}.png` });
+    } else {
+      chrome.browserAction.setIcon({ path: `icons/Icon_48x48${exp ? '_g' : ''}.png` });
+    }
   })
 }
 
