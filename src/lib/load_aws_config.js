@@ -62,7 +62,7 @@ class AwsConfigIniParser {
       delete item.role_arn;
     }
 
-    if (!item.aws_account_id) throw new Error('invalid profile definition whose the AWS account id is not specified')
+    if (!item.aws_account_id) throw new Error('Found a profile definition which does not include an AWS account id')
 
     return item;
   }
