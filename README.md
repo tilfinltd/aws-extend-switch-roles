@@ -15,7 +15,7 @@ This extension shows a menu of switchable roles that you can configure manually.
 ## Large Supporters
 
 <a href="https://classmethod.jp/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/classmethod.png" width="208" height="90"></a>
-<a href="https://www.doit-intl.com/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/doitintl.png" width="208" height="90"></a>
+<a href="https://www.ginkgobioworks.com/" rel="noopener"><img alt="Ginkgo Bioworks" src="https://aesr.tilfin.com/supporters/img/ginkgo-bioworks.png" width="208" height="90"></a>
 
 ## Development and Distribution Guideline
 
