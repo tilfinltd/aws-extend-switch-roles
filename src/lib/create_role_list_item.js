@@ -58,14 +58,14 @@ function createRedirectUri(currentUrl, curRegion, destRegion) {
 
 function createDisplayName(profile, aws_account_id) {
   const maxLength = 64;
-  const seperator = '  |  ';
-  const overflow = '...';
+  const separator = '  |  ';
+  const overflow = '…';
 
   let displayName = profile;
   let totalLength = displayName.length;
 
   if (aws_account_id !== undefined) {
-    totalLength += seperator.length + aws_account_id.length;
+    totalLength += separator.length + aws_account_id.length;
   }
 
   if (totalLength > maxLength) {
@@ -74,7 +74,7 @@ function createDisplayName(profile, aws_account_id) {
   }
 
   if (aws_account_id !== undefined) {
-    displayName += seperator + aws_account_id;
+    displayName += separator + aws_account_id;
   }
   
   return displayName;
