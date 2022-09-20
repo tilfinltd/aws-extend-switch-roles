@@ -120,13 +120,13 @@ role_arn = arn:aws:iam::123456789012:role/role-b;
   })
 
   describe('when profile does not specify AWS account id', () => {
-    it('throws an error whose message is "invalid profile definition whose the AWS account id is not specified"', () => {      
+    it('throws an error whose message is "Found a profile definition which does not include an AWS account id"', () => {      
       expect(() => {
         loadAwsConfig(`
           [b]
           key=property
         `);
-      }).to.throw(`invalid profile definition whose the AWS account id is not specified`);
+      }).to.throw(`Found a profile definition which does not include an AWS account id`);
     })
   })
 })
