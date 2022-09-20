@@ -158,10 +158,10 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 ## Extension API
 
-- **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. **'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.** [See](https://github.com/tilfin/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
+- **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. **'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.** [See](https://github.com/tilfinltd/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
 
 ## Appearance
 
-![Screen Shot 1](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_1.png)
+![Screen Shot 1](https://github.com/tilfinltd/aws-extend-switch-roles/blob/images/ScreenShot_1.png)
 
-![Screen Shot 3](https://github.com/tilfin/aws-extend-switch-roles/blob/images/ScreenShot_3_960x600.png)
+![Screen Shot 3](https://github.com/tilfinltd/aws-extend-switch-roles/blob/images/ScreenShot_3_960x600.png)
