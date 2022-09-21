@@ -27,9 +27,9 @@ export function createRoleListItem(document, item, url, region, { hidesAccountId
   anchor.appendChild(document.createTextNode(item.profile));
 
   if (hidesAccountId) {
-    anchor.dataset.displayname = item.profile;
+    anchor.dataset.displayname = createDisplayName(item.profile);
   } else {
-    anchor.dataset.displayname = item.profile + '  |  ' + item.aws_account_id;
+    anchor.dataset.displayname = createDisplayName(item.profile, item.aws_account_id);
 
     const accountIdSpan = document.createElement('span');
     accountIdSpan.className = 'suffixAccountId';
@@ -54,4 +54,28 @@ function createRedirectUri(currentUrl, curRegion, destRegion) {
     redirectUri = redirectUri.replace('region=' + curRegion, 'region=' + destRegion);
   }
   return encodeURIComponent(redirectUri);
+}
+
+function createDisplayName(profile, awsAccountId) {
+  const maxLength = 64;
+  const separator = '  |  ';
+  const overflow = '…';
+
+  let displayName = profile;
+  let totalLength = displayName.length;
+
+  if (awsAccountId !== undefined) {
+    totalLength += separator.length + awsAccountId.length;
+  }
+
+  if (totalLength > maxLength) {
+    displayName = displayName.substring(0, displayName.length - (totalLength - maxLength) - overflow.length)
+                  + overflow;
+  }
+
+  if (awsAccountId !== undefined) {
+    displayName += separator + awsAccountId;
+  }
+  
+  return displayName;
 }
