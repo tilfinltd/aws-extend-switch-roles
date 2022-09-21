@@ -56,7 +56,7 @@ function createRedirectUri(currentUrl, curRegion, destRegion) {
   return encodeURIComponent(redirectUri);
 }
 
-function createDisplayName(profile, aws_account_id) {
+function createDisplayName(profile, awsAccountId) {
   const maxLength = 64;
   const separator = '  |  ';
   const overflow = '…';
@@ -64,8 +64,8 @@ function createDisplayName(profile, aws_account_id) {
   let displayName = profile;
   let totalLength = displayName.length;
 
-  if (aws_account_id !== undefined) {
-    totalLength += separator.length + aws_account_id.length;
+  if (awsAccountId !== undefined) {
+    totalLength += separator.length + awsAccountId.length;
   }
 
   if (totalLength > maxLength) {
@@ -73,8 +73,8 @@ function createDisplayName(profile, aws_account_id) {
                   + overflow;
   }
 
-  if (aws_account_id !== undefined) {
-    displayName += separator + aws_account_id;
+  if (awsAccountId !== undefined) {
+    displayName += separator + awsAccountId;
   }
   
   return displayName;
