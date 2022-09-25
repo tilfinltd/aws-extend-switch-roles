@@ -78,6 +78,7 @@ function setupMessageListener(metaASE) {
       form.roleName.value = data.rolename;
       form.displayName.value = data.displayname;
       form.redirect_uri.value = data.redirecturi;
+      cb();
       form.submit();
       return false;
     }
