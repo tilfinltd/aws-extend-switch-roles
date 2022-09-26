@@ -2,6 +2,7 @@ import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { loadAwsConfig } from './lib/load_aws_config.js'
 import { LZString } from './lib/lz-string.min.js'
 import { LocalStorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { setIcon } from './lib/set_icon.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const localStorageRepo = new LocalStorageRepository(chrome || browser)
@@ -46,12 +47,9 @@ function initScript() {
   .then(data => {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-      localStorageRepo.set({ hasGoldenKey: 't' }).then(() => {})
-      if (chrome.action) {
-        chrome.action.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
-      } else {
-        chrome.browserAction.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
-      }
+      return localStorageRepo.set({ hasGoldenKey: 't' }).then(() => {
+        return setIcon({ path: 'icons/Icon_48x48_g.png' });
+      });
     }
   })
 }
