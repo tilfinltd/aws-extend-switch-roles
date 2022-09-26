@@ -63,12 +63,10 @@ window.onload = function() {
   }
 
   localStorageRepo.get(['hasGoldenKey', 'switchCount'])
-    .then(data => {
-      const hasGoldenKey = data.hasGoldenKey || false;
-      const swcnt = data.switchCount || 0;
-      if (hasGoldenKey) {
+    .then(({ hasGoldenKey, switchCount }) => {
+      if (hasGoldenKey || false) {
         document.getElementById('goldenkey').style.display = 'block';
-      } else if (swcnt > MANY_SWITCH_COUNT) {
+      } else if ((switchCount || 0) > MANY_SWITCH_COUNT) {
         document.getElementById('supportComment').style.display = 'block';
       }
       main();
@@ -174,12 +172,12 @@ function setupRoleFilter() {
 
 function sendSwitchRole(tabId, data) {
   executeAction(tabId, 'switch', data).then(() => {
-    localStorageRepo.get(['switchCount'])
-      .then(data => {
-        let swcnt = data.switchCount || 0;
-        localStorageRepo.set({ switchCount: ++swcnt }).then(() => {})
-        window.close()
-      })
+    localStorageRepo.get(['switchCount']).then(({ switchCount }) => {
+      let swcnt = switchCount || 0;
+      return localStorageRepo.set({ switchCount: ++swcnt });
+    }).then(() => {
+      window.close()
+    })
   });
 }
 

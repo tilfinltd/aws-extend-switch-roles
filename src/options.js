@@ -74,8 +74,8 @@ window.onload = function() {
   }
   const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
   localStorageRepo.get(['hasGoldenKey'])
-  .then((data) => {
-    if (data.hasGoldenKey) {
+  .then(({ hasGoldenKey }) => {
+    if (hasGoldenKey) {
       signinEndpointInHereCheckBox.onchange = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
