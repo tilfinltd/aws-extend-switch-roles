@@ -1,9 +1,9 @@
 import { createRoleListItem } from './lib/create_role_list_item.js'
 import { createProfileSet } from './lib/profile_set.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
-import { LocalStorageRepository, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
-const localStorageRepo = new LocalStorageRepository(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser)
 
 function openOptions() {
   if (window.chrome) {
@@ -62,7 +62,7 @@ window.onload = function() {
     return false;
   }
 
-  localStorageRepo.get(['hasGoldenKey', 'switchCount'])
+  sessionMemory.get(['hasGoldenKey', 'switchCount'])
     .then(({ hasGoldenKey, switchCount }) => {
       if (hasGoldenKey || false) {
         document.getElementById('goldenkey').style.display = 'block';
@@ -172,9 +172,9 @@ function setupRoleFilter() {
 
 function sendSwitchRole(tabId, data) {
   executeAction(tabId, 'switch', data).then(() => {
-    localStorageRepo.get(['switchCount']).then(({ switchCount }) => {
+    sessionMemory.get(['switchCount']).then(({ switchCount }) => {
       let swcnt = switchCount || 0;
-      return localStorageRepo.set({ switchCount: ++swcnt });
+      return sessionMemory.set({ switchCount: ++swcnt });
     }).then(() => {
       window.close()
     })

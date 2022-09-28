@@ -2,7 +2,7 @@ import { loadAwsConfig } from './lib/load_aws_config.js'
 import { ColorPicker } from './lib/color_picker.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { LZString } from './lib/lz-string.min.js'
-import { LocalStorageRepository, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { LocalStorageRepository, SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
 function elById(id) {
   return document.getElementById(id);
@@ -10,6 +10,7 @@ function elById(id) {
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const localStorageRepo = new LocalStorageRepository(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser)
 
 window.onload = function() {
   let configStorageArea = 'sync';
@@ -73,7 +74,7 @@ window.onload = function() {
     }
   }
   const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
-  localStorageRepo.get(['hasGoldenKey'])
+  sessionMemory.get(['hasGoldenKey'])
   .then(({ hasGoldenKey }) => {
     if (hasGoldenKey) {
       signinEndpointInHereCheckBox.onchange = function() {

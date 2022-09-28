@@ -1,11 +1,11 @@
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { loadAwsConfig } from './lib/load_aws_config.js'
 import { LZString } from './lib/lz-string.min.js'
-import { LocalStorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { LocalStorageRepository, SessionMemory, SyncStorageRepository } from './lib/storage_repository.js'
 import { setIcon } from './lib/set_icon.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
-const localStorageRepo = new LocalStorageRepository(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser)
 
 function saveAwsConfig(data, callback, storageRepo) {
   const rawstr = data;
@@ -41,13 +41,13 @@ function saveAwsConfig(data, callback, storageRepo) {
 }
 
 function initScript() {
-  localStorageRepo.set({ switchCount: 0 }).then(() => {})
+  sessionMemory.set({ switchCount: 0 }).then(() => {});
 
   syncStorageRepo.get(['goldenKeyExpire'])
   .then(data => {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-      return localStorageRepo.set({ hasGoldenKey: 't' }).then(() => {
+      return sessionMemory.set({ hasGoldenKey: 't' }).then(() => {
         return setIcon({ path: 'icons/Icon_48x48_g.png' });
       });
     }
