@@ -9,7 +9,6 @@ function elById(id) {
 }
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
-const localStorageRepo = new LocalStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
 
 window.onload = function() {
@@ -45,8 +44,6 @@ window.onload = function() {
         updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', '#dd1111');
         return;
       }
-
-      localStorageRepo.set({ rawdata: rawstr }).then(() => {})
 
       const dps = new DataProfilesSplitter(configStorageArea === 'sync' ? 40 : 400);
       const dataSet = dps.profilesToDataSet(profiles);
