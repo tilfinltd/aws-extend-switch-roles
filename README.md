@@ -66,7 +66,7 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 
 - A profile specified by the `source_profile` of the others is defined as a **base account**.
 
-- **If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.**
+- If your account is aliased, you specify `aws_account_alias` in **base account**.
 
 - If an `role_name` is specified in a **base account** it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS. If a role name starts with *AWSReservedSSO_*, the value should be only the **permission set** name.
 
@@ -79,7 +79,8 @@ More complex configurations involve multiple AWS accounts and/or organizations.
 
 ```
 [organization1]
-aws_account_id = your-account-alias
+aws_account_id = 000011112222
+aws_account_alias = your-account-alias ; If your account is aliased
 
 [Org1-Account1-Role1]
 role_arn = arn:aws:iam::123456789012:role/Role1
