@@ -6,11 +6,11 @@ import { StorageRepository, SyncStorageRepository } from './lib/storage_reposito
 function openOptions() {
   if (window.chrome) {
     chrome.runtime.openOptionsPage(err => {
-      console.error(`Error: ${err}`);
+      if (err) console.error(`Error: ${err}`);
     });
   } else if (window.browser) {
     window.browser.runtime.openOptionsPage().catch(err => {
-      console.error(`Error: ${err}`);
+      if (err) console.error(`Error: ${err}`);
     });
   }
 }
