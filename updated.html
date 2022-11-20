@@ -25,6 +25,13 @@
   section p { text-indent: .25em }
   ul > li { padding-left: .25em; }
   ol > li { padding-left: .5em }
+  blockquote {
+    border: 1px solid #666;
+    white-space: pre-line;
+    width: 22em;
+    padding: .4em .7em;
+    margin: 1em 4em;
+  }
   </style>
 </head>
 <body>
@@ -32,6 +39,17 @@
 
   <section>
     <h2 style="color:#0099f2">Recent main updates</h2>
+    <h3>'aws_account_alias' parameter</h3>
+    <p>
+      Previously, when you logged in your account alias, you had to set the alias to 'aws_account_id',
+      but now you can specify both the account ID and the alias with <b>'aws_account_alias'</b>.
+      This will ensure that the target profiles are displayed regardless of whether you log in the account ID or the alias.
+    </p>
+    <blockquote>[organization1]
+      aws_account_id = 000011112222
+      aws_account_alias = your-account-alias
+    </blockquote>
+
     <h3>'Sign-in endpoint in current region' setting (Experimental, Supporters only)</h3>
     <p>
       The 'Switch role' requests to the sign-in endpoint in the current region instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console.
@@ -40,7 +58,15 @@
 
     <hr style="margin:18px 0">
 
-    <h2>2.3.1 <span style="margin-left:0.75em; color:rgb(221, 63, 0)">New version!</span></h2>
+    <h2>2.3.2 <span style="margin-left:0.75em; color:rgb(221, 63, 0)">New version!</span></h2>
+    <ul>
+      <li>Truncate the display name when the length exceeds the limit</li>
+      <li>Fix the browser console error when the popup menu is closed</li>
+      <li>Updating the target AWS console URLs, support new health dashboard and LightSail</li>
+      <li>Support 'aws_account_alias' parameter on base account</li>
+    </ul>
+
+    <h2>2.3.1</h2>
     <ul>
       <li>Fix that 'Sign-in endpoint in current region' breaks a switch role on some page like Chatbot</li>
       <li>Fix that the icon's background becomes gray if it is transparent</li>
