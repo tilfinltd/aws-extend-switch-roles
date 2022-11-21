@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 2.3.2 (2022/11/20)
+
+- Truncate the display name when the length exceeds the limit (thanks to @samhpickering)
+- Fix the browser console error when the popup menu is closed
+- Updating the target AWS console URLs, support new health dashboard and LightSail
+- Support 'aws_account_alias' parameter on base account
+- Suppress outputing an error in a browser dev tool when the option page is opened
+
 ## 2.3.1 (2022/01/30)
 
 - Fix that 'Sign-in endpoint in current region' breaks a switch role on some page like Chatbot

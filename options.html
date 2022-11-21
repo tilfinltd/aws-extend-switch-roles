@@ -162,7 +162,7 @@ image = "https://via.placeholder.com/150"
   <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
   <ul>
    <li>A profile specified by the <code>source_profile</code> of the others is defined as <b>base account</b></li>
-   <li><b>If your account is aliased, the alias will be shown in the role dropdown after 'Account:'.  You MUST use that alias as the aws_account_id for the base account instead of the numerical account id or your configuration won't work as expected.</b></li>
+   <li>If your account is aliased, you specify <code>aws_account_alias</code> in <b>base account</b>.</li>
    <li>If an <code>role_name</code> is specified in a <b>base account</b> it will also check for the role that is used to login to AWS.
     This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS. If a role name starts with <i>AWSReservedSSO_</i>, the value should be only the <b>permission set</b>>** name.
   </li>
@@ -173,7 +173,8 @@ image = "https://via.placeholder.com/150"
   </ul>
   <pre>
 [organization1]
-aws_account_id = your-account-alias
+aws_account_id = 000011112222
+aws_account_alias = your-account-alias
 
 [Org1-Account1-Role1]
 role_arn = arn:aws:iam::123456789012:role/Role1

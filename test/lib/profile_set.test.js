@@ -404,6 +404,108 @@ describe('createProfileSet', () => {
         role_name: 'prod-role',
       });
     });
+
+    it('base account has id and alias, sign-in with id', () => {
+      const profiles = [
+        { profile: 'base1', aws_account_id: '111111111111', aws_account_alias: 'my-base-alias' },
+        {
+          profile: 'target1',
+          aws_account_id: '111133334445',
+          role_name: 'role1',
+          source_profile: 'base1',
+        },
+        {
+          profile: 'target2',
+          aws_account_id: '111133334446',
+          role_name: 'role2',
+          source_profile: 'base1',
+        },
+      ];
+      const userInfo = {
+        loginDisplayNameAccount: '111111111111',
+        loginDisplayNameUser: 'a-user',
+        roleDisplayNameAccount: undefined,
+        roleDisplayNameUser: undefined,
+      };
+      const settings = { showOnlyMatchingRoles: false };
+
+      const profileSet = createProfileSet(profiles, userInfo, settings);
+
+      expect(profileSet.destProfiles[0].profile).to.eq('target1');
+      expect(profileSet.destProfiles[1].profile).to.eq('target2');
+    });
+
+    it('base account has id and alias, sign-in with alias', () => {
+      const profiles = [
+        { profile: 'base1', aws_account_id: '111111111111', aws_account_alias: 'my-base-alias' },
+        {
+          profile: 'target1',
+          aws_account_id: '111133334445',
+          role_name: 'role1',
+          source_profile: 'base1',
+        },
+        {
+          profile: 'target2',
+          aws_account_id: '111133334446',
+          role_name: 'role2',
+          source_profile: 'base1',
+        },
+      ];
+      const userInfo = {
+        loginDisplayNameAccount: 'my-base-alias',
+        loginDisplayNameUser: 'a-user',
+        roleDisplayNameAccount: undefined,
+        roleDisplayNameUser: undefined,
+      };
+      const settings = { showOnlyMatchingRoles: false };
+
+      const profileSet = createProfileSet(profiles, userInfo, settings);
+
+      expect(profileSet.destProfiles[0].profile).to.eq('target1');
+      expect(profileSet.destProfiles[1].profile).to.eq('target2');
+    });
+
+    it('base account has id, alias and role_name, sign-in with alias', () => {
+      const profiles = [
+        {
+          profile: 'A1-er1',
+          aws_account_id: '777711112222',
+          aws_account_alias: 'base-1',
+          role_name: 'entry-role1',
+        },
+        {
+          profile: 'A1-er2',
+          aws_account_id: '777711112222',
+          aws_account_alias: 'base-1',
+          role_name: 'entry-role2',
+        },
+        {
+          profile: 'Stg1',
+          aws_account_id: '888811113333',
+          role_name: 'power-user',
+          source_profile: 'A1-er1',
+        },
+        {
+          profile: 'Stg2',
+          aws_account_id: '888811113333',
+          role_name: 'normal-user',
+          source_profile: 'A1-er2',
+        },
+      ];
+      const userInfo = {
+        loginDisplayNameAccount: 'base-1',
+        loginDisplayNameUser: 'entry-role2/a-user',
+        roleDisplayNameAccount: undefined,
+        roleDisplayNameUser: undefined,
+      };
+      const settings = { showOnlyMatchingRoles: false };
+
+      const profileSet = createProfileSet(profiles, userInfo, settings);
+      expect(profileSet.destProfiles[0]).to.deep.include({
+        profile: 'Stg2',
+        role_name: 'normal-user',
+      });
+    });
   });
 
   describe('when userInfo is on switched', () => {

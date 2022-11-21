@@ -34,9 +34,13 @@ export class ProfileSet {
 
     independentOrSrcProfiles.forEach(item => {
       if (item.profile in destsBySrcMap) {
-        let key = item.aws_account_id;
-        if (item.role_name) key += '/' + item.role_name;
-        this.srcProfileMap[key] = item;
+        let { aws_account_id: accountId, aws_account_alias: accountAlias, role_name } = item;
+        if (role_name) {
+          accountId += '/' + role_name;
+          if (accountAlias) accountAlias += '/' + role_name;
+        }
+        this.srcProfileMap[accountId] = item;
+        if (accountAlias) this.srcProfileMap[accountAlias] = item;
       } else {
         independentDests.push(item)
       }
