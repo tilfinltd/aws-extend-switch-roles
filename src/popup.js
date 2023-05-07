@@ -101,7 +101,6 @@ function main() {
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
-        p.style.color = '#666';
         noMain.style.display = 'block';
       }
     })
