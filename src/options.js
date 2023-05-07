@@ -64,7 +64,7 @@ window.onload = function() {
     }
   }
 
-  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
+  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole','darkMode'];
   for (let key of booleanSettings) {
     elById(`${key}CheckBox`).onchange = function() {
       syncStorageRepo.set({ [key]: this.checked });
@@ -109,6 +109,11 @@ window.onload = function() {
       case 'local':
         elById('configStorageLocalRadioButton').checked = true
         break;
+    }
+    if (data.darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
     }
 
     new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])
