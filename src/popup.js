@@ -67,6 +67,15 @@ window.onload = function() {
   } else if (swcnt > MANY_SWITCH_COUNT) {
     document.getElementById('supportComment').style.display = 'block';
   }
+
+  const storageRepo = new SyncStorageRepository(chrome || browser);
+  storageRepo.get(["darkMode"]).then((data) => {
+    if (data.darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  });
   main();
 }
 
