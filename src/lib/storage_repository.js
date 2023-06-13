@@ -49,40 +49,21 @@ export class SessionStorageRepository extends StorageRepository {
 
 export class SessionMemory {
   constructor(browser) {
-    const { manifest_version } = browser.runtime.getManifest();
-    if (manifest_version >= 3) {
-      this.storageRepo = new SessionStorageRepository(browser);
-      if (this.storageRepo.disabled) {
-        this.storageRepo = new LocalStorageRepository(browser);
-      }
-    } else {
-      this.storageRepo = null;
+    this.storageRepo = new SessionStorageRepository(browser);
+    if (this.storageRepo.disabled) {
+      this.storageRepo = new LocalStorageRepository(browser);
     }
   }
 
   async get(keys) {
-    if (this.storageRepo) {
-      return this.storageRepo.get(keys)
-    } else {
-      return keys.reduce((result, key) => Object.assign(result, { [key]: localStorage.getItem(key) }), {})
-    }
+    return this.storageRepo.get(keys)
   }
 
   async set(items) {
-    if (this.storageRepo) {
-      return this.storageRepo.set(items)
-    } else {
-      for (let key in items) {
-        localStorage.setItem(key, items[key])
-      }
-    }
+    return this.storageRepo.set(items)
   }
 
   delete(keys) {
-    if (this.storageRepo) {
-      this.storageRepo.delete(keys)
-    } else {
-      keys.forEach(key => { localStorage.removeItem(key) });
-    }
+    this.storageRepo.delete(keys)
   }
 }
