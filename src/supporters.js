@@ -11,7 +11,7 @@ function updateKeyExpire(exp) {
     return sessionMemory.set({ hasGoldenKey: exp ? exp : '' })
   })
   .then(() => {
-    return setIcon({ path: `icons/Icon_48x48${exp ? '_g' : ''}.png` });
+    return setIcon(`/icons/Icon_48x48${exp ? '_g' : ''}.png`);
   })
 }
 

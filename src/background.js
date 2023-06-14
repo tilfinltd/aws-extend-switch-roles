@@ -48,7 +48,7 @@ function initScript() {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
       return sessionMemory.set({ hasGoldenKey: 't' }).then(() => {
-        return setIcon({ path: 'icons/Icon_48x48_g.png' });
+        return setIcon('/icons/Icon_48x48_g.png');
       });
     }
   })
