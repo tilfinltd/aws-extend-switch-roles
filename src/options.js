@@ -41,7 +41,7 @@ window.onload = function() {
     try {
       const profiles = loadAwsConfig(rawstr);
       if (configStorageArea === 'sync' && profiles.length > 200) {
-        updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', '#dd1111');
+        updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', 'warn');
         return;
       }
 
@@ -51,16 +51,16 @@ window.onload = function() {
 
       new StorageRepository(chrome || browser, configStorageArea).set(dataSet)
       .then(() => {
-        updateMessage(msgSpan, 'Configuration has been updated!', '#1111dd');
+        updateMessage(msgSpan, 'Configuration has been updated!', 'success');
         setTimeout(() => {
           msgSpan.firstChild.remove();
         }, 2500);
       })
       .catch(lastError => {
-        updateMessage(msgSpan, lastError.message, '#dd1111');
+        updateMessage(msgSpan, lastError.message, 'warn');
       });
     } catch (e) {
-      updateMessage(msgSpan, `Failed to save because ${e.message}`, '#dd1111');
+      updateMessage(msgSpan, `Failed to save because ${e.message}`, 'warn');
     }
   }
 
@@ -123,7 +123,7 @@ window.onload = function() {
 
     const visualMode = data.visualMode || 'default'
     elById(visualMode + 'VisualRadioButton').checked = true;
-    if (data.visualMode === 'dark' || (data.visualMode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (visualMode === 'dark' || (visualMode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.body.classList.add('darkMode');
     }
 
@@ -142,9 +142,9 @@ window.onload = function() {
   });
 }
 
-function updateMessage(el, msg, color) {
+function updateMessage(el, msg, cls) {
   const span = document.createElement('span');
-  span.style.color = color;
+  span.className = cls;
   span.textContent = msg;
   const child = el.firstChild;
   if (child) {
