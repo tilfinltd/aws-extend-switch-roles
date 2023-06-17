@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 3.0.0 (2023/06/18)
+
+- Migrate to Manifest V3 (thanks to @eetann)
+- Add 'Visual mode' that can change UI to Dark Mode (thanks to @XargsUK)
+
 ## 2.3.2 (2022/11/20)
 
 - Truncate the display name when the length exceeds the limit (thanks to @samhpickering)
