@@ -1,7 +1,9 @@
 import { createRoleListItem } from './lib/create_role_list_item.js'
 import { createProfileSet } from './lib/profile_set.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
-import { StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+
+const sessionMemory = new SessionMemory(chrome || browser)
 
 function openOptions() {
   if (window.chrome) {
@@ -46,28 +48,29 @@ window.onload = function() {
   }
 
   document.getElementById('openUpdateNoticeLink').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.extension.getURL('updated.html')}, function(tab){});
+    chrome.tabs.create({ url: chrome.runtime.getURL('updated.html')}, function(tab){});
     return false;
   }
 
   document.getElementById('openCreditsLink').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.extension.getURL('credits.html')}, function(tab){});
+    chrome.tabs.create({ url: chrome.runtime.getURL('credits.html')}, function(tab){});
     return false;
   }
 
   document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.extension.getURL('supporters.html')}, function(tab){});
+    chrome.tabs.create({ url: chrome.runtime.getURL('supporters.html')}, function(tab){});
     return false;
   }
 
-  const hasGoldenKey = localStorage.getItem('hasGoldenKey');
-  const swcnt = localStorage.getItem('switchCount') || 0;
-  if (hasGoldenKey) {
-    document.getElementById('goldenkey').style.display = 'block';
-  } else if (swcnt > MANY_SWITCH_COUNT) {
-    document.getElementById('supportComment').style.display = 'block';
-  }
-  main();
+  sessionMemory.get(['hasGoldenKey', 'switchCount'])
+    .then(({ hasGoldenKey, switchCount }) => {
+      if (hasGoldenKey || false) {
+        document.getElementById('goldenkey').style.display = 'block';
+      } else if ((switchCount || 0) > MANY_SWITCH_COUNT) {
+        document.getElementById('supportComment').style.display = 'block';
+      }
+      main();
+    })
 }
 
 function main() {
@@ -169,9 +172,12 @@ function setupRoleFilter() {
 
 function sendSwitchRole(tabId, data) {
   executeAction(tabId, 'switch', data).then(() => {
-    let swcnt = localStorage.getItem('switchCount') || 0;
-    localStorage.setItem('switchCount', ++swcnt);
-    window.close()
+    sessionMemory.get(['switchCount']).then(({ switchCount }) => {
+      let swcnt = switchCount || 0;
+      return sessionMemory.set({ switchCount: ++swcnt });
+    }).then(() => {
+      window.close()
+    })
   });
 }
 

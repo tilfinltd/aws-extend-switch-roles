@@ -45,7 +45,7 @@ let accountInfo = null;
 function loadInfo(cb) {
   if (!accountInfo) {
     const script = document.createElement('script');
-    script.src = chrome.extension.getURL('/js/attach_target.js');
+    script.src = chrome.runtime.getURL('/js/attach_target.js');
     script.onload = function() {
       const json = document.getElementById('AESR_info').dataset.content;
       accountInfo = JSON.parse(json);

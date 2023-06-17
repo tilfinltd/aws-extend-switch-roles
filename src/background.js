@@ -1,9 +1,11 @@
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { loadAwsConfig } from './lib/load_aws_config.js'
 import { LZString } from './lib/lz-string.min.js'
-import { LocalStorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { LocalStorageRepository, SessionMemory, SyncStorageRepository } from './lib/storage_repository.js'
+import { setIcon } from './lib/set_icon.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser)
 
 function saveAwsConfig(data, callback, storageRepo) {
   const rawstr = data;
@@ -39,14 +41,15 @@ function saveAwsConfig(data, callback, storageRepo) {
 }
 
 function initScript() {
-  localStorage.setItem('switchCount', 0);
+  sessionMemory.set({ switchCount: 0 }).then(() => {});
 
   syncStorageRepo.get(['goldenKeyExpire'])
   .then(data => {
     const { goldenKeyExpire } = data;
     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-      localStorage.setItem('hasGoldenKey', 't');
-      chrome.browserAction.setIcon({ path: 'icons/Icon_48x48_g.png' }, () => {});
+      return sessionMemory.set({ hasGoldenKey: 't' }).then(() => {
+        return setIcon('/icons/Icon_48x48_g.png');
+      });
     }
   })
 }
@@ -60,7 +63,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
     page = 'updated.html'
   }
   if (page) {
-    const url = chrome.extension.getURL(page)
+    const url = chrome.runtime.getURL(page)
     chrome.tabs.create({ url }, function(){});
   }
 

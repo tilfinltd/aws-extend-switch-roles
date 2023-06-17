@@ -2,13 +2,14 @@ import { loadAwsConfig } from './lib/load_aws_config.js'
 import { ColorPicker } from './lib/color_picker.js'
 import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
 import { LZString } from './lib/lz-string.min.js'
-import { StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { LocalStorageRepository, SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
 
 function elById(id) {
   return document.getElementById(id);
 }
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser)
 
 window.onload = function() {
   let configStorageArea = 'sync';
@@ -44,8 +45,6 @@ window.onload = function() {
         return;
       }
 
-      localStorage['rawdata'] = rawstr;
-
       const dps = new DataProfilesSplitter(configStorageArea === 'sync' ? 40 : 400);
       const dataSet = dps.profilesToDataSet(profiles);
       dataSet.lztext = LZString.compressToUTF16(rawstr);
@@ -72,14 +71,17 @@ window.onload = function() {
     }
   }
   const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
-  if (localStorage.getItem('hasGoldenKey')) {
-    signinEndpointInHereCheckBox.onchange = function() {
-      syncStorageRepo.set({ signinEndpointInHere: this.checked });
+  sessionMemory.get(['hasGoldenKey'])
+  .then(({ hasGoldenKey }) => {
+    if (hasGoldenKey) {
+      signinEndpointInHereCheckBox.onchange = function() {
+        syncStorageRepo.set({ signinEndpointInHere: this.checked });
+      }
+    } else {
+      signinEndpointInHereCheckBox.disabled = true;
     }
-  } else {
-    signinEndpointInHereCheckBox.disabled = true;
-  }
-  booleanSettings.push('signinEndpointInHere')
+  });
+  booleanSettings.push('signinEndpointInHere');
 
   elById('configSenderIdText').onchange = function() {
     syncStorageRepo.set({ configSenderId: this.value });
@@ -109,11 +111,6 @@ window.onload = function() {
         break;
     }
 
-    if ('hidesHistory' in data) {
-      // clean deprecated key
-      syncStorageRepo.delete(['hidesHistory']).catch(() => {})
-    }
-
     new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])
     .then(data => {
       let rawData = '';
@@ -121,7 +118,7 @@ window.onload = function() {
         try {
           rawData = LZString.decompressFromUTF16(data.lztext);
         } catch(err) {
-          rawdata = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
+          rawData = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
         }
       }
       textArea.value = rawData;
