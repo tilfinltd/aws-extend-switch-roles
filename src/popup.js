@@ -161,12 +161,12 @@ function setupRoleFilter() {
         const profileName = anchor.dataset.search;
         const hit = words.every(it => profileName.includes(it));
         li.style.display = hit ? 'block' : 'none';
-        li.style.background = null;
+        li.classList.remove('selected')
         if (hit && firstHitLi === null) firstHitLi = li;
       });
 
       if (firstHitLi) {
-        firstHitLi.style.background = '#f0f9ff';
+        firstHitLi.classList.add('selected');
         AWSR_firstAnchor = firstHitLi.querySelector('a');
       } else {
         AWSR_firstAnchor = null;
