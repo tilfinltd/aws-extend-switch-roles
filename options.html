@@ -88,47 +88,47 @@ code {
   color: #222;
   font-weight: bold;
 }
-.dark-mode {
+.darkMode {
   background-color: #2c2c2c;
   color: #fff;
 }
-.dark-mode a {
+.darkMode a {
   color: #66ccff; 
 }
-.dark-mode a:hover {
+.darkMode a:hover {
     color: #ccddff; 
 }
-.dark-mode #settingPane {
+.darkMode #settingPane {
   background-color: #4a4a4a;
 }
-.dark-mode #howto {
+.darkMode #howto {
   background-color: #3a3a3a;
   color: #fff;
 }
-.dark-mode #awsConfigTextArea {
+.darkMode #awsConfigTextArea {
   background-color: #4a4a4a;
   color: #fff;
   border-color: #fff;
 }
-.dark-mode #colorPicker,
-.dark-mode #colorValue {
+.darkMode #colorPicker,
+.darkMode #colorValue {
   background-color: #4a4a4a;
   color: #fff;
 }
-.dark-mode input[type="text"],
-.dark-mode input[type="radio"],
-.dark-mode button {
+.darkMode input[type="text"],
+.darkMode input[type="radio"],
+.darkMode button {
   background-color: #4a4a4a;
   color: #fff;
   border-color: #4a4a4a;
 }
-.dark-mode code {
+.darkMode code {
   color: #fff;
 }
-.dark-mode pre {
+.darkMode pre {
   border-color: #777;
 }
-.dark-mode #settings ul li {
+.darkMode #settings ul li {
   color: #fff;
 }
 </style>
@@ -162,7 +162,12 @@ code {
       <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
       <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
     </li>
-    <li><label for="darkModeCheckBox"><input type="checkbox" id="darkModeCheckBox">Enable Dark Mode</label></li>
+    <li>
+      Visual mode:
+      <label for="defaultVisualRadioButton"><input type="radio" name="visual" id="defaultVisualRadioButton" value="default">Browser default</label>
+      <label for="lightVisualRadioButton"><input type="radio" name="visual" id="lightVisualRadioButton" value="light">Light</label>
+      <label for="darkVisualRadioButton"><input type="radio" name="visual" id="darkVisualRadioButton" value="dark">Dark</label>
+    </li>
   </ul>
  </section>
  <section id="api">
