@@ -64,7 +64,7 @@ window.onload = function() {
     }
   }
 
-  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole','darkMode'];
+  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
   for (let key of booleanSettings) {
     elById(`${key}CheckBox`).onchange = function() {
       syncStorageRepo.set({ [key]: this.checked });
@@ -94,7 +94,17 @@ window.onload = function() {
     });
   }
 
-  syncStorageRepo.get(['configSenderId', 'configStorageArea'].concat(booleanSettings))
+  elById('defaultVisualRadioButton').onchange = elById('lightVisualRadioButton').onchange = elById('darkVisualRadioButton').onchange = function() {
+    const visualMode = this.value;
+    syncStorageRepo.set({ visualMode });
+    if (visualMode === 'dark' || (visualMode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('darkMode');
+    } else {
+      document.body.classList.remove('darkMode');
+    }
+  }
+
+  syncStorageRepo.get(['configSenderId', 'configStorageArea', 'visualMode'].concat(booleanSettings))
   .then(data => {
     elById('configSenderIdText').value = data.configSenderId || '';
     for (let key of booleanSettings) {
@@ -110,10 +120,11 @@ window.onload = function() {
         elById('configStorageLocalRadioButton').checked = true
         break;
     }
-    if (data.darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
+
+    const visualMode = data.visualMode || 'default'
+    elById(visualMode + 'VisualRadioButton').checked = true;
+    if (data.visualMode === 'dark' || (data.visualMode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('darkMode');
     }
 
     new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])

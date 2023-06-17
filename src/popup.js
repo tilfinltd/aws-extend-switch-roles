@@ -63,11 +63,10 @@ window.onload = function() {
   }
 
   const storageRepo = new SyncStorageRepository(chrome || browser);
-  storageRepo.get(["darkMode"]).then((data) => {
-    if (data.darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
+  storageRepo.get(['visualMode']).then(({ visualMode }) => {
+    const mode = visualMode || 'default';
+    if (mode === 'dark' || (mode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('darkMode');
     }
   });
 
