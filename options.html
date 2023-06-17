@@ -22,7 +22,10 @@ body {
   width: 100%;
   padding: 10px 20px;
 }
-#settingPane { background-color: #fff }
+#settingPane {
+  background-color: #fff;
+  color: #000;
+}
 #howto {
   background-color: #eee;
   color: #444;
@@ -88,6 +91,25 @@ code {
   color: #222;
   font-weight: bold;
 }
+.success, #msgSpan, a { color: #1c1cff }
+.warn { color: #de1010 }
+.darkMode .success, .darkMode #msgSpan, .darkMode a { color: #2aedff }
+.darkMode .warn { color: #e82828 }
+.darkMode #settingPane {
+  background-color: #333;
+  color: #fff;
+}
+.darkMode #howto {
+  background-color: #444;
+  color: #bbb;
+}
+.darkMode code { color: #ddd }
+.darkMode pre { border-color: #979797 }
+.darkMode textarea, .darkMode input[type="text"] {
+  background-color: #222;
+  border-color: #9d9d9d;
+  color: #eee;
+}
 </style>
 </head>
 <body>
@@ -118,6 +140,12 @@ code {
       Configuration storage:
       <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
       <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
+    </li>
+    <li>
+      Visual mode:
+      <label for="defaultVisualRadioButton"><input type="radio" name="visual" id="defaultVisualRadioButton" value="default">Browser default</label>
+      <label for="lightVisualRadioButton"><input type="radio" name="visual" id="lightVisualRadioButton" value="light">Light</label>
+      <label for="darkVisualRadioButton"><input type="radio" name="visual" id="darkVisualRadioButton" value="dark">Dark</label>
     </li>
   </ul>
  </section>
@@ -256,7 +284,7 @@ source_profile = Org3-BaseAccount2
   <h3>Extension API</h3>
   <ul>
    <li><b>Config sender extension</b> allowed by the <b>ID</b> can send your switch roles configuration to this extension.
-     <strong style="color:#d00">'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.</strong>
+     <strong class="warn">'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.</strong>
      <a href="https://github.com/tilfinltd/aws-extend-switch-roles/wiki/External-API#config-sender-extension" target="_blank" rel="noopener noreferrer">See</a> how to make your config sender extension.</li>
   </ul>
  </section>

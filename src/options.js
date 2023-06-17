@@ -41,7 +41,7 @@ window.onload = function() {
     try {
       const profiles = loadAwsConfig(rawstr);
       if (configStorageArea === 'sync' && profiles.length > 200) {
-        updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', '#dd1111');
+        updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', 'warn');
         return;
       }
 
@@ -51,16 +51,16 @@ window.onload = function() {
 
       new StorageRepository(chrome || browser, configStorageArea).set(dataSet)
       .then(() => {
-        updateMessage(msgSpan, 'Configuration has been updated!', '#1111dd');
+        updateMessage(msgSpan, 'Configuration has been updated!', 'success');
         setTimeout(() => {
           msgSpan.firstChild.remove();
         }, 2500);
       })
       .catch(lastError => {
-        updateMessage(msgSpan, lastError.message, '#dd1111');
+        updateMessage(msgSpan, lastError.message, 'warn');
       });
     } catch (e) {
-      updateMessage(msgSpan, `Failed to save because ${e.message}`, '#dd1111');
+      updateMessage(msgSpan, `Failed to save because ${e.message}`, 'warn');
     }
   }
 
@@ -94,7 +94,17 @@ window.onload = function() {
     });
   }
 
-  syncStorageRepo.get(['configSenderId', 'configStorageArea'].concat(booleanSettings))
+  elById('defaultVisualRadioButton').onchange = elById('lightVisualRadioButton').onchange = elById('darkVisualRadioButton').onchange = function() {
+    const visualMode = this.value;
+    syncStorageRepo.set({ visualMode });
+    if (visualMode === 'dark' || (visualMode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('darkMode');
+    } else {
+      document.body.classList.remove('darkMode');
+    }
+  }
+
+  syncStorageRepo.get(['configSenderId', 'configStorageArea', 'visualMode'].concat(booleanSettings))
   .then(data => {
     elById('configSenderIdText').value = data.configSenderId || '';
     for (let key of booleanSettings) {
@@ -109,6 +119,12 @@ window.onload = function() {
       case 'local':
         elById('configStorageLocalRadioButton').checked = true
         break;
+    }
+
+    const visualMode = data.visualMode || 'default'
+    elById(visualMode + 'VisualRadioButton').checked = true;
+    if (visualMode === 'dark' || (visualMode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('darkMode');
     }
 
     new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])
@@ -126,9 +142,9 @@ window.onload = function() {
   });
 }
 
-function updateMessage(el, msg, color) {
+function updateMessage(el, msg, cls) {
   const span = document.createElement('span');
-  span.style.color = color;
+  span.className = cls;
   span.textContent = msg;
   const child = el.firstChild;
   if (child) {

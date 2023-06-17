@@ -62,6 +62,14 @@ window.onload = function() {
     return false;
   }
 
+  const storageRepo = new SyncStorageRepository(chrome || browser);
+  storageRepo.get(['visualMode']).then(({ visualMode }) => {
+    const mode = visualMode || 'default';
+    if (mode === 'dark' || (mode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('darkMode');
+    }
+  });
+
   sessionMemory.get(['hasGoldenKey', 'switchCount'])
     .then(({ hasGoldenKey, switchCount }) => {
       if (hasGoldenKey || false) {
@@ -95,7 +103,6 @@ function main() {
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
-        p.style.color = '#666';
         noMain.style.display = 'block';
       }
     })
@@ -154,12 +161,12 @@ function setupRoleFilter() {
         const profileName = anchor.dataset.search;
         const hit = words.every(it => profileName.includes(it));
         li.style.display = hit ? 'block' : 'none';
-        li.style.background = null;
+        li.classList.remove('selected')
         if (hit && firstHitLi === null) firstHitLi = li;
       });
 
       if (firstHitLi) {
-        firstHitLi.style.background = '#f0f9ff';
+        firstHitLi.classList.add('selected');
         AWSR_firstAnchor = firstHitLi.querySelector('a');
       } else {
         AWSR_firstAnchor = null;

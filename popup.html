@@ -31,9 +31,7 @@ body {
   text-decoration: none;
   width: 9em;
 }
-a:hover {
-  background-color: #e8fafa;
-}
+a:hover { background-color: #e8fafa }
 #openOptionsLink { font-weight: bold }
 
 .mainPane {
@@ -60,6 +58,7 @@ a:hover {
   white-space: nowrap;
   vertical-align: middle;
 }
+#roleList li.selected { background-color: #f0f9ff }
 #roleList li a {
   color: #000;
   font-family: Arial;
@@ -88,11 +87,42 @@ a:hover {
   font-size: 12px;
   margin: 12px 5px 5px 5px;
   line-height: 1.66;
+  color: #666;
 }
 #supportComment p {
   line-height: 1.25;
   margin: .5em 0;
   font-weight: bold;
+}
+.roleListTitle {
+  color: #2c2c2c; 
+}
+.darkMode {
+  background-color: #2a2e33; 
+  color: #d3d9d9;
+}
+.darkMode a:hover { background-color: #153247 }
+.darkMode #noMain p { color: #eaeded }
+.darkMode #roleList a { color: #fff }
+.darkMode #roleList li.selected { background-color: #143846 }
+.darkMode #roleList .suffixAccountId { color: #95a5a6 }
+.darkMode .mainPane { border-color: #41474F }
+.darkMode .optionMenu li { border-color: #41474F }
+.darkMode .optionMenu a { color: #d5dbdb }
+.darkMode #roleFilter {
+  background-color: #1a2029;
+  color: #d5dbdb;
+  border-color: #879596;
+}
+.darkMode .roleListTitle { color: #eaeded }
+.darkMode #roleList::-webkit-scrollbar {
+  width: 10px;
+}
+.darkMode #roleList::-webkit-scrollbar-track {
+  background-color: #3b3b3b;
+}
+.darkMode #roleList::-webkit-scrollbar-thumb {
+  background-color: #616161;
 }
 </style>
 </head>
@@ -101,7 +131,7 @@ a:hover {
   <div class="mainPane" style="min-width: 280px">
     <div id="main" style="display: none">
       <div style="padding: 12px 6px 6px;">
-        <span style="color: #2c2c2c">Role List</span>
+        <span class="roleListTitle">Role List</span>
         <input id="roleFilter" type="text" placeholder="Filter"
           style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
       </div>
