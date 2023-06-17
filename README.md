@@ -156,6 +156,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 - **Sign-in endpoint in current region (Experimental, Supporters only)** instead of *signin.aws.amazon.com* when you browse a non-global page in AWS Management Console. For those working geographically far from Virginia, the switch role may be a little faster.
 - ~~**Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.~~ **temporarily disabled**
 - **Configuration storage** specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles. 'Local' is the exact opposite of 'Sync.'
+- **Visual mode** specifies whether light mode or dark mode is applied to the UI appearance.
 
 ## Extension API
 
