@@ -62,6 +62,15 @@ window.onload = function() {
     return false;
   }
 
+  const storageRepo = new SyncStorageRepository(chrome || browser);
+  storageRepo.get(["darkMode"]).then((data) => {
+    if (data.darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  });
+
   sessionMemory.get(['hasGoldenKey', 'switchCount'])
     .then(({ hasGoldenKey, switchCount }) => {
       if (hasGoldenKey || false) {
@@ -95,7 +104,6 @@ function main() {
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
-        p.style.color = '#666';
         noMain.style.display = 'block';
       }
     })
