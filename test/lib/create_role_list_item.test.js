@@ -97,7 +97,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
   });
 
   describe('profile has color and image', () => {
-    it('returns li element', () => {
+    it('returns li element with image border color when enableImageBorderColor is true', () => {
       const item = {
         profile: 'prf',
         aws_account_id: '333344441111',
@@ -106,13 +106,31 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
         image: '"https://www.exapmle.com/icon.png"',
       }
       const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
-      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, () => {});
-
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', { enableImageBorderColor: true }, () => {});
+  
       const a = li.querySelector('a')
-      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(255, 170, 34); \
-background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
+      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-image: url(https://www.exapmle.com/icon.png); border: 3px solid #ffaa22;"> </span>prf<span class="suffixAccountId">333344441111</span>`);
     });
   });
+  
+  describe('profile has color and image', () => {
+    it('returns li element without color style when enableImageBorderColor is false', () => {
+      const item = {
+        profile: 'prf',
+        aws_account_id: '333344441111',
+        role_name: 'img-role',
+        color: 'ffaa22',
+        image: '"https://www.exapmle.com/icon.png"',
+      }
+      const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', { enableImageBorderColor: false }, () => {});
+  
+      const a = li.querySelector('a')
+      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
+    });
+  });
+  
+  
 
   describe('profile has region', () => {
     it('returns li element', () => {
