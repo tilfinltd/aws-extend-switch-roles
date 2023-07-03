@@ -1,16 +1,18 @@
-export function createRoleListItem(document, item, url, region, { hidesAccountId }, selectHandler) {
+export function createRoleListItem(document, item, url, region, { hidesAccountId, enableImageBorderColor }, selectHandler) {
   const li = document.createElement('li');
   const headSquare = document.createElement('span');
   headSquare.textContent = ' ';
   headSquare.className = 'headSquare';
-  if (item.color) {
-    headSquare.style.backgroundColor = `#${item.color}`;
-  } else if (!item.image) {
-    // set gray if both color and image are undefined
-    headSquare.style.backgroundColor = '#aaaaaa';
-  }
   if (item.image) {
     headSquare.style.backgroundImage = `url('${item.image.replace(/"/g, '')}')`;
+    if (item.color && enableImageBorderColor) {
+      headSquare.style.border = `3px solid #${item.color}`;
+    }
+  } else if (item.color) {
+    headSquare.style.backgroundColor = `#${item.color}`;
+  } else {
+    // set gray if both color and image are undefined
+    headSquare.style.backgroundColor = '#aaaaaa';
   }
 
   const anchor = document.createElement('a');

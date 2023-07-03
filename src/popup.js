@@ -110,12 +110,13 @@ function main() {
 
 function loadFormList(curURL, userInfo, tabId) {
   const storageRepo = new SyncStorageRepository(chrome || browser)
-  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea', 'signinEndpointInHere'])
+  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea', 'signinEndpointInHere', 'enableImageBorderColor'])
   .then(data => {
     const hidesAccountId = data.hidesAccountId || false;
     const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
     const configStorageArea = data.configStorageArea || 'sync';
     const signinEndpointInHere = data.signinEndpointInHere || false;
+    const enableImageBorderColor = data.enableImageBorderColor || false;
 
     new StorageRepository(chrome || browser, configStorageArea).get(['profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'])
     .then(data => {
@@ -123,7 +124,7 @@ function loadFormList(curURL, userInfo, tabId) {
         const dps = new DataProfilesSplitter();
         const profiles = dps.profilesFromDataSet(data);
         const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
-        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
+        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId, signinEndpointInHere, enableImageBorderColor }); 
         setupRoleFilter();
       }
     })

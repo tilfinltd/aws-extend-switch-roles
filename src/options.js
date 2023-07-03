@@ -64,7 +64,7 @@ window.onload = function() {
     }
   }
 
-  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole'];
+  const booleanSettings = ['hidesAccountId', 'showOnlyMatchingRoles', 'autoAssumeLastRole', 'enableImageBorderColor'];
   for (let key of booleanSettings) {
     elById(`${key}CheckBox`).onchange = function() {
       syncStorageRepo.set({ [key]: this.checked });
