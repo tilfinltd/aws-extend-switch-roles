@@ -109,10 +109,10 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
       const li = createRoleListItem(window.document, item, url, 'us-east-1', { enableImageBorderColor: true }, () => {});
   
       const a = li.querySelector('a')
-      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-image: url(https://www.exapmle.com/icon.png); border: 3px solid rgb(255, 170, 34);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
+      expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-image: url(https://www.exapmle.com/icon.png); border: 3px solid #ffaa22;"> </span>prf<span class="suffixAccountId">333344441111</span>`);
     });
   });
-
+  
   describe('profile has color and image', () => {
     it('returns li element without color style when enableImageBorderColor is false', () => {
       const item = {
