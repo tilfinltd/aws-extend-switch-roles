@@ -7,15 +7,18 @@ export class DBManager {
 
   open() {
     return new Promise((resolve, reject) => {
-      const openReq = indexedDB.open(this.dbName, 1);
+      const openReq = indexedDB.open(this.dbName, this.version);
       openReq.onsuccess = (event) => {
         this.db = event.target.result;
-        resolve(this.db);
+        resolve();
       };
       openReq.onupgradeneeded = (event) => {
+        const { oldVersion, newVersion } = event;
         const db = event.target.result;
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          const objStore = db.createObjectStore(this.storeName, { keyPath: 'profilePath' });
+        for (let v = oldVersion + 1; v <= newVersion; v++) {
+          if (v === 1) {
+            db.createObjectStore('profiles', { keyPath: 'profilePath' });
+          }
         }
       };
       openReq.onerror = (event) => {

@@ -3,6 +3,7 @@ import { loadAwsConfig } from './lib/load_aws_config.js'
 import { LZString } from './lib/lz-string.min.js'
 import { LocalStorageRepository, SessionMemory, SyncStorageRepository } from './lib/storage_repository.js'
 import { setIcon } from './lib/set_icon.js'
+import { updateProfilesTable } from './lib/migrate_profiles.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
@@ -22,12 +23,11 @@ function saveAwsConfig(data, callback, storageRepo) {
       return;
     }
 
-    const dps = new DataProfilesSplitter(400);
-    const dataSet = dps.profilesToDataSet(profiles);
-    dataSet.lztext = LZString.compressToUTF16(rawstr);
-
+    const dataSet = { lztext: LZString.compressToUTF16(rawstr) };
     storageRepo.set(dataSet)
+    .then(() => updateProfilesTableForConfigSender(brw))
     .then(() => {
+      updateProfilesTableForConfigSender(brw)
       callback({ result: 'success' });
     });
   } catch (e) {
@@ -54,7 +54,13 @@ function initScript() {
   })
 }
 
-chrome.runtime.onStartup.addListener(function () { initScript() })
+chrome.runtime.onStartup.addListener(function () {
+  updateProfilesTable(chrome || browser).catch(err => {
+    console.error(err);
+  });
+
+  initScript();
+})
 
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
