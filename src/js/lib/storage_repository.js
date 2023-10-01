@@ -67,3 +67,22 @@ export class SessionMemory {
     this.storageRepo.delete(keys)
   }
 }
+
+export class StorageProvider {
+  static _local = null;
+  static _sync = null;
+
+  static getLocalRepository() {
+    if (!this._local) {
+      this._local = new LocalStorageRepository(chrome || browser);
+    }
+    return this._local;
+  }
+
+  static getSyncRepository() {
+    if (!this._sync) {
+      this._sync = new SyncStorageRepository(chrome || browser);
+    }
+    return this._sync;
+  }
+}
