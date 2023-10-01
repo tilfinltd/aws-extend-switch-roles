@@ -11,10 +11,10 @@ popup=dist/chrome/js/popup.js
 background=dist/chrome/js/background.js
 supporters=dist/chrome/js/supporters.js
 
-rollup src/options.js --file $options
-rollup src/popup.js --file $popup
-rollup src/background.js --file $background
-rollup src/supporters.js --file $supporters
+rollup src/js/options.js --file $options
+rollup src/js/popup.js --file $popup
+rollup src/js/background.js --file $background
+rollup src/js/supporters.js --file $supporters
 
 \cp -f $options    dist/firefox/js/options.js
 \cp -f $popup      dist/firefox/js/popup.js
@@ -26,8 +26,8 @@ jq -s '.[0] * .[1]' manifest.json manifest_firefox.json > dist/firefox/manifest.
 
 for brw in `ls dist`
 do
-  \cp src/content.js dist/$brw/js/
-  \cp src/attach_target.js dist/$brw/js/
+  \cp src/js/content.js dist/$brw/js/
+  \cp src/js/attach_target.js dist/$brw/js/
   \cp -r src/*.html dist/$brw/
   \cp -r icons  dist/$brw/
 done
