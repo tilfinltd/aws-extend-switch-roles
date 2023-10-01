@@ -1,6 +1,6 @@
-import { validateKeyCode } from './lib/verify_jwt'
-import { SessionMemory, SyncStorageRepository } from './lib/storage_repository'
-import { setIcon } from './lib/set_icon'
+import { validateKeyCode } from './lib/verify_jwt.js'
+import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js'
+import { setIcon } from './lib/set_icon.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)

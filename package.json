@@ -10,7 +10,7 @@
     "archive": "npm run build; ./bin/archive.sh",
     "build": "./bin/build.sh",
     "test": "mocha --timeout 10000 src/js/**/*.test.js",
-    "test_ci": "",
+    "test_emulator": "playwright test test/emulator/*.spec.js",
     "coverage": "codecov"
   },
   "repository": {
@@ -27,7 +27,7 @@
     "chai": "^4.3.4",
     "jsdom": "^19.0.0",
     "mocha": "^9.1.3",
-    "playwright": "^1.17.2",
+    "@playwright/test": "^1.38.1",
     "rollup": "^2.63.0"
   },
   "type": "module"

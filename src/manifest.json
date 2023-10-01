@@ -1,0 +1,21 @@
+{
+  "version": "0.0.1",
+  "name": "For emulator test",
+  "short_name": "test",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 3,
+  "minimum_chrome_version": "88.0",
+  "background": {
+    "service_worker": "test/background.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}
