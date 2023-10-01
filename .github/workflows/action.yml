@@ -20,5 +20,7 @@ jobs:
 
       - uses: microsoft/playwright-github-action@v1
 
-      - name: Install dependencies and run tests
-        run: npm install && npm test
+      - name: Install dependencies
+        run: npm install
+      - run: npm test
+      - run: npm run test_emulator
