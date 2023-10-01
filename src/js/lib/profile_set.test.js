@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createProfileSet } from '../../src/lib/profile_set.js';
+import { createProfileSet } from './profile_set.js';
 
 describe('createProfileSet', () => {
   describe('when userInfo is on logged-in', () => {

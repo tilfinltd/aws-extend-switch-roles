@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import { createRoleListItem } from '../../src/lib/create_role_list_item.js';
+import { createRoleListItem } from './create_role_list_item.js';
 
 describe('createRoleListItem', () => {
   let window;
