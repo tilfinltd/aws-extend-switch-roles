@@ -28,7 +28,7 @@ for brw in `ls dist`
 do
   \cp src/content.js dist/$brw/js/
   \cp src/attach_target.js dist/$brw/js/
-  \cp -r *.html dist/$brw/
+  \cp -r src/*.html dist/$brw/
   \cp -r icons  dist/$brw/
 done
 echo "build done"
