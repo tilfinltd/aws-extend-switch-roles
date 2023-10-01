@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { loadAwsConfig } from '../../src/lib/load_aws_config.js'
+import { loadAwsConfig } from './load_aws_config.js'
 
 describe('loadAwsConfig', () => {
   describe('Simple Configuration', () => {
