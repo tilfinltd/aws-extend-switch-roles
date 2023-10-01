@@ -10,7 +10,7 @@
     "archive": "npm run build; ./bin/archive.sh",
     "build": "./bin/build.sh",
     "test": "mocha --timeout 10000 src/js/**/*.test.js",
-    "test_ci": "",
+    "test_emulator": "playwright test test/emulator/*.spec.js",
     "coverage": "codecov"
   },
   "repository": {
