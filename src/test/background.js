@@ -1,4 +1,4 @@
-//import * as externalTest from "./external.test.js";
+import * as externalTest from "./external.test.js";
 //import * as migrateTest from "./migrate.test.js";
 
 self.assert = function (actual, expected, message = '') {
@@ -22,6 +22,6 @@ self.assertUndefined = function (actual) {
 }
 
 self.__tests__ = {
-  //...externalTest,
+  ...externalTest,
   //...migrateTest,
 };
