@@ -1,4 +1,4 @@
-name: Browser CI test
+name: Test
 
 on:
   push:
@@ -16,11 +16,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
-
-      - uses: microsoft/playwright-github-action@v1
-
+          node-version: '18'
       - name: Install dependencies
-        run: npm install
-      - run: npm test
-      - run: npm run test_emulator
+        run: npm ci
+      - name: Install playwright browsers
+        run: npx playwright install --with-deps
+      - name: Run tests
+        run: npm test
+      - name: Run tests in playwright
+        run: xvfb-run npm run test_emulator
