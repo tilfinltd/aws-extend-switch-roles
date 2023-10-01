@@ -1,6 +1,7 @@
 import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js'
 import { setIcon } from './lib/set_icon.js'
 import { externalConfigReceived } from './handlers/external.js'
+import { updateProfilesTable } from './handlers/update_profiles.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
@@ -19,7 +20,13 @@ function initScript() {
   })
 }
 
-chrome.runtime.onStartup.addListener(function () { initScript() })
+chrome.runtime.onStartup.addListener(function () {
+  updateProfilesTable().catch(err => {
+    console.error(err);
+  });
+
+  initScript();
+})
 
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;

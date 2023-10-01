@@ -1,7 +1,8 @@
 export class StorageRepository {
   constructor(browser, storageArea) {
-    this.runtime = browser.runtime
-    this.storageArea = browser.storage[storageArea]
+    this.kind = storageArea;
+    this.runtime = browser.runtime;
+    this.storageArea = browser.storage[storageArea];
   }
 
   async get(keys) {
@@ -84,5 +85,10 @@ export class StorageProvider {
       this._sync = new SyncStorageRepository(chrome || browser);
     }
     return this._sync;
+  }
+
+  static getRepositoryByKind(kind) {
+    if (kind === 'local') return this.getLocalRepository();
+    if (kind === 'sync') return this.getSyncRepository();
   }
 }

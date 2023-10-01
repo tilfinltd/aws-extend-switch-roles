@@ -1,17 +1,17 @@
-import { loadAwsConfig } from './lib/load_aws_config.js'
-import { ColorPicker } from './lib/color_picker.js'
-import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
-import { LZString } from './lib/lz-string.min.js'
-import { LocalStorageRepository, SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { deleteConfigIni, loadConfigIni, saveConfigIni } from './lib/config_ini.js';
+import { ColorPicker } from './lib/color_picker.js';
+import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
+import { loadAwsConfig } from './lib/load_aws_config.js';
+import { writeProfileItemsToTable } from "./lib/profile_db.js";
 
 function elById(id) {
   return document.getElementById(id);
 }
 
-const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
 
 window.onload = function() {
+  const syncStorageRepo = StorageProvider.getSyncRepository();
   let configStorageArea = 'sync';
   let colorPicker = new ColorPicker(document);
 
@@ -36,21 +36,8 @@ window.onload = function() {
   let msgSpan = elById('msgSpan');
   let saveButton = elById('saveButton');
   saveButton.onclick = function() {
-    let rawstr = textArea.value;
-
     try {
-      const profiles = loadAwsConfig(rawstr);
-      if (configStorageArea === 'sync' && profiles.length > 200) {
-        updateMessage(msgSpan, 'Failed to save bacause the number of profiles exceeded maximum 200!', 'warn');
-        return;
-      }
-
-      const dps = new DataProfilesSplitter(configStorageArea === 'sync' ? 40 : 400);
-      const dataSet = dps.profilesToDataSet(profiles);
-      dataSet.lztext = LZString.compressToUTF16(rawstr);
-
-      new StorageRepository(chrome || browser, configStorageArea).set(dataSet)
-      .then(() => {
+      saveConfiguration(textArea.value, configStorageArea).then(() => {
         updateMessage(msgSpan, 'Configuration has been updated!', 'success');
         setTimeout(() => {
           msgSpan.firstChild.remove();
@@ -87,10 +74,22 @@ window.onload = function() {
     syncStorageRepo.set({ configSenderId: this.value });
   }
 
-  elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function() {
+  elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function(e) {
+    const preStorageRepo = StorageProvider.getRepositoryByKind(configStorageArea);
     configStorageArea = this.value;
-    syncStorageRepo.set({ configStorageArea: this.value }).then(() => {
-      saveButton.click();
+    const postStorageRepo = StorageProvider.getRepositoryByKind(configStorageArea);
+
+    loadConfigIni(preStorageRepo)
+    .then(text => {
+      if (text) {
+        return saveConfigIni(postStorageRepo, text)
+          .then(() => deleteConfigIni(preStorageRepo));
+      }
+    })
+    .then(() => syncStorageRepo.set({ configStorageArea }))
+    .catch(err => {
+      e.preventDefault();
+      alert(err.message);
     });
   }
 
@@ -127,19 +126,18 @@ window.onload = function() {
       document.body.classList.add('darkMode');
     }
 
-    new StorageRepository(chrome || browser, configStorageArea).get(['lztext'])
-    .then(data => {
-      let rawData = '';
-      if (data.lztext) {
-        try {
-          rawData = LZString.decompressFromUTF16(data.lztext);
-        } catch(err) {
-          rawData = ';; !!!WARNING!!!\n;; Latest setting is broken.\n;; !!!WARNING!!!\n';
-        }
-      }
-      textArea.value = rawData;
+    loadConfigIni(StorageProvider.getRepositoryByKind(configStorageArea)).then(cfgText => {
+      textArea.value = cfgText || '';
     });
   });
+}
+
+async function saveConfiguration(text, storageArea) {
+  const storageRepo = StorageProvider.getRepositoryByKind(storageArea);
+  await saveConfigIni(storageRepo, text);
+
+  const items = loadAwsConfig(text);
+  await writeProfileItemsToTable(items, true);
 }
 
 function updateMessage(el, msg, cls) {
