@@ -5,6 +5,10 @@ testInWorker('externalConfigReceived tests', async () => {
   await self.__tests__.externalConfigReceivedFailureTest();
 })
 
+testInWorker('findProfilesTable tests', async () => {
+  await self.__tests__.findTargetProfilesTest();
+})
+
 testInWorker('updateProfilesTable tests', async () => {
   await self.__tests__.updateProfilesTableMigrateTest();
   await self.__tests__.updateProfilesTableUpdateTest();

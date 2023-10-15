@@ -16,20 +16,20 @@ export function createRoleListItem(document, item, url, region, { hidesAccountId
   const anchor = document.createElement('a');
   anchor.href = "#";
   anchor.title = item.role_name + '@' + item.aws_account_id;
-  anchor.dataset.profile = item.profile;
+  anchor.dataset.profile = item.name;
   anchor.dataset.rolename = item.role_name;
   anchor.dataset.account = item.aws_account_id;
   anchor.dataset.color = item.color || 'aaaaaa';
   anchor.dataset.redirecturi = createRedirectUri(url, region, item.region);
-  anchor.dataset.search = item.profile.toLowerCase() + ' ' + item.aws_account_id;
+  anchor.dataset.search = item.name.toLowerCase() + ' ' + item.aws_account_id;
 
   anchor.appendChild(headSquare);
-  anchor.appendChild(document.createTextNode(item.profile));
+  anchor.appendChild(document.createTextNode(item.name));
 
   if (hidesAccountId) {
-    anchor.dataset.displayname = createDisplayName(item.profile);
+    anchor.dataset.displayname = createDisplayName(item.name);
   } else {
-    anchor.dataset.displayname = createDisplayName(item.profile, item.aws_account_id);
+    anchor.dataset.displayname = createDisplayName(item.name, item.aws_account_id);
 
     const accountIdSpan = document.createElement('span');
     accountIdSpan.className = 'suffixAccountId';

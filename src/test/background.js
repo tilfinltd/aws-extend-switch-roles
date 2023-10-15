@@ -1,4 +1,5 @@
 import * as externalTest from "./external.test.js";
+import * as findTargetProfilesTest from "./find_target_profiles.test.js";
 import * as updateProfileTableTest from "./update_profiles.test.js";
 
 self.assert = function (actual, expected, message = '') {
@@ -23,5 +24,6 @@ self.assertUndefined = function (actual) {
 
 self.__tests__ = {
   ...externalTest,
+  ...findTargetProfilesTest,
   ...updateProfileTableTest,
 };

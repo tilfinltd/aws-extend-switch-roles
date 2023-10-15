@@ -13,14 +13,16 @@ export async function writeProfileItemsToTable(items, replace = false) {
   }
 
   await dbManager.transaction('profiles', async dbTable => {
+    let i = 1;
     for (const item of items) {
+      const num = `${i}`.padStart(6, '0')
       const { profile, source_profile, single, ...props } = item;
       const profilePath = (() => {
-        if (single) return `[SINGLE];${profile}`;
+        if (single) return `[SINGLE];${num}`;
         if (source_profile) {
-          return `${source_profile};${profile}`;
+          return `${source_profile};${num}`;
         } else {
-          return `[COMPLEX];${profile}`;
+          return `[COMPLEX];${num}`;
         }
       })();
       const record = {
@@ -29,6 +31,7 @@ export async function writeProfileItemsToTable(items, replace = false) {
         ...props,
       };
       await dbTable.insert(record);
+      i++;
     }
   });
 

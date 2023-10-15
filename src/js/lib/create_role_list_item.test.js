@@ -19,7 +19,7 @@ describe('createRoleListItem', () => {
   describe("profile has minimum properties", () => {
     it('returns li element', () => {
       const item = {
-        profile: 'profileA',
+        name: 'profileA',
         aws_account_id: '222233334444',
         role_name: 'roleA',
       }
@@ -57,7 +57,7 @@ describe('createRoleListItem', () => {
   describe('profile has color', () => {
     it('returns li element', () => {
       const item = {
-        profile: 'profile-b',
+        name: 'profile-b',
         aws_account_id: '000011115555',
         role_name: 'role-b',
         color: 'ffaa99',
@@ -82,7 +82,7 @@ describe('createRoleListItem', () => {
   describe('profile has image', () => {
     it('returns li element', () => {
       const item = {
-        profile: 'prf',
+        name: 'prf',
         aws_account_id: '333344441111',
         role_name: 'img-role',
         image: '"https://www.exapmle.com/icon.png"',
@@ -99,7 +99,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
   describe('profile has color and image', () => {
     it('returns li element', () => {
       const item = {
-        profile: 'prf',
+        name: 'prf',
         aws_account_id: '333344441111',
         role_name: 'img-role',
         color: 'ffaa22',
@@ -117,7 +117,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
   describe('profile has region', () => {
     it('returns li element', () => {
       const item = {
-        profile: 'foo',
+        name: 'foo',
         aws_account_id: '111122225555',
         role_name: 'role-foo',
         region: 'us-west-2',
@@ -133,7 +133,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
   describe('hidesAccountId is true', () => {
     it('returns li element', () => {
       const item = {
-        profile: 'ProfileC',
+        name: 'ProfileC',
         aws_account_id: '000011117777',
         role_name: 'role-C',
       }

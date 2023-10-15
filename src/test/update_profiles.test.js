@@ -1,5 +1,5 @@
-import { DBManager } from "../js/lib/db.js";
-import { updateProfilesTable } from "../js/handlers/update_profiles.js";
+import { DBManager } from '../js/lib/db.js';
+import { updateProfilesTable } from '../js/handlers/update_profiles.js';
 
 export async function updateProfilesTableMigrateTest() {
   await chrome.storage.sync.set({
@@ -142,21 +142,22 @@ export async function updateProfilesTableMigrateTest() {
     assert(singleProfiles[0].name, 'profile1');
 
     const complexProfiles = await dbTable.query('[COMPLEX];');
-    assert(complexProfiles[0].name, 'Company');
-    assert(complexProfiles[1].name, 'MyCompany');
-    assert(complexProfiles[2].name, 'a-company');
-
-    const childCompany = await dbTable.query('Company;');
-    assert(childCompany.length, 5);
+    assert(complexProfiles[0].name, 'MyCompany');
+    assert(complexProfiles[1].name, 'b-project');
+    assert(complexProfiles[2].name, 'Company');
+    assert(complexProfiles[3].name, 'a-company');
 
     const childMyCompany = await dbTable.query('MyCompany;');
     assert(childMyCompany.length, 5);
-  
-    const childACompany = await dbTable.query('a-company;');
-    assert(childACompany.length, 1);
 
     const childBProject = await dbTable.query('b-project;');
     assert(childBProject.length, 2);
+
+    const childCompany = await dbTable.query('Company;');
+    assert(childCompany.length, 5);
+  
+    const childACompany = await dbTable.query('a-company;');
+    assert(childACompany.length, 1);
   });
   await dbManager.close();
 }
@@ -186,11 +187,11 @@ export async function updateProfilesTableUpdateTest() {
   });
   await dbManager.close();
   assert(items, [{
-    profilePath: "[COMPLEX];main",
+    profilePath: "[COMPLEX];000001",
     name: 'main',
     aws_account_id: '111122223333',
   }, {
-    profilePath: "main;develop",
+    profilePath: "main;000002",
     name: 'develop',
     color: 'eeffdd',
     aws_account_id: '111122223334',

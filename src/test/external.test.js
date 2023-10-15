@@ -1,5 +1,5 @@
-import { DBManager } from "../js/lib/db.js";
-import { externalConfigReceived } from "../js/handlers/external.js";
+import { DBManager } from '../js/lib/db.js';
+import { externalConfigReceived } from '../js/handlers/external.js';
 
 export async function externalConfigReceivedTest() {
   await chrome.storage.sync.set({ configStorageArea: 'sync', configSenderId: 'test_sender_id' });
