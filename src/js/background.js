@@ -30,15 +30,15 @@ chrome.runtime.onStartup.addListener(function () {
 
 chrome.runtime.onInstalled.addListener(function (details) {
   const { reason } = details;
-  let page = null;
   if (reason === 'install' || reason === 'update') {
-    page = 'updated.html'
-  }
-  if (page) {
-    const url = chrome.runtime.getURL(page)
+    const url = chrome.runtime.getURL('updated.html')
     chrome.tabs.create({ url }, function(){});
   }
-
+  if (reason === 'update') {
+    updateProfilesTable().catch(err => {
+      console.error(err);
+    });
+  }
   initScript();
 })
 
