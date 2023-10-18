@@ -44,4 +44,5 @@ export async function refreshDB(storageRepo) {
     const items = loadAwsConfig(cfgText);
     await writeProfileItemsToTable(items, true);
   }
+  return cfgText;
 }

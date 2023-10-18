@@ -2,6 +2,8 @@ import { testInOptions } from './fixtures.js';
 
 testInOptions("change and save configuration",
   async () => {
+    await chrome.storage.sync.set({ profilesLastUpdated: 1000 });
+    await chrome.storage.local.set({ profilesTableUpdated: 1000 });
   }, // before
   async ({ page, expect }) => {
     await page.locator('#awsConfigTextArea').fill(`\
@@ -31,8 +33,12 @@ source_profile=src-A
     await page.locator('#saveButton').click();
   },
   async () => { // after
-    const syncData = await chrome.storage.sync.get(['configStorageArea', 'lztext']);
+    const syncData = await chrome.storage.sync.get(['configStorageArea', 'lztext', 'profilesLastUpdated']);
     self.assertUndefined(syncData.configStorageArea);
     self.assertTrue(syncData.lztext.length > 0);
+    self.assertTrue(syncData.profilesLastUpdated > 1000);
+
+    const localData = await chrome.storage.local.get(['profilesTableUpdated']);
+    self.assertTrue(localData.profilesTableUpdated > 1000);
   }
 );

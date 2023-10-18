@@ -2,6 +2,7 @@ import { nowEpochSeconds } from "../lib/util.js";
 import { DataProfilesSplitter } from "../lib/data_profiles_splitter.js";
 import { writeProfileItemsToTable, refreshDB } from "../lib/profile_db.js";
 import { StorageProvider } from "../lib/storage_repository.js";
+import { saveConfigIni } from "../lib/config_ini.js";
 
 export async function updateProfilesTable() {
   const syncRepo = StorageProvider.getSyncRepository();
@@ -11,14 +12,18 @@ export async function updateProfilesTable() {
   const { profilesTableUpdated = 0 } = await localRepo.get(['profilesTableUpdated']);
 
   if (profilesTableUpdated === 0) {
-    await migrateFromStorageToDB(configStorageArea === 'sync' ? syncRepo : localRepo);
-    if (profilesLastUpdated === 0 && configStorageArea === 'sync') {
+    if (configStorageArea === 'sync' && profilesLastUpdated === 0) {
       // first migration
+      await migrateFromStorageToDB(syncRepo);
+      await copyLztextFromSyncToLocal(syncRepo, localRepo);
       await syncRepo.set({ profilesLastUpdated: nowEpochSeconds() });
+    } else if (configStorageArea === 'local') {
+      await migrateFromStorageToDB(localRepo);
     }
   } else if (configStorageArea === 'sync' && profilesTableUpdated < profilesLastUpdated) {
     // Profiles are updated in sync storage
-    await refreshDB(syncRepo);
+    const cfgText = await refreshDB(syncRepo);
+    await saveConfigIni(localRepo, cfgText);
   } else {
     return;
   }
@@ -46,4 +51,9 @@ async function migrateFromStorageToDB(storageRepo) {
     writeProfileItemsToTable(items);
     storageRepo.delete(keys);
   }
+}
+
+async function copyLztextFromSyncToLocal(syncRepo, localRepo) {
+  const { lztext } = await syncRepo.get(['lztext']);
+  await localRepo.set({ lztext });
 }

@@ -1,3 +1,4 @@
+import { nowEpochSeconds } from './lib/util.js';
 import { deleteConfigIni, loadConfigIni, saveConfigIni } from './lib/config_ini.js';
 import { ColorPicker } from './lib/color_picker.js';
 import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
@@ -75,22 +76,30 @@ window.onload = function() {
   }
 
   elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function(e) {
-    const preStorageRepo = StorageProvider.getRepositoryByKind(configStorageArea);
-    configStorageArea = this.value;
-    const postStorageRepo = StorageProvider.getRepositoryByKind(configStorageArea);
-
-    loadConfigIni(preStorageRepo)
-    .then(text => {
-      if (text) {
-        return saveConfigIni(postStorageRepo, text)
-          .then(() => deleteConfigIni(preStorageRepo));
-      }
-    })
-    .then(() => syncStorageRepo.set({ configStorageArea }))
-    .catch(err => {
-      e.preventDefault();
-      alert(err.message);
-    });
+    if (this.value === 'sync') {
+      // local to sync
+      loadConfigIni(StorageProvider.getLocalRepository())
+      .then(text => {
+        if (text) {
+          return saveConfigIni(syncStorageRepo, text)
+            .then(() => {
+              const data = { configStorageArea: 'sync', profilesLastUpdated: nowEpochSeconds() };
+              return syncStorageRepo.set(data)
+            });
+        }
+      })
+      .catch(err => {
+        e.preventDefault();
+        alert(err.message);
+      });
+    } else {
+      // sync to local
+      syncStorageRepo.set({ configStorageArea: 'local' })
+      .catch(err => {
+        e.preventDefault();
+        alert(err.message);
+      });
+    }
   }
 
   elById('defaultVisualRadioButton').onchange = elById('lightVisualRadioButton').onchange = elById('darkVisualRadioButton').onchange = function() {
@@ -133,11 +142,18 @@ window.onload = function() {
 }
 
 async function saveConfiguration(text, storageArea) {
-  const storageRepo = StorageProvider.getRepositoryByKind(storageArea);
-  await saveConfigIni(storageRepo, text);
+  const syncRepo = StorageProvider.getSyncRepository();
+  const localRepo = StorageProvider.getLocalRepository();
+
+  await saveConfigIni(localRepo, text);
+  if (storageArea === 'sync') {
+    await saveConfigIni(syncRepo, text);
+    await syncRepo.set({ profilesLastUpdated: nowEpochSeconds() });
+  }
 
   const items = loadAwsConfig(text);
   await writeProfileItemsToTable(items, true);
+  await localRepo.set({ profilesTableUpdated: nowEpochSeconds() });
 }
 
 function updateMessage(el, msg, cls) {
