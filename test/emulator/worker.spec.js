@@ -10,7 +10,13 @@ testInWorker('findProfilesTable tests', async () => {
 })
 
 testInWorker('updateProfilesTable tests', async () => {
-  await self.__tests__.updateProfilesTableMigrateTest();
-  await self.__tests__.updateProfilesTableUpdateTest();
-  await self.__tests__.updateProfilesTableNoUpdateTest();
+  for (const test of [
+    self.__tests__.updateProfilesTableMigrateSyncTest,
+    self.__tests__.updateProfilesTableMigrateLocalTest,
+    self.__tests__.updateProfilesTableUpdateSyncTest,
+    self.__tests__.updateProfilesTableNoUpdateTest,
+  ]) {
+    await test();
+    await self.__tests__.clean();
+  }
 })

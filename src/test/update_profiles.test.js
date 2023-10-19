@@ -1,7 +1,17 @@
 import { DBManager } from '../js/lib/db.js';
 import { updateProfilesTable } from '../js/handlers/update_profiles.js';
 
-export async function updateProfilesTableMigrateTest() {
+export async function clean() {
+  await chrome.storage.sync.clear();
+  await chrome.storage.local.clear();
+
+  const dbManager = new DBManager('aesr');
+  await dbManager.open();
+  await dbManager.transaction('profiles', dbTable => dbTable.truncate());
+  await dbManager.close();
+}
+
+export async function updateProfilesTableMigrateSyncTest() {
   await chrome.storage.sync.set({
     configStorageArea: 'sync',
     lztext: "<dummy>",
@@ -134,6 +144,11 @@ export async function updateProfilesTableMigrateTest() {
   assertUndefined(postStorage.profile_4);
   assertTrue(postStorage.profilesLastUpdated > 1693526400);
 
+  // lztext in local stroage should be saved.
+  const localStorage = await chrome.storage.local.get(['lztext', 'lztext_1']);
+  assertTrue(localStorage.lztext);
+  assertUndefined(localStorage.lztext_1);
+
   // Indexed DB profiles should be registered.
   const dbManager = new DBManager('aesr');
   await dbManager.open();
@@ -159,10 +174,83 @@ export async function updateProfilesTableMigrateTest() {
     const childACompany = await dbTable.query('a-company;');
     assert(childACompany.length, 1);
   });
+}
+
+export async function updateProfilesTableMigrateLocalTest() {
+  await chrome.storage.sync.set({ configStorageArea: 'local' });
+
+  await chrome.storage.local.set({
+    lztext: "<dummy>",
+    profiles: [
+      { aws_account_id: '222250800000', profile: 'HisCompany' },
+      {
+        aws_account_id: '333372690000',
+        color: 'ff33cc',
+        image: 'https://console.aws.amazon.com/favicon.ico',
+        profile: 'dev',
+        role_name: 'developer',
+        source_profile: 'HisCompany'
+      },
+      {
+        aws_account_id: '444450800000',
+        profile: 'tfadmin',
+        role_name: 'HisCompanyAdmin',
+        source_profile: 'HisCompany'
+      },
+      { aws_account_id: '555577779940', profile: 'V-project' },
+      {
+        aws_account_id: '666677770000',
+        color: '222222',
+        profile: 'stg',
+        role_name: 'developer',
+        source_profile: 'V-project'
+      },
+    ],
+    profiles_1: [
+      {
+        aws_account_id: '333344445555',
+        profile: 'Independent',
+        role_name: 'first.family'
+      },
+    ],
+  });
+
+  await updateProfilesTable();
+
+  // the only configStorageArea in sync storage should be kept.
+  const postSyncStorage = await chrome.storage.sync.get(['configStorageArea', 'profilesLastUpdated']);
+  assert(postSyncStorage.configStorageArea, 'local');
+  assertUndefined(postSyncStorage.profilesLastUpdated);
+
+  // lztext in stroage should be kept and profiles in storage should be deleted.
+  const postStorage = await chrome.storage.local.get(['lztext', 'lztext_1', "profile", 'profile_1', 'profilesTableUpdated']);
+  assertTrue(postStorage.lztext);
+  assertUndefined(postStorage.lztext_1);
+  assertUndefined(postStorage.profile);
+  assertUndefined(postStorage.profile_1);
+  assertTrue(postStorage.profilesTableUpdated > 1693526400);
+
+  // Indexed DB profiles should be registered.
+  const dbManager = new DBManager('aesr');
+  await dbManager.open();
+  await dbManager.transaction('profiles', async dbTable => {
+    const singleProfiles = await dbTable.query('[SINGLE];');
+    assert(singleProfiles[0].name, 'Independent');
+
+    const complexProfiles = await dbTable.query('[COMPLEX];');
+    assert(complexProfiles[0].name, 'HisCompany');
+    assert(complexProfiles[1].name, 'V-project');
+
+    const childHisCompany = await dbTable.query('HisCompany;');
+    assert(childHisCompany.length, 2);
+
+    const childVProject = await dbTable.query('V-project;');
+    assert(childVProject.length, 1);
+  });
   await dbManager.close();
 }
 
-export async function updateProfilesTableUpdateTest() {
+export async function updateProfilesTableUpdateSyncTest() {
   // Sync storage is updated and local is older than it.
   const epochTime = Math.floor(new Date().getTime() / 1000);
   await chrome.storage.sync.set({
@@ -199,12 +287,31 @@ export async function updateProfilesTableUpdateTest() {
   }]);
 }
 
-export async function updateProfilesTableNoUpdateTest() {
+export async function updateProfilesTableUpdateLocalTest() {
+  await chrome.storage.sync.set({ configStorageArea: 'local' });
+  await chrome.storage.local.set({
+    lztext: "<dummy>",
+    profilesTableUpdated: 123456789,
+  });
+
+  await updateProfilesTable();
+
+  // profilesTableUpdated shouldn't be changed.
+  const storage = await chrome.storage.local.get(['profilesTableUpdated']);
+  assert(storage.profilesTableUpdated, 123456789);
+
+  // Indexed DB profiles shouldn't be updated.
   const dbManager = new DBManager('aesr');
   await dbManager.open();
-  await dbManager.transaction('profiles', dbTable => dbTable.truncate());
+  let items;
+  await dbManager.transaction('profiles', async dbTable => {
+    items = await dbTable.all();
+  });
   await dbManager.close();
+  assert(items.length, 0); // not registered
+}
 
+export async function updateProfilesTableNoUpdateTest() {
   // Sync storage update datetime and local DB update datetime match.
   await chrome.storage.sync.set({
     configStorageArea: 'sync',
@@ -220,6 +327,7 @@ export async function updateProfilesTableNoUpdateTest() {
   await updateProfilesTable();
 
   // Indexed DB profiles shouldn't be updated.
+  const dbManager = new DBManager('aesr');
   await dbManager.open();
   let items;
   await dbManager.transaction('profiles', async dbTable => {
