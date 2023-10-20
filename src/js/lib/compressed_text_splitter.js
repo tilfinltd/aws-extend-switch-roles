@@ -4,7 +4,7 @@ export class CompressedTextSplitter {
   constructor(area) {
     if (area === 'sync') {
       this.itemLen = 2700;
-      this.maxItemCount = 5;
+      this.maxItemCount = 8;
     } else {
       this.itemLen = 10485760;
       this.maxItemCount = 1;

@@ -38,7 +38,8 @@ window.onload = function() {
   let saveButton = elById('saveButton');
   saveButton.onclick = function() {
     try {
-      saveConfiguration(textArea.value, configStorageArea).then(() => {
+      const area = elById('configStorageSyncRadioButton').checked ? 'sync' : 'local';
+      saveConfiguration(textArea.value, area).then(() => {
         updateMessage(msgSpan, 'Configuration has been updated!', 'success');
         setTimeout(() => {
           msgSpan.firstChild.remove();
@@ -95,6 +96,7 @@ window.onload = function() {
       .catch(err => {
         e.preventDefault();
         alert(err.message);
+        elById('configStorageLocalRadioButton').checked = true;
       });
     } else {
       // sync to local
@@ -102,6 +104,7 @@ window.onload = function() {
       .catch(err => {
         e.preventDefault();
         alert(err.message);
+        elById('configStorageSyncRadioButton').checked = true;
       });
     }
   }
@@ -148,16 +151,17 @@ window.onload = function() {
 async function saveConfiguration(text, storageArea) {
   const syncRepo = StorageProvider.getSyncRepository();
   const localRepo = StorageProvider.getLocalRepository();
+  const now = nowEpochSeconds();
 
   await saveConfigIni(localRepo, text);
   if (storageArea === 'sync') {
     await saveConfigIni(syncRepo, text);
-    await syncRepo.set({ profilesLastUpdated: nowEpochSeconds() });
+    await syncRepo.set({ profilesLastUpdated: now });
   }
 
   const items = loadAwsConfig(text);
   await writeProfileItemsToTable(items, true);
-  await localRepo.set({ profilesTableUpdated: nowEpochSeconds() });
+  await localRepo.set({ profilesTableUpdated: now });
 }
 
 function updateMessage(el, msg, cls) {

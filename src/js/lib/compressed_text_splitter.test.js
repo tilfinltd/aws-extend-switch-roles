@@ -38,7 +38,7 @@ describe('CompressedTextSplitter', () => {
     })
 
     it('getKeys', () => {
-      expect(cts.getKeys()).to.deep.eq(['lztext', 'lztext_1', 'lztext_2', 'lztext_3', 'lztext_4']);
+      expect(cts.getKeys()).to.deep.eq(['lztext', 'lztext_1', 'lztext_2', 'lztext_3', 'lztext_4', 'lztext_5', 'lztext_6', 'lztext_7']);
     })
   })
 })

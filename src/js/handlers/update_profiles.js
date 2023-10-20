@@ -11,12 +11,13 @@ export async function updateProfilesTable() {
   const { configStorageArea = 'sync', profilesLastUpdated = 0 } = await syncRepo.get(['configStorageArea', 'profilesLastUpdated']);
   const { profilesTableUpdated = 0 } = await localRepo.get(['profilesTableUpdated']);
 
+  const now = nowEpochSeconds();
   if (profilesTableUpdated === 0) {
     if (configStorageArea === 'sync' && profilesLastUpdated === 0) {
       // first migration
       await migrateFromStorageToDB(syncRepo);
       await copyLztextFromSyncToLocal(syncRepo, localRepo);
-      await syncRepo.set({ profilesLastUpdated: nowEpochSeconds() });
+      await syncRepo.set({ profilesLastUpdated: now });
     } else if (configStorageArea === 'local') {
       await migrateFromStorageToDB(localRepo);
     }
@@ -27,7 +28,7 @@ export async function updateProfilesTable() {
   } else {
     return;
   }
-  await localRepo.set({ profilesTableUpdated: nowEpochSeconds() });
+  await localRepo.set({ profilesTableUpdated: now });
 }
 
 async function migrateFromStorageToDB(storageRepo) {
