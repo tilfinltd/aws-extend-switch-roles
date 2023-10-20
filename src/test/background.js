@@ -1,5 +1,6 @@
-//import * as externalTest from "./external.test.js";
-//import * as migrateTest from "./migrate.test.js";
+import * as externalTest from "./external.test.js";
+import * as findTargetProfilesTest from "./find_target_profiles.test.js";
+import * as updateProfileTableTest from "./update_profiles.test.js";
 
 self.assert = function (actual, expected, message = '') {
   const actualStr = JSON.stringify(actual);
@@ -22,6 +23,7 @@ self.assertUndefined = function (actual) {
 }
 
 self.__tests__ = {
-  //...externalTest,
-  //...migrateTest,
+  ...externalTest,
+  ...findTargetProfilesTest,
+  ...updateProfileTableTest,
 };

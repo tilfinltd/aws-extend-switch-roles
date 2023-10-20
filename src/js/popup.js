@@ -1,9 +1,9 @@
-import { createRoleListItem } from './lib/create_role_list_item.js'
-import { createProfileSet } from './lib/profile_set.js'
-import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
-import { SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { createRoleListItem } from './lib/create_role_list_item.js';
+import { CurrentContext } from './lib/current_context.js';
+import { findTargetProfiles } from './lib/target_profiles.js';
+import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js';
 
-const sessionMemory = new SessionMemory(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser);
 
 function openOptions() {
   if (window.chrome) {
@@ -84,14 +84,16 @@ window.onload = function() {
 function main() {
   getCurrentTab()
     .then(tab => {
+      if (!tab.url) return;
+
       const url = new URL(tab.url)
       if (url.host.endsWith('.aws.amazon.com')
        || url.host.endsWith('.amazonaws-us-gov.com')
        || url.host.endsWith('.amazonaws.cn')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           if (userInfo) {
-            loadFormList(url, userInfo, tab.id);
             document.getElementById('main').style.display = 'block';
+            return loadFormList(url, userInfo, tab.id);
           } else {
             const noMain = document.getElementById('noMain');
             const p = noMain.querySelector('p');
@@ -108,26 +110,15 @@ function main() {
     })
 }
 
-function loadFormList(curURL, userInfo, tabId) {
-  const storageRepo = new SyncStorageRepository(chrome || browser)
-  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea', 'signinEndpointInHere'])
-  .then(data => {
-    const hidesAccountId = data.hidesAccountId || false;
-    const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
-    const configStorageArea = data.configStorageArea || 'sync';
-    const signinEndpointInHere = data.signinEndpointInHere || false;
+async function loadFormList(curURL, userInfo, tabId) {
+  const storageRepo = new SyncStorageRepository(chrome || browser);
+  const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'signinEndpointInHere']);
+  const { hidesAccountId = false, showOnlyMatchingRoles = false, signinEndpointInHere = false } = data;
 
-    new StorageRepository(chrome || browser, configStorageArea).get(['profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'])
-    .then(data => {
-      if (data.profiles) {
-        const dps = new DataProfilesSplitter();
-        const profiles = dps.profilesFromDataSet(data);
-        const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
-        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
-        setupRoleFilter();
-      }
-    })
-  });
+  const curCtx = new CurrentContext(userInfo, { showOnlyMatchingRoles });
+  const profiles = await findTargetProfiles(curCtx);
+  renderRoleList(profiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
+  setupRoleFilter();
 }
 
 function renderRoleList(profiles, tabId, curURL, options) {

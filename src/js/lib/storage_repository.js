@@ -1,7 +1,8 @@
 export class StorageRepository {
   constructor(browser, storageArea) {
-    this.runtime = browser.runtime
-    this.storageArea = browser.storage[storageArea]
+    this.kind = storageArea;
+    this.runtime = browser.runtime;
+    this.storageArea = browser.storage[storageArea];
   }
 
   async get(keys) {
@@ -65,5 +66,29 @@ export class SessionMemory {
 
   delete(keys) {
     this.storageRepo.delete(keys)
+  }
+}
+
+export class StorageProvider {
+  static _local = null;
+  static _sync = null;
+
+  static getLocalRepository() {
+    if (!this._local) {
+      this._local = new LocalStorageRepository(chrome || browser);
+    }
+    return this._local;
+  }
+
+  static getSyncRepository() {
+    if (!this._sync) {
+      this._sync = new SyncStorageRepository(chrome || browser);
+    }
+    return this._sync;
+  }
+
+  static getRepositoryByKind(kind) {
+    if (kind === 'local') return this.getLocalRepository();
+    if (kind === 'sync') return this.getSyncRepository();
   }
 }
