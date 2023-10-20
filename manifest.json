@@ -29,7 +29,7 @@
         "https://*.console.amazonaws-us-gov.com/*",
         "https://phd.amazonaws-us-gov.com/*",
         "https://*.console.amazonaws.cn/*",
-        "https://phd.amazonaws.cn/*"
+        "https://health.amazonaws.cn/*"
       ],
       "all_frames": true,
       "js": [
@@ -46,9 +46,12 @@
     "resources": ["js/attach_target.js"],
     "matches": [
       "https://*.console.aws.amazon.com/*",
-      "https://phd.aws.amazon.com/*",
+      "https://health.aws.amazon.com/*",
+      "https://lightsail.aws.amazon.com/*",
       "https://*.console.amazonaws-us-gov.com/*",
-      "https://*.console.amazonaws.cn/*"
+      "https://phd.amazonaws-us-gov.com/*",
+      "https://*.console.amazonaws.cn/*",
+      "https://health.amazonaws.cn/*"
     ]
   }],
   "manifest_version": 3
