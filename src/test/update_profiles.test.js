@@ -261,6 +261,9 @@ export async function updateProfilesTableUpdateSyncTest() {
     lztext_2: `\u7480\u0188\u21d8\u4022\u1b93\u0bac\u47ac\u2354\u70a9\u0086\u0873\u73e3\u21e0\u70a4\u6312\u6e8e\u27c7\u44a4\u4724\u0020\u0020`,
     lztext_3: '',
     lztext_4: '',
+    lztext_5: '',
+    lztext_6: '',
+    lztext_7: '',
   });
   await chrome.storage.local.set({ profilesTableUpdated: epochTime - 10 });
 
