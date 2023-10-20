@@ -70,5 +70,18 @@ class AwsConfigIniParser {
 
 export function loadAwsConfig(text) {
   const parser = new AwsConfigIniParser()
-  return parser.load(text);
+  const items = parser.load(text);
+
+  // Set single flag to independent profiles
+  const sourceProfileSet = new Set();
+  items.forEach(it => {
+    if (it.source_profile) sourceProfileSet.add(it.source_profile);
+  });
+  items.forEach(it => {
+    if (!it.source_profile && !sourceProfileSet.has(it.profile)) {
+      it.single = true;
+    }
+  });
+
+  return items;
 }
