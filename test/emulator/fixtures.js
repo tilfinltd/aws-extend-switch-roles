@@ -33,6 +33,8 @@ const sleep = util.promisify(setTimeout);
 export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
+    await sleep(400);
+
     const resultB = await worker.evaluate(beforeFunc);
     if (resultB !== undefined) console.log(resultB);
 
@@ -40,7 +42,8 @@ export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
     const resultP = await pageFunc({ page, expect: test.expect });
     if (resultP !== undefined) console.log(resultP);
 
-    await sleep(1000);
+    await sleep(400);
+
     const resultA = await worker.evaluate(afterFunc);
     if (resultA !== undefined) console.log(resultA);
     //await sleep(1000000);
@@ -50,6 +53,8 @@ export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
 export const testInPopup = (message, beforeFunc, pageFunc, afterFunc) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
+    await sleep(400);
+
     const resultB = await worker.evaluate(beforeFunc);
     if (resultB !== undefined) console.log(resultB);
 
@@ -57,7 +62,8 @@ export const testInPopup = (message, beforeFunc, pageFunc, afterFunc) => {
     const resultP = await pageFunc({ page, expect: test.expect });
     if (resultP !== undefined) console.log(resultP);
 
-    await sleep(100);
+    await sleep(400);
+
     const resultA = await worker.evaluate(afterFunc);
     if (resultA !== undefined) console.log(resultA);
     //await sleep(1000000);
@@ -76,7 +82,11 @@ export const testInSupporters = (message, pageFunc) => {
 export const testInWorker = (message, workerFunc) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
+    await sleep(400);
+
     const result = await worker.evaluate(workerFunc);
+
+    await sleep(400);
     if (result !== undefined) console.log(result);
     //await sleep(1000000);
   });
