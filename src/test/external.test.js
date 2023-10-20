@@ -1,6 +1,16 @@
 import { DBManager } from '../js/lib/db.js';
 import { externalConfigReceived } from '../js/handlers/external.js';
 
+export async function clean() {
+  await chrome.storage.sync.clear();
+  await chrome.storage.local.clear();
+
+  const dbManager = new DBManager('aesr');
+  await dbManager.open();
+  await dbManager.transaction('profiles', dbTable => dbTable.truncate());
+  await dbManager.close();
+}
+
 export async function externalConfigReceivedTest() {
   await chrome.storage.sync.set({ configStorageArea: 'sync', configSenderId: 'test_sender_id' });
 

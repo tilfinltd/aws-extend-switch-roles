@@ -1,8 +1,13 @@
 import { testInWorker } from './fixtures.js';
 
 testInWorker('externalConfigReceived tests', async () => {
-  await self.__tests__.externalConfigReceivedTest();
-  await self.__tests__.externalConfigReceivedFailureTest();
+  for (const test of [
+    self.__tests__.externalConfigReceivedTest,
+    self.__tests__.externalConfigReceivedFailureTest,
+  ]) {
+    await test();
+    await self.__tests__.clean();
+  }
 })
 
 testInWorker('findProfilesTable tests', async () => {
