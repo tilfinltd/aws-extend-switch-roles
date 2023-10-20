@@ -19,9 +19,9 @@ aws_account_id = 987654321988
 role_name = athirdrole
 image = "https://via.placeholder.com/150"
 `);
-      expect(results[0]).to.deep.equal({ profile: 'marketingadmin', aws_account_id: '123456789012', role_name: 'marketingadmin', color: 'ffaaee' });
-      expect(results[1]).to.deep.equal({ profile: 'anotheraccount', aws_account_id: '987654321987', role_name: 'anotherrole', region: 'ap-northeast-1' });
-      expect(results[2]).to.deep.equal({ profile: 'athirdaccount', aws_account_id: '987654321988', role_name: 'athirdrole', image: '"https://via.placeholder.com/150"' });
+      expect(results[0]).to.deep.equal({ profile: 'marketingadmin', aws_account_id: '123456789012', role_name: 'marketingadmin', color: 'ffaaee', single: true });
+      expect(results[1]).to.deep.equal({ profile: 'anotheraccount', aws_account_id: '987654321987', role_name: 'anotherrole', region: 'ap-northeast-1', single: true });
+      expect(results[2]).to.deep.equal({ profile: 'athirdaccount', aws_account_id: '987654321988', role_name: 'athirdrole', image: '"https://via.placeholder.com/150"', single: true });
     })
   })
 
@@ -56,7 +56,7 @@ aws_account_id = account-3-alias
       expect(results[2]).to.deep.equal({ profile: 'Org1-Account1-Role2', aws_account_id: '123456789013', role_name: 'Role2', source_profile: 'organization1' });
       expect(results[3]).to.deep.equal({ profile: 'baseaccount2', aws_account_id: '000000000000' });
       expect(results[4]).to.deep.equal({ profile: 'Base2/Role1', aws_account_id: '234567890123', role_name: 'Role1', source_profile: 'baseaccount2' });
-      expect(results[5]).to.deep.equal({ profile: 'AnotherRole', aws_account_id: 'account-3-alias', role_name: 'SomeOtherRole' });
+      expect(results[5]).to.deep.equal({ profile: 'AnotherRole', aws_account_id: 'account-3-alias', role_name: 'SomeOtherRole', single: true });
     })
   })
 
@@ -75,9 +75,9 @@ role_arn = arn:aws:iam::123456789012:role/role-b;
   role_arn = arn:aws:iam::123456789012:role/c  ;comment
   ; comment
 `);
-      expect(results[0]).to.deep.equal({ profile: 'a', aws_account_id: '123456789012', role_name: 'roleA' });
-      expect(results[1]).to.deep.equal({ profile: 'B', aws_account_id: '123456789012', role_name: 'role-b' });
-      expect(results[2]).to.deep.equal({ profile: 'profileC', aws_account_id: '123456789012', role_name: 'c' });
+      expect(results[0]).to.deep.equal({ profile: 'a', aws_account_id: '123456789012', role_name: 'roleA', single: true });
+      expect(results[1]).to.deep.equal({ profile: 'B', aws_account_id: '123456789012', role_name: 'role-b', single: true });
+      expect(results[2]).to.deep.equal({ profile: 'profileC', aws_account_id: '123456789012', role_name: 'c', single: true });
     })
   })
 
