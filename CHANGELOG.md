@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 4.0.0 (2023/10/20)
+
+- Change the storage location of profile data to **IndexedDB**, removing the registration number limit
+- Update the host specification for the AWS Management Console
+
 ## 3.0.0 (2023/06/18)
 
 - Migrate to Manifest V3 (thanks to @eetann)
