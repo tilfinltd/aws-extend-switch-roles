@@ -40,7 +40,7 @@ export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
     const resultP = await pageFunc({ page, expect: test.expect });
     if (resultP !== undefined) console.log(resultP);
 
-    await sleep(500);
+    await sleep(1000);
     const resultA = await worker.evaluate(afterFunc);
     if (resultA !== undefined) console.log(resultA);
     //await sleep(1000000);

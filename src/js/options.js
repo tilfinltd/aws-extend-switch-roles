@@ -78,15 +78,19 @@ window.onload = function() {
   elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function(e) {
     if (this.value === 'sync') {
       // local to sync
-      loadConfigIni(StorageProvider.getLocalRepository())
+      const localStorageRepo = StorageProvider.getLocalRepository();
+      const now = nowEpochSeconds();
+      loadConfigIni(localStorageRepo)
       .then(text => {
         if (text) {
           return saveConfigIni(syncStorageRepo, text)
-            .then(() => {
-              const data = { configStorageArea: 'sync', profilesLastUpdated: nowEpochSeconds() };
-              return syncStorageRepo.set(data)
-            });
         }
+      })
+      .then(() => {
+        return Promise.all([
+          syncStorageRepo.set({ configStorageArea: 'sync', profilesLastUpdated: now }),
+          localStorageRepo.set({ profilesTableUpdated: now }),
+        ])
       })
       .catch(err => {
         e.preventDefault();
