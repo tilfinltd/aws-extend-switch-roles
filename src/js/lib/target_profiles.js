@@ -7,6 +7,9 @@ export async function findTargetProfiles(ctx) {
 
   const results = [];
   await dbManager.transaction('profiles', async dbTable => {
+    const singles = await dbTable.query(`[SINGLE];`);
+    results.push(...singles)
+
     const complexSrcItems = await dbTable.query('[COMPLEX];');
     const matchedComplexSrc = complexSrcItems.find(it => matchSourceProfile(it, baseAccount, loginRole));
     if (matchedComplexSrc) {
@@ -17,9 +20,6 @@ export async function findTargetProfiles(ctx) {
       }
       results.push(...targets)
     }
-
-    const singles = await dbTable.query(`[SINGLE];`);
-    results.push(...singles)
   }, 'readonly');
 
   await dbManager.close();
