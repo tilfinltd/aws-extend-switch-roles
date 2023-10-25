@@ -1,6 +1,6 @@
 coverage
 dist
 node_modules
-test/extension/js/*.js
-test/extension/test/*.test.js
-test/extension/*.html
+test/extension/*
+!test/extension/background.js
+!test/extension/manifest.json

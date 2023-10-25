@@ -1,6 +1,6 @@
-import * as externalTest from "./external.test.js";
-import * as findTargetProfilesTest from "./find_target_profiles.test.js";
-import * as updateProfileTableTest from "./update_profiles.test.js";
+import * as externalTest from "./tests/external.test.js";
+import * as findTargetProfilesTest from "./tests/find_target_profiles.test.js";
+import * as updateProfileTableTest from "./tests/update_profiles.test.js";
 
 self.assert = function (actual, expected, message = '') {
   const actualStr = JSON.stringify(actual);

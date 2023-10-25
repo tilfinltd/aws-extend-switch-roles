@@ -9,6 +9,7 @@
   "scripts": {
     "archive": "npm run build; ./bin/archive.sh",
     "build": "./bin/build.sh",
+    "pretest": "./bin/build_test.sh",
     "test": "mocha --timeout 10000 src/js/**/*.test.js",
     "test_emulator": "playwright test test/emulator/*.spec.js",
     "coverage": "codecov"
