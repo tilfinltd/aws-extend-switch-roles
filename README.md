@@ -132,6 +132,7 @@ role_name = Entry-Role-1 ; Role for Federated Login, or User to login
 
 [Org3-BaseAccount2]
 aws_account_id = 333300000000
+aws_account_alias = mycompany
 role_name = custom_permission-set ; DO NOT set AWSReservedSSO_custom_permission-set_0123456890abcdef
 
 [Org3-Account1-Role1]
