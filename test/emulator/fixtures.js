@@ -7,7 +7,7 @@ export const test = base.extend({
   context: async ({}, use) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    const pathToExtension = path.resolve(__dirname, '../../src');
+    const pathToExtension = path.resolve(__dirname, '../extension');
     const context = await chromium.launchPersistentContext('', {
       headless: false,
       args: [

@@ -11,10 +11,10 @@ popup=dist/chrome/js/popup.js
 background=dist/chrome/js/background.js
 supporters=dist/chrome/js/supporters.js
 
-rollup src/js/options.js --file $options
-rollup src/js/popup.js --file $popup
-rollup src/js/background.js --file $background
-rollup src/js/supporters.js --file $supporters
+rollup -c ./rollup.config.js src/js/options.js --file $options
+rollup -c ./rollup.config.js src/js/popup.js --file $popup
+rollup -c ./rollup.config.js src/js/background.js --file $background
+rollup -c ./rollup.config.js src/js/supporters.js --file $supporters
 
 \cp -f $options    dist/firefox/js/options.js
 \cp -f $popup      dist/firefox/js/popup.js
