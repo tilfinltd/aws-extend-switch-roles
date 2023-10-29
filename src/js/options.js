@@ -1,9 +1,9 @@
+import { ConfigParser } from 'aesr-config';
 import { nowEpochSeconds } from './lib/util.js';
-import { deleteConfigIni, loadConfigIni, saveConfigIni } from './lib/config_ini.js';
+import { loadConfigIni, saveConfigIni } from './lib/config_ini.js';
 import { ColorPicker } from './lib/color_picker.js';
 import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
-import { loadAwsConfig } from './lib/load_aws_config.js';
-import { writeProfileItemsToTable } from "./lib/profile_db.js";
+import { writeProfileSetToTable } from "./lib/profile_db.js";
 
 function elById(id) {
   return document.getElementById(id);
@@ -159,8 +159,8 @@ async function saveConfiguration(text, storageArea) {
     await syncRepo.set({ profilesLastUpdated: now });
   }
 
-  const items = loadAwsConfig(text);
-  await writeProfileItemsToTable(items, true);
+  const profileSet = ConfigParser.parseIni(text);
+  await writeProfileSetToTable(profileSet);
   await localRepo.set({ profilesTableUpdated: now });
 }
 
