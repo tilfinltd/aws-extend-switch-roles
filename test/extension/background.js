@@ -2,12 +2,14 @@ import * as externalTest from "./tests/external.test.js";
 import * as findTargetProfilesTest from "./tests/find_target_profiles.test.js";
 import * as updateProfileTableTest from "./tests/update_profiles.test.js";
 
-self.assert = function (actual, expected, message = '') {
-  const actualStr = JSON.stringify(actual);
-  const expectedStr = JSON.stringify(expected);
-  if (expectedStr !== actualStr) {
-    throw new Error(`${message} expected ${expectedStr} but got ${actualStr}`);
-  }
+self.assert = function deepEqual(actual, expected, message = '') {
+  Object.entries(actual).forEach(([key, value]) => {
+    if (typeof value === 'object') {
+      deepEqual(value, expected[key]);
+    } else if (expected[key] !== value) {
+      throw new Error(`${message} expected ${expected[key]} but got ${value}`);
+    }
+  });
 }
 
 self.assertNever = function () {
