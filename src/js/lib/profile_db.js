@@ -1,6 +1,42 @@
+import { ConfigParser } from 'aesr-config';
 import { DBManager } from './db.js';
 import { loadConfigIni } from './config_ini.js';
-import { loadAwsConfig } from './load_aws_config.js';
+
+export async function writeProfileSetToTable(profileSet) {
+  const dbManager = new DBManager('aesr');
+  await dbManager.open();
+
+  await dbManager.transaction('profiles', async dbTable => {
+    await dbTable.truncate();
+  });
+
+  await dbManager.transaction('profiles', async dbTable => {
+    let i = 0;
+    for (const profile of profileSet.singles) {
+      await dbTable.insert({
+        profilePath: `[SINGLE];${formatNum(++i)}`,
+        ...profile,
+      });
+    }
+
+    for (const baseProfile of profileSet.complexes) {
+      const { targets, ...props } = baseProfile;
+      await dbTable.insert({
+        profilePath: `[COMPLEX];${formatNum(++i)}`,
+        ...props,
+      });
+
+      for (const targetProfile of targets) {
+        await dbTable.insert({
+          profilePath: `${props.name};${formatNum(++i)}`,
+          ...targetProfile,
+        });
+      }
+    }
+  });
+
+  await dbManager.close();
+}
 
 export async function writeProfileItemsToTable(items, replace = false) {
   const dbManager = new DBManager('aesr');
@@ -41,8 +77,12 @@ export async function writeProfileItemsToTable(items, replace = false) {
 export async function refreshDB(storageRepo) {
   const cfgText = await loadConfigIni(storageRepo);
   if (cfgText) {
-    const items = loadAwsConfig(cfgText);
-    await writeProfileItemsToTable(items, true);
+    const profileSet = ConfigParser.parseIni(cfgText);
+    await writeProfileSetToTable(profileSet);
   }
   return cfgText;
+}
+
+function formatNum(num) {
+  return `${num}`.padStart(6, '0');
 }
