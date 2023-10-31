@@ -88,8 +88,10 @@ function setupMessageListener(metaASE) {
 if (document.body) {
   const metaASE = document.getElementById('awsc-signin-endpoint');
   if (metaASE) {
-    adjustDisplayNameColor();
     appendAESR();
     setupMessageListener(metaASE);
+    setTimeout(() => {
+      adjustDisplayNameColor();
+    }, 1000);
   }
 }
