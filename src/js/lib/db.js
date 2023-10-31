@@ -22,7 +22,7 @@ export class DBManager {
         }
       };
       openReq.onerror = (event) => {
-        reject(`Error opening database: ${event.target.error}`);
+        reject(event.target.error);
       };
     });
   }

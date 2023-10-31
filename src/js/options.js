@@ -46,7 +46,11 @@ window.onload = function() {
         }, 2500);
       })
       .catch(lastError => {
-        updateMessage(msgSpan, lastError.message, 'warn');
+        let msg = lastError.message
+        if (lastError.message === "A mutation operation was attempted on a database that did not allow mutations.") {
+          msg = "Configuration cannot be saved while using Private Browsing."
+        }
+        updateMessage(msgSpan, msg, 'warn');
       });
     } catch (e) {
       updateMessage(msgSpan, `Failed to save because ${e.message}`, 'warn');
