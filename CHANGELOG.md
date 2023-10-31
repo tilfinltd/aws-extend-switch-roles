@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 4.0.1 (2023/10/31)
+
+- Fix the switch targets to list in the order of Simple profiles, followed by Complex target profiles
+- Shorten the process of fetching user info during the loading of the AWS Management Console page
+
 ## 4.0.0 (2023/10/22)
 
 - Change the storage location of profile data to **IndexedDB**, removing the registration number limit
