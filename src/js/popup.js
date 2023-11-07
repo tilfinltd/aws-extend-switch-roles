@@ -6,37 +6,27 @@ import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.j
 const sessionMemory = new SessionMemory(chrome || browser);
 
 function openOptions() {
-  if (window.chrome) {
-    chrome.runtime.openOptionsPage(err => {
-      if (err) console.error(`Error: ${err}`);
-    });
-  } else if (window.browser) {
-    window.browser.runtime.openOptionsPage().catch(err => {
-      if (err) console.error(`Error: ${err}`);
-    });
-  }
+  (chrome || browser).runtime.openOptionsPage().catch(err => {
+    console.error(`Error: ${err}`);
+  });
 }
 
-function getCurrentTab() {
-  if (window.chrome) {
-    return new Promise((resolve) => {
-      chrome.tabs.query({ currentWindow:true, active:true }, tabs => {
-        resolve(tabs[0])
-      })
-    })
-  } else if (window.browser) {
-    return browser.tabs.query({ currentWindow:true, active:true }).then(tabs => tabs[0])
-  }
+function openPage(pageUrl) {
+  const brw = chrome || browser;
+  const url = brw.runtime.getURL(pageUrl);
+  brw.tabs.create({ url }).catch(err => {
+    console.error(`Error: ${err}`);
+  });
 }
 
-function executeAction(tabId, action, data) {
-  if (window.chrome) {
-    return new Promise((resolve) => {
-      chrome.tabs.sendMessage(tabId, { action, data }, {}, resolve)
-    })
-  } else if (window.browser) {
-    return browser.tabs.sendMessage(tabId, { action, data })
-  }
+async function getCurrentTab() {
+  const brw = chrome || browser;
+  const [tab] = await brw.tabs.query({ currentWindow:true, active:true });
+  return tab;
+}
+
+async function executeAction(tabId, action, data) {
+  return (chrome || browser).tabs.sendMessage(tabId, { action, data });
 }
 
 window.onload = function() {
@@ -48,17 +38,17 @@ window.onload = function() {
   }
 
   document.getElementById('openUpdateNoticeLink').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.runtime.getURL('updated.html')}, function(tab){});
+    openPage('updated.html');
     return false;
   }
 
   document.getElementById('openCreditsLink').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.runtime.getURL('credits.html')}, function(tab){});
+    openPage('credits.html');
     return false;
   }
 
   document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.runtime.getURL('supporters.html')}, function(tab){});
+    openPage('supporters.html');
     return false;
   }
 
