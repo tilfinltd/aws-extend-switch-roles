@@ -1,6 +1,18 @@
+import { ConfigParser } from "aesr-config";
 import { DBManager } from "./db.js";
+import { loadConfigIni } from "./config_ini";
+import { StorageProvider } from "./storage_repository.js";
 
 export async function findTargetProfiles(ctx) {
+  try {
+    return await retrieveTargetProfilesFromDB(ctx);
+  } catch (err) {
+    // Firefox private browsing
+    return await retriveTargetProfilesFromLztext(ctx);
+  }
+}
+
+async function retrieveTargetProfilesFromDB(ctx) {
   const { baseAccount, loginRole, filterByTargetRole } = ctx;
   const dbManager = new DBManager('aesr');
   await dbManager.open();
@@ -43,4 +55,27 @@ function convertComplexTarget(item, baseProfile) {
   }
 
   return item
+}
+
+async function retrieveTargetProfilesFromLztext(ctx) {
+  const { baseAccount, loginRole, filterByTargetRole } = ctx;
+  
+  const localRepo = StorageProvider.getLocalRepository();
+  const cfgText = await loadConfigIni(localRepo);
+  if (!cfgText) return [];
+
+  const profileSet = ConfigParser.parseIni(cfgText);
+
+  const results = [...profileSet.singles];
+
+  const matchedComplexSrc = profileSet.complexes.find(it => matchSourceProfile(it, baseAccount, loginRole));
+  if (matchedComplexSrc) {
+    let targets = matchedComplexSrc.targets;
+    if (filterByTargetRole) {
+      targets = targets.filter(it => it.role_name === filterByTargetRole);
+    }
+    results.push(...targets)
+  }
+
+  return results;
 }
