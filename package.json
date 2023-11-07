@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/tilfinltd/aws-extend-switch-roles#readme",
   "dependencies": {
-    "aesr-config": "^0.4.0"
+    "aesr-config": "^0.4.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.38.1",
