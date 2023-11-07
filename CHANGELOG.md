@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 4.0.2 (2023/11/07)
+
+- Implement fallback for displaying the role list in Firefox private browsing mode
+- Fix parsing of 'role_arn' when the role name contains slashes
+
 ## 4.0.1 (2023/10/31)
 
 - Fix the switch targets to list in the order of Simple profiles, followed by Complex target profiles
