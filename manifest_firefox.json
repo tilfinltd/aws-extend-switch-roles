@@ -5,6 +5,7 @@
       "strict_min_version": "109.0"
     }
   },
+  "optional_permissions": ["https://*.aesr.dev/*"],
   "background": {
     "scripts": ["js/background.js"]
   }
