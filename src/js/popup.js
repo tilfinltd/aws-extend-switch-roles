@@ -2,6 +2,7 @@ import { createRoleListItem } from './lib/create_role_list_item.js';
 import { CurrentContext } from './lib/current_context.js';
 import { findTargetProfiles } from './lib/target_profiles.js';
 import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js';
+import { remoteCallback } from './handlers/remote_connect.js';
 
 const sessionMemory = new SessionMemory(chrome || browser);
 
@@ -92,6 +93,19 @@ function main() {
             noMain.style.display = 'block';
           }
         })
+      } else if (url.host.endsWith('.aesr.dev') && url.pathname.startsWith('/callback')) {
+        remoteCallback(url)
+        .then(() => {
+          const p = noMain.querySelector('p');
+          p.textContent = "Successfully connected to AESR Config Hub!";
+          noMain.style.display = 'block';
+        })
+        .catch(err => {
+          console.error(err);
+          const p = noMain.querySelector('p');
+          p.textContent = "Failed to connected to AESR Config Hub.";
+          noMain.style.display = 'block';
+        });
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";

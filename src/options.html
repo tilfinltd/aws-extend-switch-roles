@@ -116,6 +116,14 @@ code {
 <div class="pane" id="settingPane">
  <section>
   <h1>Configuration</h1>
+  <div>
+    Storage in configuration:
+    <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
+    <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
+  </div>
+  <div>
+    <a href="">Switch into fetching from Config Hub</a>
+  </div>
   <textarea id="awsConfigTextArea" spellcheck="false"></textarea>
   <div style="margin-top:8px">
    <input type="color" id="colorPicker">
@@ -129,6 +137,20 @@ code {
    <span id="msgSpan" style="margin-left:12px"></span>
   </div>
  </section>
+ <section id="remote">
+  <div>
+    <label for="remoteDomain">Domain:</label>
+    <input id="remoteDomain" type="text" maxlength="40" style="width: 15ex">.aesr.dev
+  </div>
+  <div>
+    <label for="remoteClientId">Client ID:</label>
+    <input id="remoteClientId" type="text" maxlength="40" style="width: 40ex">
+  </div>
+  <div style="margin-top:12px">
+   <button id="remoteButton">&nbsp; Connect Profile Hub &nbsp;</button>
+   <span id="remoteMsgSpan" style="margin-left:12px"></span>
+  </div>
+ </section>
  <section id="settings">
   <h1>Settings</h1>
   <ul>
@@ -136,11 +158,6 @@ code {
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
     <li><label for="signinEndpointInHereCheckBox"><input type="checkbox" id="signinEndpointInHereCheckBox">Sign-in endpoint in current region</label> (Experimental, Supporters only) </li>
     <li><s><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </s> (temporarily disabled) </li>
-    <li>
-      Configuration storage:
-      <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
-      <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
-    </li>
     <li>
       Visual mode:
       <label for="defaultVisualRadioButton"><input type="radio" name="visual" id="defaultVisualRadioButton" value="default">Browser default</label>

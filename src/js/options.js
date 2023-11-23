@@ -4,6 +4,7 @@ import { loadConfigIni, saveConfigIni } from './lib/config_ini.js';
 import { ColorPicker } from './lib/color_picker.js';
 import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
 import { writeProfileSetToTable } from "./lib/profile_db.js";
+import { remoteConnect } from './handlers/remote_connect.js';
 
 function elById(id) {
   return document.getElementById(id);
@@ -121,6 +122,14 @@ window.onload = function() {
     } else {
       document.body.classList.remove('darkMode');
     }
+  }
+
+  elById('remoteButton').onclick = function() {
+    const subdomain = elById('configHubDomain').value;
+    const clientId = elById('configHubClientId').value;
+    remoteConnect(subdomain, clientId).catch(err => {
+      console.error(err);
+    });
   }
 
   syncStorageRepo.get(['configSenderId', 'configStorageArea', 'visualMode'].concat(booleanSettings))
