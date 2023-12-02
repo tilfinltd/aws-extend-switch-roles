@@ -8,7 +8,7 @@ export async function findTargetProfiles(ctx) {
     return await retrieveTargetProfilesFromDB(ctx);
   } catch (err) {
     // Firefox private browsing
-    return await retriveTargetProfilesFromLztext(ctx);
+    return await retrieveTargetProfilesFromLztext(ctx);
   }
 }
 

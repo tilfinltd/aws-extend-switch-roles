@@ -1,9 +1,12 @@
 Changelog
 =========
 
-## 4.0.2 (2023/11/07)
+## 4.0.3 (2023/11/27)
 
 - Implement fallback for displaying the role list in Firefox private browsing mode
+
+## 4.0.2 (2023/11/07)
+
 - Fix parsing of 'role_arn' when the role name contains slashes
 
 ## 4.0.1 (2023/10/31)
