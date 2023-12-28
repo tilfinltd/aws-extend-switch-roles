@@ -60,9 +60,11 @@ a { text-decoration: none }
   padding: 0;
   line-height: 26px;
 }
-#settings input {
+input[type="checkbox"], 
+input[type="radio"] {
   position: relative;
   top: 2px;
+  margin-right: .33ex;
 }
 #awsConfigTextArea {
   box-sizing: border-box;
@@ -110,19 +112,36 @@ code {
   border-color: #9d9d9d;
   color: #eee;
 }
+.formItem {
+  line-height: 32px;
+}
+.formItem label {
+  display: inline-block;
+  min-width: 4em;
+  padding-right: 1ex;
+}
+.radioGroup {
+  display: flex;
+  flex-direction: row;
+  line-height: 26px;
+}
+.radioGroup label {
+  margin-left: .5ex;
+  margin-right: 1ex;
+}
 </style>
 </head>
 <body>
 <div class="pane" id="settingPane">
- <section>
-  <h1>Configuration</h1>
-  <div>
-    Storage in configuration:
+ <h1>Configuration</h1>
+ <section id="standalonePanel">
+  <div id="storageDiv">
+   <div class="radioGroup">
+    <span>Storage:</span>
     <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
     <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
-  </div>
-  <div>
-    <a href="">Switch into fetching from Config Hub</a>
+    <button id="switchConfigHubButton" style="margin-left: auto;">Switch into fetching from Config Hub</button>
+   </div>
   </div>
   <textarea id="awsConfigTextArea" spellcheck="false"></textarea>
   <div style="margin-top:8px">
@@ -137,17 +156,19 @@ code {
    <span id="msgSpan" style="margin-left:12px"></span>
   </div>
  </section>
- <section id="remote">
-  <div>
-    <label for="remoteDomain">Domain:</label>
-    <input id="remoteDomain" type="text" maxlength="40" style="width: 15ex">.aesr.dev
+ <section id="configHubPanel">
+  <h2>Config Hub settings</h2>
+  <div class="formItem">
+    <label for="configHubDomain">Domain:</label>
+    <input id="configHubDomain" type="text" maxlength="40" style="width: 15ex">.aesr.dev
   </div>
-  <div>
-    <label for="remoteClientId">Client ID:</label>
-    <input id="remoteClientId" type="text" maxlength="40" style="width: 40ex">
+  <div class="formItem">
+    <label for="configHubClientId">Client ID:</label>
+    <input id="configHubClientId" type="text" maxlength="40" style="width: 40ex">
   </div>
   <div style="margin-top:12px">
-   <button id="remoteButton">&nbsp; Connect Profile Hub &nbsp;</button>
+   <button id="cancelConfigHubButton"> Cancel </button>
+   <button id="connectConfigHubButton">&nbsp; Connect Profile Hub &nbsp;</button>
    <span id="remoteMsgSpan" style="margin-left:12px"></span>
   </div>
  </section>
@@ -158,8 +179,8 @@ code {
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
     <li><label for="signinEndpointInHereCheckBox"><input type="checkbox" id="signinEndpointInHereCheckBox">Sign-in endpoint in current region</label> (Experimental, Supporters only) </li>
     <li><s><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </s> (temporarily disabled) </li>
-    <li>
-      Visual mode:
+    <li class="radioGroup">
+      <span>Visual mode:</span>
       <label for="defaultVisualRadioButton"><input type="radio" name="visual" id="defaultVisualRadioButton" value="default">Browser default</label>
       <label for="lightVisualRadioButton"><input type="radio" name="visual" id="lightVisualRadioButton" value="light">Light</label>
       <label for="darkVisualRadioButton"><input type="radio" name="visual" id="darkVisualRadioButton" value="dark">Dark</label>
@@ -168,7 +189,7 @@ code {
  </section>
  <section id="api">
   <h1>Extension API</h1>
-  <div>
+  <div class="formItem">
    <label for="configSenderIdText">Config sender extension ID:</label>
    <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex">
   </div>

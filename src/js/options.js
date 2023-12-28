@@ -17,6 +17,22 @@ window.onload = function() {
   let configStorageArea = 'sync';
   let colorPicker = new ColorPicker(document);
 
+  elById('switchConfigHubButton').onclick = function() {
+    elById('configHubPanel').style.display = 'block';
+    elById('standalonePanel').style.display = 'none';
+  }
+  elById('cancelConfigHubButton').onclick = function() {
+    elById('standalonePanel').style.display = 'block';
+    elById('configHubPanel').style.display = 'none';
+  }
+  elById('connectConfigHubButton').onclick = function() {
+    const subdomain = elById('configHubDomain').value;
+    const clientId = elById('configHubClientId').value;
+    remoteConnect(subdomain, clientId).catch(err => {
+      elById('remoteMsgSpan').textContent = err.message;
+    });
+  }
+
   let selection = [];
   let textArea = elById('awsConfigTextArea');
   textArea.onselect = function() {
@@ -122,14 +138,6 @@ window.onload = function() {
     } else {
       document.body.classList.remove('darkMode');
     }
-  }
-
-  elById('remoteButton').onclick = function() {
-    const subdomain = elById('configHubDomain').value;
-    const clientId = elById('configHubClientId').value;
-    remoteConnect(subdomain, clientId).catch(err => {
-      console.error(err);
-    });
   }
 
   syncStorageRepo.get(['configSenderId', 'configStorageArea', 'visualMode'].concat(booleanSettings))
