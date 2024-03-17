@@ -15,12 +15,16 @@ body {
   padding: 0;
   margin: 0;
 }
+h1 { font-size: 22px; margin-block: 14px 10px }
+h2 { font-size: 17px; margin-block: 14px }
+h3 { font-size: 15px; margin-block: 8px }
+section { margin-block: 10px 20px }
 .pane {
   box-sizing: border-box;
   height: 100vh;
   max-width: 660px;
   width: 100%;
-  padding: 10px 20px;
+  padding-inline: 20px;
 }
 #settingPane {
   background-color: #fff;
@@ -46,11 +50,6 @@ a { text-decoration: none }
   font-weight: bold;
   margin: 5px 0;
 }
-#settingPane h1 {
-  font-size: 20px;
-  line-height: 1.125;
-  margin: 1em 0 .68em;
-}
 #settings ul {
   list-style: none;
   margin: 0 0; padding: 0;
@@ -74,7 +73,8 @@ input[type="radio"] {
   resize: none;
   white-space: pre;
   width: 100%;
-  height: calc(100vh - 400px);
+  height: calc(100vh - 456px);
+  margin: 8px 0;
   max-height: 800px;
 }
 #colorValue {
@@ -87,8 +87,12 @@ pre {
   font-size: 14px;
   font-family: Consolas, "Courier New", Courier, Monaco, monospace;
   padding: 0.5ex;
+  overflow-x: hidden;
 }
-input, button { font-size: 16px }
+input, button {
+  font-size: 14px;
+  padding-block: 3px;
+}
 code {
   color: #222;
   font-weight: bold;
@@ -144,7 +148,7 @@ code {
    </div>
   </div>
   <textarea id="awsConfigTextArea" spellcheck="false"></textarea>
-  <div style="margin-top:8px">
+  <div>
    <input type="color" id="colorPicker">
    <b style="margin-left: 6px">#</b>
    <input type="text" id="colorValue" maxlength="6" placeholder="RRGGBB">
@@ -156,7 +160,7 @@ code {
    <span id="msgSpan" style="margin-left:12px"></span>
   </div>
  </section>
- <section id="configHubPanel">
+ <section id="configHubPanel" style="display: none">
   <h2>Config Hub settings</h2>
   <div class="formItem">
     <label for="configHubDomain">Domain:</label>
@@ -196,12 +200,12 @@ code {
  </section>
 </div>
 <div class="pane" id="howto">
- <h2>How to configure</h2>
+ <h1>How to configure</h1>
  <section>
-  <h3>Simple Configuration</h3>
+  <h2>Simple Configuration</h2>
   <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code>.</p>
 
-  <h4>Optional parameters</h4>
+  <h3>Optional parameters</h3>
   <ul>
    <li><code>color</code> - The RGB hex value (without the prefix '#') for the color of the header bottom border and around the current profile.</li>
    <li><code>region</code> - Changing the region whenever switching the role if this parameter is specified.</li>
@@ -224,7 +228,7 @@ image = "https://via.placeholder.com/150"
   </pre>
  </section>
  <section>
-  <h3>Complex Configuration</h3>  
+  <h2>Complex Configuration</h2>  
   <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
   <ul>
    <li>A profile specified by the <code>source_profile</code> of the others is defined as <b>base account</b></li>
@@ -309,7 +313,7 @@ source_profile = Org3-BaseAccount2
   <p>The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite.  Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts.  Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown.  You won't see roles that your current role can't actually assume.</p>
  </section>
  <section>
-  <h3>Settings</h3>
+  <h2>Settings</h2>
   <ul>
    <li><b>Hide account id</b> hides the account_id for each profile.</li>
    <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
@@ -321,7 +325,7 @@ source_profile = Org3-BaseAccount2
   </ul>
  </section>
  <section>
-  <h3>Extension API</h3>
+  <h2>Extension API</h2>
   <ul>
    <li><b>Config sender extension</b> allowed by the <b>ID</b> can send your switch roles configuration to this extension.
      <strong class="warn">'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.</strong>

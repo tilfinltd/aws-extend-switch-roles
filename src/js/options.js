@@ -89,6 +89,9 @@ window.onload = function() {
       }
     } else {
       signinEndpointInHereCheckBox.disabled = true;
+      const schb = elById('switchConfigHubButton')
+      schb.disabled = true;
+      schb.title = 'Supporters only';
     }
   });
   booleanSettings.push('signinEndpointInHere');
