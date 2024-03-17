@@ -2,7 +2,7 @@ import { ConfigParser } from 'aesr-config';
 import { nowEpochSeconds } from './lib/util.js';
 import { loadConfigIni, saveConfigIni } from './lib/config_ini.js';
 import { ColorPicker } from './lib/color_picker.js';
-import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
+import { LocalStorageRepository, SessionMemory, StorageProvider } from './lib/storage_repository.js';
 import { writeProfileSetToTable } from "./lib/profile_db.js";
 import { remoteConnect } from './handlers/remote_connect.js';
 
@@ -87,6 +87,13 @@ window.onload = function() {
       signinEndpointInHereCheckBox.onchange = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
+
+      getRemoteConnectInfo().then(({ subdomain, clientId }) => {
+        elById('configHubDomain').value = subdomain;
+        elById('configHubClientId').value = clientId;
+        elById('cancelConfigHubButton').textContent = 'Disconnect';
+        elById('connectConfigHubButton').textContent = 'Reload';
+      });
     } else {
       signinEndpointInHereCheckBox.disabled = true;
       const schb = elById('switchConfigHubButton')

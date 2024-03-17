@@ -18,7 +18,7 @@ export async function remoteConnect(subdomain, clientId) {
 }
 
 export async function remoteCallback(uRL) {
-  const remoteConnectParams = await sessionMemory.get(['remoteConnectParams']);
+  const { remoteConnectParams } = await sessionMemory.get(['remoteConnectParams']);
   const { subdomain, clientId, codeVerifier } = remoteConnectParams;
 
   const oauthClient = new OAuthClient(subdomain, clientId);
@@ -53,11 +53,18 @@ export async function remoteRefreshIdToken() {
   
   const now = nowEpochSeconds();
   const resultToken = await oauthClient.getIdTokenByRefresh(refreshToken);
-  await sessionMemory.set({
+  await localRepo.set({
     remoteConnectParams: {
       idToken: resultToken.id_token,
       expiresAt: now + resultToken.expires_in - 15,
       apiEndpoint: `https://api.${subdomain}.aesr.dev`,
     }
   });
+}
+
+export async function getRemoteConnectInfo() {
+  const localRepo = StorageProvider.getLocalRepository();
+  const { remoteConnectInfo } = await localRepo.get(['remoteConnectInfo']);
+  const { subdomain, clientId } = remoteConnectInfo;
+  return { subdomain, clientId };
 }
