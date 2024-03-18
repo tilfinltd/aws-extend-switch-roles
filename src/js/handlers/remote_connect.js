@@ -25,7 +25,7 @@ export async function remoteCallback(uRL) {
   const authCode = oauthClient.validateCallbackUrl(uRL);
 
   const now = nowEpochSeconds();
-  const resultToken = await oauthClient.getIdToken(codeVerifier, authCode);
+  const resultToken = await oauthClient.verify(codeVerifier, authCode);
   await sessionMemory.set({
     remoteConnectParams: {
       idToken: resultToken.id_token,
@@ -40,31 +40,26 @@ export async function remoteCallback(uRL) {
     clientId,
     refreshToken: resultToken.refresh_token,
   };
+  await localRepo.set({ remoteConnectInfo });
   const { profile } = await oauthClient.getUserConfig(resultToken.id_token);
-  await localRepo.set({ remoteConnectInfo, remoteConfigProfile: profile });
-}
-
-export async function remoteRefreshIdToken() {
-  const localRepo = StorageProvider.getLocalRepository();
-  const { remoteConnectInfo } = await localRepo.get(['remoteConnectInfo']);
-  const { subdomain, clientId, refreshToken } = remoteConnectInfo;
-
-  const oauthClient = new OAuthClient(subdomain, clientId);
-  
-  const now = nowEpochSeconds();
-  const resultToken = await oauthClient.getIdTokenByRefresh(refreshToken);
-  await localRepo.set({
-    remoteConnectParams: {
-      idToken: resultToken.id_token,
-      expiresAt: now + resultToken.expires_in - 15,
-      apiEndpoint: `https://api.${subdomain}.aesr.dev`,
-    }
-  });
+  return { profile };
 }
 
 export async function getRemoteConnectInfo() {
   const localRepo = StorageProvider.getLocalRepository();
   const { remoteConnectInfo } = await localRepo.get(['remoteConnectInfo']);
-  const { subdomain, clientId } = remoteConnectInfo;
-  return { subdomain, clientId };
+  return remoteConnectInfo;
+}
+
+export function deleteRemoteConnectInfo() {
+  const localRepo = StorageProvider.getLocalRepository();
+  localRepo.delete(['remoteConnectInfo']);
+}
+
+export async function deleteRefreshTokenFromRemoteConnectInfo() {
+  const localRepo = StorageProvider.getLocalRepository();
+  localRepo.delete(['remoteConnectInfo']);
+  const { remoteConnectInfo } = await localRepo.get(['remoteConnectInfo']);
+  delete remoteConnectInfo.refreshToken;
+  await localRepo.set({ remoteConnectInfo });
 }

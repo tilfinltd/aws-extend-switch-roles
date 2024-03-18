@@ -33,7 +33,7 @@ export class OAuthClient {
     }
   }
 
-  async getIdToken(codeVerifier, authCode) {
+  async verify(codeVerifier, authCode) {
     const params = {
       grant_type: 'authorization_code',
       client_id: this.clientId,
@@ -68,7 +68,7 @@ export class OAuthClient {
       body: new URLSearchParams(params),
     });
     const result = await res.json();
-    return result;
+    return result.id_token;
   }
 
   async getUserConfig(idToken) {
