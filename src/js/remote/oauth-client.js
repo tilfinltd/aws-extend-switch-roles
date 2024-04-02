@@ -28,6 +28,13 @@ export class OAuthClient {
 
   validateCallbackUrl(uRL) {
     if (uRL.host === `api.${this.domain}` && uRL.pathname === '/callback') {
+      const error = uRL.searchParams.get('error');
+      if (error) {
+        let errmsg = error;
+        const errDesc = uRL.searchParams.get('error_description');
+        if (errDesc) errmsg += ': ' + errDesc;
+        throw new Error(errmsg);
+      }
       const authCode = uRL.searchParams.get('code');
       if (authCode) return authCode;
     }
@@ -50,6 +57,9 @@ export class OAuthClient {
       body: new URLSearchParams(params),
     });
     const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.error);
+    }
     return result;
   }
 
@@ -68,6 +78,12 @@ export class OAuthClient {
       body: new URLSearchParams(params),
     });
     const result = await res.json();
+    if (!res.ok) {
+      if (result.error === 'invalid_grant') {
+        throw new RefreshTokenError('refresh token is invalid');
+      }
+      throw new Error(result.error);
+    }
     return result.id_token;
   }
 
@@ -79,6 +95,11 @@ export class OAuthClient {
       },
     })
     const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.message);
+    }
     return result;
   }
 }
+
+export class RefreshTokenError extends Error {}

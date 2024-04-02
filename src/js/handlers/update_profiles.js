@@ -1,10 +1,9 @@
 import { nowEpochSeconds } from "../lib/util.js";
 import { DataProfilesSplitter } from "../lib/data_profiles_splitter.js";
-import { writeProfileSetToTable, writeProfileItemsToTable, refreshDB } from "../lib/profile_db.js";
+import { writeProfileItemsToTable, refreshDB } from "../lib/profile_db.js";
 import { StorageProvider } from "../lib/storage_repository.js";
 import { saveConfigIni } from "../lib/config_ini.js";
-import { OAuthClient } from "../remote/oauth-client.js";
-import { deleteRefreshTokenFromRemoteConnectInfo } from "./remote_connect.js";
+import { reloadConfig } from "../lib/reload-config.js";
 
 export async function updateProfilesTable() {
   const syncRepo = StorageProvider.getSyncRepository();
@@ -14,15 +13,10 @@ export async function updateProfilesTable() {
   const { profilesTableUpdated = 0, remoteConnectInfo = null } = await localRepo.get(['profilesTableUpdated', 'remoteConnectInfo']);
 
   if (remoteConnectInfo) {
-    const oaClient = new OAuthClient(remoteConnectInfo.subdomain, remoteConnectInfo.clientId);
     try {
-      const idToken = await oaClient.getIdTokenByRefresh(remoteConnectInfo.refreshToken);
-      const { profile } = await oaClient.getUserConfig(idToken);
-      await writeProfileSetToTable(profile);
-      console.log('Updated profile from Config Hub');
-    } catch {
-      await deleteRefreshTokenFromRemoteConnectInfo();
-      console.warn('Failed to profile from Config Hub, so the refresh token was deleted.');
+      await reloadConfig(remoteConnectInfo);
+    } catch (err) {
+      console.warn('Failed to get profile from Config Hub');
     }
     return;
   }

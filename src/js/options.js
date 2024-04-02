@@ -5,7 +5,7 @@ import { ColorPicker } from './lib/color_picker.js';
 import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
 import { writeProfileSetToTable } from "./lib/profile_db.js";
 import { remoteConnect, getRemoteConnectInfo, deleteRemoteConnectInfo } from './handlers/remote_connect.js';
-import { OAuthClient } from './remote/oauth-client.js';
+import { reloadConfig } from './lib/reload-config.js';
 
 function elById(id) {
   return document.getElementById(id);
@@ -36,18 +36,20 @@ window.onload = function() {
     deleteRemoteConnectInfo();
   }
   elById('reloadConfigHubButton').onclick = function() {
-    getRemoteConnectInfo().then(({ subdomain, clientId, refreshToken }) => {
-      if (subdomain && clientId) {
-        const oaClient = new OAuthClient(subdomain, clientId);
-        oaClient.getIdTokenByRefresh(refreshToken).then(idToken => {
-          return oaClient.getUserConfig(idToken);
-        }).then(({ profile }) => {
-          return writeProfileSetToTable(profile);
-        }).then(() => {
-          updateMessage('remoteMsgSpan', "Successfully reloaded config from Hub!");
+    getRemoteConnectInfo().then(rci => {
+      if (rci && rci.subdomain && rci.clientId) {
+        reloadConfig(rci).then(result => {
+          if (result) {
+            updateMessage('remoteMsgSpan', "Successfully reloaded config from Hub!");
+          } else {
+            updateMessage('remoteMsgSpan', `Failed to reload because the connection expired.`, 'warn');
+            updateRemoteFieldsState('disconnected');
+          }
         }).catch(e => {
           updateMessage('remoteMsgSpan', `Failed to reload because ${e.message}`, 'warn');
         });
+      } else {
+        updateMessage('remoteMsgSpan', `Failed to reload because the connection is broken.`, 'warn');
       }
     });
   }
@@ -102,11 +104,11 @@ window.onload = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
 
-      getRemoteConnectInfo().then(({ subdomain, clientId, refreshToken }) => {
-        if (subdomain && clientId) {
-          elById('configHubDomain').value = subdomain;
-          elById('configHubClientId').value = clientId;
-          if (refreshToken) {
+      getRemoteConnectInfo().then(rci => {
+        if (rci && rci.subdomain && rci.clientId) {
+          elById('configHubDomain').value = rci.subdomain;
+          elById('configHubClientId').value = rci.clientId;
+          if (rci.refreshToken) {
             updateRemoteFieldsState('connected');
           } else {
             updateRemoteFieldsState('disconnected');

@@ -11,15 +11,17 @@ export async function writeProfileSetToTable(profileSet) {
   });
 
   await dbManager.transaction('profiles', async dbTable => {
+    const { singles = [], complexes = [] } = profileSet;
     let i = 0;
-    for (const profile of profileSet.singles) {
+
+    for (const profile of singles) {
       await dbTable.insert({
         profilePath: `[SINGLE];${formatNum(++i)}`,
         ...profile,
       });
     }
 
-    for (const baseProfile of profileSet.complexes) {
+    for (const baseProfile of complexes) {
       const { targets, ...props } = baseProfile;
       await dbTable.insert({
         profilePath: `[COMPLEX];${formatNum(++i)}`,

@@ -41,8 +41,7 @@ export async function remoteCallback(uRL) {
     refreshToken: resultToken.refresh_token,
   };
   await localRepo.set({ remoteConnectInfo });
-  const { profile } = await oauthClient.getUserConfig(resultToken.id_token);
-  return { profile };
+  return await oauthClient.getUserConfig(resultToken.id_token);
 }
 
 export async function getRemoteConnectInfo() {
@@ -58,7 +57,6 @@ export function deleteRemoteConnectInfo() {
 
 export async function deleteRefreshTokenFromRemoteConnectInfo() {
   const localRepo = StorageProvider.getLocalRepository();
-  localRepo.delete(['remoteConnectInfo']);
   const { remoteConnectInfo } = await localRepo.get(['remoteConnectInfo']);
   delete remoteConnectInfo.refreshToken;
   await localRepo.set({ remoteConnectInfo });
