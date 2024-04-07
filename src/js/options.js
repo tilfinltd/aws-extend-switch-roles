@@ -4,6 +4,8 @@ import { loadConfigIni, saveConfigIni } from './lib/config_ini.js';
 import { ColorPicker } from './lib/color_picker.js';
 import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
 import { writeProfileSetToTable } from "./lib/profile_db.js";
+import { remoteConnect, getRemoteConnectInfo, deleteRemoteConnectInfo } from './handlers/remote_connect.js';
+import { reloadConfig } from './lib/reload-config.js';
 
 function elById(id) {
   return document.getElementById(id);
@@ -15,6 +17,42 @@ window.onload = function() {
   const syncStorageRepo = StorageProvider.getSyncRepository();
   let configStorageArea = 'sync';
   let colorPicker = new ColorPicker(document);
+
+  elById('switchConfigHubButton').onclick = function() {
+    updateRemoteFieldsState('disconnected');
+  }
+  elById('cancelConfigHubButton').onclick = function() {
+    updateRemoteFieldsState('not_shown');
+  }
+  elById('connectConfigHubButton').onclick = function() {
+    const subdomain = elById('configHubDomain').value;
+    const clientId = elById('configHubClientId').value;
+    remoteConnect(subdomain, clientId).catch(err => {
+      updateMessage('remoteMsgSpan', err.message, 'warn');
+    });
+  }
+  elById('disconnectConfigHubButton').onclick = function() {
+    updateRemoteFieldsState('disconnected');
+    deleteRemoteConnectInfo();
+  }
+  elById('reloadConfigHubButton').onclick = function() {
+    getRemoteConnectInfo().then(rci => {
+      if (rci && rci.subdomain && rci.clientId) {
+        reloadConfig(rci).then(result => {
+          if (result) {
+            updateMessage('remoteMsgSpan', "Successfully reloaded config from Hub!");
+          } else {
+            updateMessage('remoteMsgSpan', `Failed to reload because the connection expired.`, 'warn');
+            updateRemoteFieldsState('disconnected');
+          }
+        }).catch(e => {
+          updateMessage('remoteMsgSpan', `Failed to reload because ${e.message}`, 'warn');
+        });
+      } else {
+        updateMessage('remoteMsgSpan', `Failed to reload because the connection is broken.`, 'warn');
+      }
+    });
+  }
 
   let selection = [];
   let textArea = elById('awsConfigTextArea');
@@ -34,26 +72,21 @@ window.onload = function() {
     }
   }
 
-  let msgSpan = elById('msgSpan');
-  let saveButton = elById('saveButton');
-  saveButton.onclick = function() {
+  elById('saveButton').onclick = function() {
     try {
       const area = elById('configStorageSyncRadioButton').checked ? 'sync' : 'local';
       saveConfiguration(textArea.value, area).then(() => {
-        updateMessage(msgSpan, 'Configuration has been updated!', 'success');
-        setTimeout(() => {
-          msgSpan.firstChild.remove();
-        }, 2500);
+        updateMessage('msgSpan', 'Configuration has been updated!');
       })
       .catch(lastError => {
         let msg = lastError.message
         if (lastError.message === "A mutation operation was attempted on a database that did not allow mutations.") {
           msg = "Configuration cannot be saved while using Private Browsing."
         }
-        updateMessage(msgSpan, msg, 'warn');
+        updateMessage('msgSpan', msg, 'warn');
       });
     } catch (e) {
-      updateMessage(msgSpan, `Failed to save because ${e.message}`, 'warn');
+      updateMessage('msgSpan', `Failed to save because ${e.message}`, 'warn');
     }
   }
 
@@ -70,8 +103,24 @@ window.onload = function() {
       signinEndpointInHereCheckBox.onchange = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
+
+      getRemoteConnectInfo().then(rci => {
+        if (rci && rci.subdomain && rci.clientId) {
+          elById('configHubDomain').value = rci.subdomain;
+          elById('configHubClientId').value = rci.clientId;
+          if (rci.refreshToken) {
+            updateRemoteFieldsState('connected');
+          } else {
+            updateRemoteFieldsState('disconnected');
+            updateMessage('remoteMsgSpan', "Please reconnect because your credentials have expired.", 'warn');
+          }
+        }
+      });
     } else {
       signinEndpointInHereCheckBox.disabled = true;
+      const schb = elById('switchConfigHubButton')
+      schb.disabled = true;
+      schb.title = 'Supporters only';
     }
   });
   booleanSettings.push('signinEndpointInHere');
@@ -168,7 +217,8 @@ async function saveConfiguration(text, storageArea) {
   await localRepo.set({ profilesTableUpdated: now });
 }
 
-function updateMessage(el, msg, cls) {
+function updateMessage(elId, msg, cls = 'success') {
+  const el = elById(elId);
   const span = document.createElement('span');
   span.className = cls;
   span.textContent = msg;
@@ -177,5 +227,36 @@ function updateMessage(el, msg, cls) {
     el.replaceChild(span, child);
   } else {
     el.appendChild(span);
+  }
+
+  if (cls === 'success') {
+    setTimeout(() => {
+      span.remove();
+    }, 2500);
+  }
+}
+
+function updateRemoteFieldsState(state) {
+  if (state === 'connected') {
+    elById('configHubPanel').style.display = 'block';
+    elById('standalonePanel').style.display = 'none';
+    elById('configHubDomain').disabled = true;
+    elById('configHubClientId').disabled = true;
+    elById('cancelConfigHubButton').style.display = 'none';
+    elById('connectConfigHubButton').style.display = 'none';
+    elById('disconnectConfigHubButton').style.display = 'inline-block';
+    elById('reloadConfigHubButton').style.display = 'inline-block';
+  } else if (state === 'disconnected') {
+    elById('configHubPanel').style.display = 'block';
+    elById('standalonePanel').style.display = 'none';
+    elById('configHubDomain').disabled = false;
+    elById('configHubClientId').disabled = false;
+    elById('cancelConfigHubButton').style.display = 'inline-block';
+    elById('connectConfigHubButton').style.display = 'inline-block';
+    elById('disconnectConfigHubButton').style.display = 'none';
+    elById('reloadConfigHubButton').style.display = 'none';
+  } else { // not shown
+    elById('standalonePanel').style.display = 'block';
+    elById('configHubPanel').style.display = 'none';
   }
 }

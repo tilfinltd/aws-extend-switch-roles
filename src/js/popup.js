@@ -2,6 +2,8 @@ import { createRoleListItem } from './lib/create_role_list_item.js';
 import { CurrentContext } from './lib/current_context.js';
 import { findTargetProfiles } from './lib/target_profiles.js';
 import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js';
+import { remoteCallback } from './handlers/remote_connect.js';
+import { writeProfileSetToTable } from './lib/profile_db.js';
 
 const sessionMemory = new SessionMemory(chrome || browser);
 
@@ -23,6 +25,12 @@ async function getCurrentTab() {
   const brw = chrome || browser;
   const [tab] = await brw.tabs.query({ currentWindow:true, active:true });
   return tab;
+}
+
+async function moveTabToOption(tabId) {
+  const brw = chrome || browser;
+  const url = await brw.runtime.getURL('options.html');
+  await brw.tabs.update(tabId, { url });
 }
 
 async function executeAction(tabId, action, data) {
@@ -92,6 +100,20 @@ function main() {
             noMain.style.display = 'block';
           }
         })
+      } else if (url.host.endsWith('.aesr.dev') && url.pathname.startsWith('/callback')) {
+        remoteCallback(url)
+        .then(userCfg => {
+          const p = noMain.querySelector('p');
+          p.textContent = "Successfully connected to AESR Config Hub!";
+          noMain.style.display = 'block';
+          return writeProfileSetToTable(userCfg.profile);
+        })
+        .then(() => moveTabToOption(tab.id))
+        .catch(err => {
+          const p = noMain.querySelector('p');
+          p.textContent = `Failed to connect to AESR Config Hub because.\n${err.message}`;
+          noMain.style.display = 'block';
+        });
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
