@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 5.0.0 (2024/04/07)
+## 5.0.1 (2024/04/07)
 
 - Add support for remote retrieval of user configurations through [AESR Config Hub](https://aesr.dev/)
 
