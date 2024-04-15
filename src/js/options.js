@@ -83,7 +83,7 @@ window.onload = function() {
         if (lastError.message === "A mutation operation was attempted on a database that did not allow mutations.") {
           msg = "Configuration cannot be saved while using Private Browsing."
         }
-        updateMessage('msgSpan', msg, 'warn');
+        updateMessage('msgSpan', msg, 'warn', scrapeProfileName(textArea.value, lastError.line));
       });
     } catch (e) {
       updateMessage('msgSpan', `Failed to save because ${e.message}`, 'warn');
@@ -217,10 +217,21 @@ async function saveConfiguration(text, storageArea) {
   await localRepo.set({ profilesTableUpdated: now });
 }
 
-function updateMessage(elId, msg, cls = 'success') {
+function scrapeProfileName(text, line) {
+  if (!line) {
+    return;
+  }
+  let lines = text.split("\n");
+  return `[${lines[line - 1].split('[').pop().split(']')[0]}]:${line}`;
+}
+
+function updateMessage(elId, msg, cls = 'success', profile) {
   const el = elById(elId);
   const span = document.createElement('span');
   span.className = cls;
+  if (profile) {
+    msg += " " + profile;
+  }
   span.textContent = msg;
   const child = el.firstChild;
   if (child) {
