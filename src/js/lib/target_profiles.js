@@ -28,7 +28,7 @@ async function retrieveTargetProfilesFromDB(ctx) {
       const complexTargetItems = await dbTable.query(`${matchedComplexSrc.name};`);
       let targets = complexTargetItems.map(it => convertComplexTarget(it, matchedComplexSrc));
       if (filterByTargetRole) {
-        targets = targets.filter(it => it.role_name === filterByTargetRole);
+        targets = targets.filter(it => targetRoleNameMatches(it, filterByTargetRole));
       }
       results.push(...targets)
     }
@@ -72,10 +72,14 @@ async function retrieveTargetProfilesFromLztext(ctx) {
   if (matchedComplexSrc) {
     let targets = matchedComplexSrc.targets;
     if (filterByTargetRole) {
-      targets = targets.filter(it => it.role_name === filterByTargetRole);
+      targets = targets.filter(it => targetRoleNameMatches(it, filterByTargetRole));
     }
     results.push(...targets)
   }
 
   return results;
+}
+
+function targetRoleNameMatches(it, filterByTargetRole) {
+  return it.role_name === filterByTargetRole || it.role_name.substring(it.role_name.lastIndexOf('/') + 1) === filterByTargetRole;
 }
