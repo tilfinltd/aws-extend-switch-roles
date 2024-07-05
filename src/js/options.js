@@ -84,6 +84,7 @@ window.onload = function() {
           msg = "Configuration cannot be saved while using Private Browsing."
         }
         updateMessage('msgSpan', msg, 'warn');
+        if (typeof lastError.line === 'number') focusConfigTextArea(lastError.line);
       });
     } catch (e) {
       updateMessage('msgSpan', `Failed to save because ${e.message}`, 'warn');
@@ -259,4 +260,20 @@ function updateRemoteFieldsState(state) {
     elById('standalonePanel').style.display = 'block';
     elById('configHubPanel').style.display = 'none';
   }
+}
+
+function focusConfigTextArea(ln) {
+  const ta = document.getElementById('awsConfigTextArea');
+  ta.scrollTop = ln < 10 ? 0 : 16 * (ln - 10);
+  const lines = ta.value.split('\n');
+  if (ln === 1) {
+    ta.setSelectionRange(0, lines[0].length + 1);
+    ta.focus();
+    return;
+  }
+  ln--;
+  const start = lines.slice(0, ln).join('\n').length + 1;
+  const end = start + lines[ln].length;
+  ta.setSelectionRange(start, end);
+  ta.focus();
 }
