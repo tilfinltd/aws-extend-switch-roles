@@ -27,7 +27,7 @@ source_profile = src/B
 [profile A/2]
 aws_account_id = 000011112224
 role_name=target-a2
-color=#00cc33
+color=00cc33
 source_profile=src-A
 ; comment`);
     await page.locator('#saveButton').click();
