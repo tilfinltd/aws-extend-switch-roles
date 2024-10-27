@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 5.0.2 (2024/10/27)
+
+- Fix to highlight the relevant part when validation fails in the configuration textarea (thanks to @brandonkgarner)
+- Fix **Show only matching roles** when target role ARN has a path (thanks to @dblackhall-tyro)
+
 ## 5.0.1 (2024/04/07)
 
 - Add support for remote retrieval of user configurations through [AESR Config Hub](https://aesr.dev/)
