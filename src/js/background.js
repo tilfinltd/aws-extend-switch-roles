@@ -6,18 +6,16 @@ import { updateProfilesTable } from './handlers/update_profiles.js'
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
 
-function initScript() {
-  sessionMemory.set({ switchCount: 0 }).then(() => {});
+async function initScript() {
+  await sessionMemory.set({ switchCount: 0 });
 
-  syncStorageRepo.get(['goldenKeyExpire'])
-  .then(data => {
-    const { goldenKeyExpire } = data;
-    if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-      return sessionMemory.set({ hasGoldenKey: 't' }).then(() => {
-        return setIcon('/icons/Icon_48x48_g.png');
-      });
-    }
-  })
+  const { goldenKeyExpire } = await syncStorageRepo.get(['goldenKeyExpire']);
+  if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
+    await sessionMemory.set({ hasGoldenKey: 't' });
+    return setIcon('/icons/Icon_48x48_g.png');
+  } else {
+    await syncStorageRepo.set({ autoTabGrouping: false, signinEndpointInHere: false });
+  }
 }
 
 chrome.runtime.onStartup.addListener(function () {
@@ -60,12 +58,16 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
   });
 });
 
+function createTabGroupKey(title) {
+  return encodeURIComponent(`tabGroup/${title}`);
+}
+
 let listeningTabGroupsRemove = false;
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === 'listenTabGroupsRemove' && !listeningTabGroupsRemove) {
     chrome.tabGroups.onRemoved.addListener(async function (group) {
-      const key = encodeURIComponent(`tabGroup/${group.title}`);
+      const key = createTabGroupKey(group.title);
       const result = await sessionMemory.get([key]);
       const { [key]: url } = result;
       if (url) {
@@ -78,12 +80,28 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       }
     });
     listeningTabGroupsRemove = true;
-  } else if (message.action === 'registerTabGroup') {
-    const { endpoint, sessionId, tabGroupId, title, color } = message;
-    await chrome.tabGroups.update(tabGroupId, { title, color: getTabGroupColor(color) });
+  } else if (message.action === 'openTab') {
+    const { url, signinHost, tabGroup } = message;
+    const tab = await chrome.tabs.create({ url });
 
-    const key = encodeURIComponent(`tabGroup/${title}`);
-    await sessionMemory.set({ [key]: `${endpoint}/sessions/${sessionId}/v1/logout` });
+    if (tabGroup) {
+      const uRL = new URL(url);
+      const params = new URLSearchParams(uRL.search);
+      const sessionId = params.get('login_hint');
+
+      const { title, color } = tabGroup;
+
+      const [group] = await chrome.tabGroups.query({ title });
+      if (group) {
+        await chrome.tabs.group({ groupId: group.id, tabIds: tab.id });
+      } else {
+        const newGroupId = await chrome.tabs.group({ tabIds: tab.id });
+        await chrome.tabGroups.update(newGroupId, { title, color: getTabGroupColor(color) });
+      }
+
+      const key = createTabGroupKey(title);
+      await sessionMemory.set({ [key]: `https://${signinHost}/sessions/${sessionId}/v1/logout` });
+    }
   }
   sendResponse({});
 });

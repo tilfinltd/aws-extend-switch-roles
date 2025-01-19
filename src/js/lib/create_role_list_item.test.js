@@ -26,7 +26,7 @@ describe('createRoleListItem', () => {
       const url = 'https://console.aws.amazonaws.com/';
       const options = {};
       let handlerData = null;
-      const li = createRoleListItem(window.document, item, url, '', options, (data) => { handlerData = data });
+      const li = createRoleListItem(window.document, item, url, '', options, (sender, data) => { handlerData = data });
 
       const a = li.querySelector('a')
       expect(a.href).to.eq('http://localhost/#');
@@ -63,7 +63,7 @@ describe('createRoleListItem', () => {
         color: 'ffaa99',
       }
       const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
-      const li = createRoleListItem(window.document, item, url, {}, () => {});
+      const li = createRoleListItem(window.document, item, url, {}, (sender, data) => {});
 
       const a = li.querySelector('a')
       expect(a.title).to.eq('role-b@000011115555');
@@ -88,7 +88,7 @@ describe('createRoleListItem', () => {
         image: '"https://www.exapmle.com/icon.png"',
       }
       const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
-      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, () => {});
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, (sender, data) => {});
 
       const a = li.querySelector('a')
       expect(a.innerHTML).to.eq(`<span class="headSquare" style="\
@@ -106,7 +106,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
         image: '"https://www.exapmle.com/icon.png"',
       }
       const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
-      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, () => {});
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', {}, (sender, data) => {});
 
       const a = li.querySelector('a')
       expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(255, 170, 34); \
@@ -123,7 +123,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
         region: 'us-west-2',
       }
       const url = 'https://console.aws.amazonaws.com/?region=ap-southeast-1';
-      const li = createRoleListItem(window.document, item, url, 'ap-southeast-1', {}, () => {});
+      const li = createRoleListItem(window.document, item, url, 'ap-southeast-1', {}, (sender, data) => {});
 
       const a = li.querySelector('a')
       expect(a.dataset.redirecturi).to.eq('https%3A%2F%2Fconsole.aws.amazonaws.com%2F%3Fregion%3Dus-west-2');
@@ -139,7 +139,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
       }
       const url = 'https://console.aws.amazonaws.com/?region=us-east-1';
       const options = { hidesAccountId: true }
-      const li = createRoleListItem(window.document, item, url, 'us-east-1', options, () => {});
+      const li = createRoleListItem(window.document, item, url, 'us-east-1', options, (sender, data) => {});
 
       const a = li.querySelector('a')
       expect(a.title).to.eq('role-C@000011117777');

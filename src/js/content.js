@@ -40,49 +40,57 @@ function appendAESR() {
   divInfo.style.visibility = 'hidden';
   document.body.appendChild(divInfo);
 
-  const divResult = document.createElement('div');
-  divResult.id = 'AESR_result';
-  divResult.style.display = 'none';
-  divResult.style.visibility = 'hidden';
-  document.body.appendChild(divResult);
+  const inputResult = document.createElement('input');
+  inputResult.type = 'hidden';
+  inputResult.id = 'AESR_result';
+  inputResult.style.display = 'none';
+  inputResult.style.visibility = 'hidden';
+  document.body.appendChild(inputResult);
 }
 
-function getSessionData() {
-  const metaASD = document.querySelector('meta[name="awsc-session-data"]');
-  let sessData = null;
-  if (metaASD) {
+function getMetaData() {
+  const ase = document.getElementById('awsc-signin-endpoint');
+  if (!ase) return null;
+
+  const result = { prismModeEnabled: false };
+
+  const asd = document.querySelector('meta[name="awsc-session-data"]');
+  if (asd) {
     try {
-      sessData = JSON.parse(metaASD.getAttribute('content'));
+      const json = asd.getAttribute('content');
+      Object.assign(result, JSON.parse(json));
     } catch (e) {}
   }
-  return sessData;
+
+  if (!result.signInEndpoint) {
+    result.signInEndpoint = ase.getAttribute('content');
+  }
+
+  return result;
 }
 
-let prismModeEnabled = false;
+const brw = (chrome || browser);
+let session = null;
 let accountInfo = null;
+
 function loadInfo(cb) {
   if (accountInfo) {
     cb(accountInfo);
     return false;
   }
 
-  const sessData = getSessionData();
-  if (sessData.prismModeEnabled) {
-    prismModeEnabled = true;
-  }
-
   const script = document.createElement('script');
-  script.src = chrome.runtime.getURL('/js/war/attach_target.js');
+  script.src = brw.runtime.getURL('/js/war/attach_target.js');
   script.onload = function() {
     const json = document.getElementById('AESR_info').dataset.content;
     accountInfo = JSON.parse(json);
-    if (prismModeEnabled) {
+    accountInfo.prism = session.prismModeEnabled;
+    if (session.prismModeEnabled) {
       if (!accountInfo.loginDisplayNameAccount) {
         accountInfo.loginDisplayNameAccount = accountInfo.roleDisplayNameAccount;
         accountInfo.loginDisplayNameUser = accountInfo.roleDisplayNameUser;
       }
     }
-    accountInfo.prismMode = prismModeEnabled;
     cb(accountInfo);
     this.remove();
   };
@@ -91,63 +99,84 @@ function loadInfo(cb) {
 }
 
 function getPrismSwitchUrl(cb) {
-  const NONE = 'NONE';
-  document.getElementById('AESR_result').dataset.content = NONE;
   const script = document.createElement('script');
-  script.src = chrome.runtime.getURL('/js/war/prism_switch_dest.js');
-  script.onload = function() {
-    const checkResult = () => {
-      const url = document.getElementById('AESR_result').dataset.content;
-      if (url !== NONE) {
-        cb(url === 'null' ? null : url);
-        this.remove();
-        return;
-      }
-      setTimeout(checkResult, 150);
-    };
-    setTimeout(checkResult, 150);
-  };
+  script.src = brw.runtime.getURL('/js/war/prism_switch_dest.js');
+
+  const aesrResult = document.getElementById('AESR_result');
+  function aesrResultOnChange() {
+    aesrResult.removeEventListener('change', aesrResultOnChange);
+    script.remove();
+    const url = this.value;
+    this.value = '';
+    cb(url);
+  }
+  aesrResult.addEventListener('change', aesrResultOnChange);
+
   document.body.appendChild(script);
   return true;
 }
 
-function setupMessageListener(metaASE) {
-  (chrome || browser).runtime.onMessage.addListener(function(msg, sender, cb) {
+function doSwitch(data, cb) {
+  const formActionUrl = (() => {
+    if (session.prismModeEnabled) {
+      return `https://${session.signInEndpoint}/sessions/${session.sessionDifferentiator}/v1/switchrole`;
+    } else {
+      let actionHost = session.signInEndpoint;
+      const { actionSubdomain } = data;
+      if (actionSubdomain) {
+        if (actionHost === 'signin.aws.amazon.com') {
+          actionHost = actionSubdomain + '.' + actionHost;
+        } else if (actionHost.endsWith('.signin.aws.amazon.com')) {
+          actionHost = actionHost.replace(/^[^\.]+/, actionSubdomain);
+        }
+      }
+      return `https://${actionHost}/switchrole`;
+    }
+  })();
+
+  const form = document.getElementById('AESR_form');
+  form.setAttribute('action', formActionUrl);
+  form.account.value = data.account;
+  form.color.value = data.color;
+  form.roleName.value = data.rolename;
+  form.displayName.value = data.displayname;
+
+  if (session.prismModeEnabled) {
+    form.redirect_uri.value = data.redirecturi.replace(`${session.sessionDifferentiator}.`, "")
+    getPrismSwitchUrl(url => {
+      cb({ prism: true, url, signinHost: session.signInEndpoint });
+    });
+    return true;
+  } else {
+    form.redirect_uri.value = data.redirecturi;
+    cb({ prism: false });
+    form.submit();
+    return false;
+  }
+}
+
+function setupMessageListener() {
+  brw.runtime.onMessage.addListener(function(msg, sender, cb) {
     const { data, action } = msg;
     if (action === 'loadInfo') {
       return loadInfo(cb);
     } else if (action === 'switch') {
-      let actionHost = metaASE.getAttribute('content');
-      const { actionSubdomain } = data;
-      if (actionSubdomain && actionHost === 'signin.aws.amazon.com') {
-        actionHost = actionSubdomain + '.' + actionHost;
-      }
-      const form = document.getElementById('AESR_form');
-      form.setAttribute('action', `https://${actionHost}/switchrole`);
-      form.account.value = data.account;
-      form.color.value = data.color;
-      form.roleName.value = data.rolename;
-      form.displayName.value = data.displayname;
-      form.redirect_uri.value = data.redirecturi;
-
-      if (prismModeEnabled) {
-        return getPrismSwitchUrl(cb);
-      } else {
-        cb(null);
-        form.submit();
-        return false;
-      }
+      return doSwitch(data, cb);
     }
   })
 }
 
 if (document.body) {
-  const metaASE = document.getElementById('awsc-signin-endpoint');
-  if (metaASE) {
+  const data = getMetaData();
+  if (data) {
+    session = data;
     appendAESR();
-    setupMessageListener(metaASE);
-    setTimeout(() => {
-      adjustDisplayNameColor();
-    }, 1000);
+    setupMessageListener();
+
+    if (!session.prismModeEnabled) {
+      setTimeout(() => {
+        adjustDisplayNameColor();
+      }, 1000);
+    }
   }
 }

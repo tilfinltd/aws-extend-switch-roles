@@ -11,7 +11,8 @@ function elById(id) {
   return document.getElementById(id);
 }
 
-const sessionMemory = new SessionMemory(chrome || browser)
+const brw = chrome || browser;
+const sessionMemory = new SessionMemory(brw);
 
 window.onload = function() {
   const syncStorageRepo = StorageProvider.getSyncRepository();
@@ -98,7 +99,7 @@ window.onload = function() {
     }
   }
   const autoTabGroupingCheckBox = elById('autoTabGroupingCheckBox');
-  if (!chrome.tabGroups) {
+  if (navigator.userAgent.includes('Firefox')) {
     autoTabGroupingCheckBox.disabled = true;
     autoTabGroupingCheckBox.parentElement.style.textDecoration = 'line-through';
     autoTabGroupingCheckBox.parentElement.title = 'This browser does not support tab groups.';
@@ -109,14 +110,14 @@ window.onload = function() {
     if (hasGoldenKey) {
       autoTabGroupingCheckBox.onchange = function(evt) {
         if (this.checked) {
-          chrome.permissions.request({
+          brw.permissions.request({
             permissions: ['tabGroups'],
             origins: ["https://*.console.aws.amazon.com/*"],
           }, (granted) => {
             if (granted) {
               syncStorageRepo.set({ autoTabGrouping: 'AddTabGroup,LogoutOnRemove' });
             } else {
-              evt.preventDefault();
+              this.checked = false;
             }
           });
         } else {
@@ -201,7 +202,7 @@ window.onload = function() {
   .then(data => {
     elById('configSenderIdText').value = data.configSenderId || '';
     for (let key of booleanSettings) {
-      elById(`${key}CheckBox`).checked = data[key] || false;
+      elById(`${key}CheckBox`).checked = Boolean(data[key]);
     }
 
     configStorageArea = data.configStorageArea || 'sync'
@@ -287,7 +288,7 @@ function updateRemoteFieldsState(state) {
 }
 
 function focusConfigTextArea(ln) {
-  const ta = document.getElementById('awsConfigTextArea');
+  const ta = elById('awsConfigTextArea');
   ta.scrollTop = ln < 10 ? 0 : 16 * (ln - 10);
   const lines = ta.value.split('\n');
   if (ln === 1) {

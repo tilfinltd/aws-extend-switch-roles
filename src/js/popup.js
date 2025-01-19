@@ -5,39 +5,35 @@ import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.j
 import { remoteCallback } from './handlers/remote_connect.js';
 import { writeProfileSetToTable } from './lib/profile_db.js';
 
-const sessionMemory = new SessionMemory(chrome || browser);
+const brw = chrome || browser;
+
+const sessionMemory = new SessionMemory(brw);
 
 function openOptions() {
-  (chrome || browser).runtime.openOptionsPage().catch(err => {
-    console.error(`Error: ${err}`);
-  });
-}
-
-function createTab(url) {
-  return (chrome || browser).tabs.create({ url }).catch(err => {
+  brw.runtime.openOptionsPage().catch(err => {
     console.error(`Error: ${err}`);
   });
 }
 
 function openPage(pageUrl) {
-  const url = (chrome || browser).runtime.getURL(pageUrl);
-  return createTab(url);
+  const url = brw.runtime.getURL(pageUrl);
+  return brw.tabs.create({ url }).catch(err => {
+    console.error(`Error: ${err}`);
+  });
 }
 
 async function getCurrentTab() {
-  const brw = chrome || browser;
   const [tab] = await brw.tabs.query({ currentWindow:true, active:true });
   return tab;
 }
 
 async function moveTabToOption(tabId) {
-  const brw = chrome || browser;
   const url = await brw.runtime.getURL('options.html');
   await brw.tabs.update(tabId, { url });
 }
 
 async function executeAction(tabId, action, data) {
-  return (chrome || browser).tabs.sendMessage(tabId, { action, data });
+  return brw.tabs.sendMessage(tabId, { action, data });
 }
 
 let mainEl, noMainEl;
@@ -76,7 +72,7 @@ window.onload = function() {
     return false;
   }
 
-  const storageRepo = new SyncStorageRepository(chrome || browser);
+  const storageRepo = new SyncStorageRepository(brw);
   storageRepo.get(['visualMode', 'autoTabGrouping']).then(({ visualMode, autoTabGrouping }) => {
     const mode = visualMode || 'default';
     if (mode === 'dark' || (mode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -84,7 +80,7 @@ window.onload = function() {
     }
 
     if (autoTabGrouping) {
-      chrome.runtime.sendMessage({ action: 'listenTabGroupsRemove' });
+      brw.runtime.sendMessage({ action: 'listenTabGroupsRemove' });
     }
   });
 
@@ -133,17 +129,17 @@ function main() {
 }
 
 async function loadFormList(curURL, userInfo, tabId) {
-  const storageRepo = new SyncStorageRepository(chrome || browser);
+  const storageRepo = new SyncStorageRepository(brw);
   const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'autoTabGrouping', 'signinEndpointInHere']);
   const { hidesAccountId = false, showOnlyMatchingRoles = false, autoTabGrouping = false, signinEndpointInHere = false } = data;
 
   const curCtx = new CurrentContext(userInfo, { showOnlyMatchingRoles });
   const profiles = await findTargetProfiles(curCtx);
-  renderRoleList(profiles, tabId, curURL, userInfo.prismMode, { hidesAccountId, autoTabGrouping, signinEndpointInHere });
+  renderRoleList(profiles, tabId, curURL, userInfo.prism, { hidesAccountId, autoTabGrouping, signinEndpointInHere });
   setupRoleFilter();
 }
 
-function renderRoleList(profiles, tabId, curURL, prismMode, options) {
+function renderRoleList(profiles, tabId, curURL, isPrism, options) {
   const { url, region, isLocal } = getCurrentUrlandRegion(curURL)
   const listItemOnSelect = function(sender, data) {
     // disable link for loading
@@ -151,15 +147,13 @@ function renderRoleList(profiles, tabId, curURL, prismMode, options) {
     sender.onclick = null;
 
     if (options.signinEndpointInHere && isLocal) data.actionSubdomain = region;
-    if (prismMode) {
+    if (isPrism) {
       if (options.autoTabGrouping) {
         data.tabGroup = { title: data.profile, color: data.color };
       }
       data.displayname = data.displayname.replace(/\s\s\|\s\s\d{12}$/, '');
     }
-    sendSwitchRole(tabId, data).catch(err => {
-      console.error(`Error: ${err}`);
-    })
+    sendSwitchRole(tabId, data);
   }
   const list = document.getElementById('roleList');
   profiles.forEach(item => {
@@ -203,37 +197,24 @@ function setupRoleFilter() {
 }
 
 async function sendSwitchRole(tabId, data) {
-  const url = await executeAction(tabId, 'switch', data);
-  if (!url) {
+  const { prism, url, signinHost } = await executeAction(tabId, 'switch', data);
+  if (prism && !url) {
     showMessage("Switch failed: this session doesn't have permission to switch to target profile.", 'error');
     return;
   }
 
-  const tab = await createTab(url);
-  if (data.tabGroup && chrome.tabGroups) {
-    const { title, color } = data.tabGroup;
-    const groups = await chrome.tabGroups.query({ title });
-    if (groups.length) {
-      await chrome.tabs.group({ groupId: groups[0].id, tabIds: tab.id });
-    } else {
-      const uRL = new URL(url);
-      const params = new URLSearchParams(uRL.search);
-      const newGroupId = await chrome.tabs.group({ tabIds: tab.id });
+  const { switchCount } = await sessionMemory.get(['switchCount']);
+  await sessionMemory.set({ switchCount: (switchCount || 0) + 1 });
 
-      await chrome.runtime.sendMessage({
-        action: 'registerTabGroup',
-        endpoint: 'https://' + params.get('region') + '.signin.aws.amazon.com',
-        sessionId: params.get('login_hint'),
-        tabGroupId: newGroupId,
-        title,
-        color,
-      });
-    }
+  if (prism) {
+    await brw.runtime.sendMessage({
+      action: 'openTab',
+      url,
+      signinHost,
+      tabGroup: data.tabGroup,
+    });
   }
 
-  const { switchCount } = await sessionMemory.get(['switchCount']);
-  let swcnt = switchCount || 0;
-  await sessionMemory.set({ switchCount: ++swcnt });
   window.close();
 }
 
