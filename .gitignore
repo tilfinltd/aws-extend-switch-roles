@@ -4,3 +4,4 @@ node_modules
 test/extension/*
 !test/extension/background.js
 !test/extension/manifest.json
+manifest_*_dev.json

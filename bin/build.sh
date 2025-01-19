@@ -21,10 +21,10 @@ rollup -c ./rollup.config.js src/js/supporters.js --file $supporters
 \cp -f $background dist/firefox/js/background.js
 \cp -f $supporters dist/firefox/js/supporters.js
 
-jq -s '.[0] * .[1]' manifest.json manifest_chrome.json > dist/chrome/manifest.json
-jq -s '.[0] * .[1]' manifest.json manifest_firefox.json > dist/firefox/manifest.json
+bin/setup_manifest.mjs $1
 
-for brw in `ls dist`
+browsers=("chrome" "firefox")
+for brw in ${browsers[@]}
 do
   \cp src/js/content.js dist/$brw/js/
   \cp src/js/attach_target.js dist/$brw/js/
