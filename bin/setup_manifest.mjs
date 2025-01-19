@@ -9,7 +9,7 @@ function mergeObjects(target, source) {
   }
 
   for (const key in source) {
-    if (source.hasOwn(key)) {
+    if (Object.hasOwn(source, key)) {
       target[key] = mergeObjects(target[key], source[key]); // 再帰的にマージ
     }
   }
