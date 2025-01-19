@@ -30,7 +30,7 @@
     "aesr-config": "^0.5.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.38.1",
+    "@playwright/test": "^1.49.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "chai": "^4.3.10",
     "jsdom": "^22.1.0",
