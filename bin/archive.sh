@@ -3,9 +3,9 @@
 # archive.sh
 #--
 copydest=$1
+version=$(cat dist/version)
 
 cd dist/chrome;
-version=`cat manifest.json | jq -r '.version' | sed 's/\./-/g'`
 zipfile="aesr-chrome-$version.zip"
 if [ -e $zipfile ]; then
   \rm $zipfile
@@ -20,7 +20,6 @@ fi
 echo "----"
 
 cd ../firefox;
-version=`cat manifest.json | jq -r '.version' | sed 's/\./-/g'`
 zipfile="aesr-firefox-$version.zip"
 if [ -e $zipfile ]; then
   \rm $zipfile
