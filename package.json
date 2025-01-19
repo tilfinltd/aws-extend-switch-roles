@@ -1,6 +1,6 @@
 {
   "name": "aws-extend-switch-roles",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Extend your AWS IAM switching roles by Chrome extension",
   "main": "index.js",
   "directories": {
@@ -8,7 +8,9 @@
   },
   "scripts": {
     "archive": "npm run build; ./bin/archive.sh",
+    "archive:dev": "npm run build:dev; ./bin/archive.sh",
     "build": "./bin/build.sh",
+    "build:dev": "./bin/build.sh --dev",
     "pretest": "./bin/build_test.sh",
     "test": "mocha --timeout 10000 src/js/**/*.test.js",
     "test_emulator": "playwright test test/emulator/*.spec.js",
@@ -25,15 +27,15 @@
   },
   "homepage": "https://github.com/tilfinltd/aws-extend-switch-roles#readme",
   "dependencies": {
-    "aesr-config": "^0.4.1"
+    "aesr-config": "^0.5.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.38.1",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "chai": "^4.3.10",
-    "jsdom": "^22.1.0",
-    "mocha": "^10.2.0",
-    "rollup": "^4.1.4"
+    "@playwright/test": "^1.49.1",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "chai": "^4.5.0",
+    "jsdom": "^25.0.1",
+    "mocha": "^10.8.2",
+    "rollup": "^4.30.1"
   },
   "type": "module"
 }
