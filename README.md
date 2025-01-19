@@ -11,6 +11,7 @@ This extension shows a menu of switchable roles that you can configure manually.
 
 - Supports the Sync feature on all sorts of browsers
 - Not support switching between AWS accounts you sign into with AWS SSO or SAML solution providers directly
+- Experimental support for **multi-session** on the AWS Management Console
 
 ## Large Supporters
 
@@ -153,6 +154,7 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 
 - **Hide account id** hides the account_id for each profile.
 - **Show only matching roles** filters to only show profiles with roles that match your role in your master account.
+- **Automatic tab grouping for multi-session (Experimental, Supporters only)** automatically organizes tabs from the same AWS Management Console multi-session into tab groups. The tab group name will be the corresponding profile name. When a tab group is removed, the corresponding session will be automatically signed out.
 - **Sign-in endpoint in current region (Experimental, Supporters only)** instead of *signin.aws.amazon.com* when you browse a non-global page in AWS Management Console. For those working geographically far from Virginia, the switch role may be a little faster.
 - ~~**Automatically assume last assumed role (Experimental)** automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.~~ **temporarily disabled**
 - **Configuration storage** specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles. 'Local' is the exact opposite of 'Sync.'

@@ -13,12 +13,15 @@ function openOptions() {
   });
 }
 
-function openPage(pageUrl) {
-  const brw = chrome || browser;
-  const url = brw.runtime.getURL(pageUrl);
-  brw.tabs.create({ url }).catch(err => {
+function createTab(url) {
+  return (chrome || browser).tabs.create({ url }).catch(err => {
     console.error(`Error: ${err}`);
   });
+}
+
+function openPage(pageUrl) {
+  const url = (chrome || browser).runtime.getURL(pageUrl);
+  return createTab(url);
 }
 
 async function getCurrentTab() {
@@ -37,7 +40,20 @@ async function executeAction(tabId, action, data) {
   return (chrome || browser).tabs.sendMessage(tabId, { action, data });
 }
 
+let mainEl, noMainEl;
+
+function showMessage(msg, level = 'info') {
+  const p = noMainEl.querySelector('p');
+  p.textContent = msg;
+  if (level === 'error') p.style.color = '#d11';
+  noMainEl.style.display = 'block';
+  mainEl.style.display = 'none';
+}
+
 window.onload = function() {
+  mainEl = document.getElementById('main');
+  noMainEl = document.getElementById('noMain');
+
   const MANY_SWITCH_COUNT = 4;
 
   document.getElementById('openOptionsLink').onclick = function(e) {
@@ -61,10 +77,14 @@ window.onload = function() {
   }
 
   const storageRepo = new SyncStorageRepository(chrome || browser);
-  storageRepo.get(['visualMode']).then(({ visualMode }) => {
+  storageRepo.get(['visualMode', 'autoTabGrouping']).then(({ visualMode, autoTabGrouping }) => {
     const mode = visualMode || 'default';
     if (mode === 'dark' || (mode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.body.classList.add('darkMode');
+    }
+
+    if (autoTabGrouping) {
+      chrome.runtime.sendMessage({ action: 'listenTabGroupsRemove' });
     }
   });
 
@@ -90,54 +110,56 @@ function main() {
        || url.host.endsWith('.amazonaws.cn')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           if (userInfo) {
-            document.getElementById('main').style.display = 'block';
+            mainEl.style.display = 'block';
             return loadFormList(url, userInfo, tab.id);
           } else {
-            const noMain = document.getElementById('noMain');
-            const p = noMain.querySelector('p');
-            p.textContent = 'Failed to fetch user info from the AWS Management Console page';
-            p.style.color = '#d11';
-            noMain.style.display = 'block';
+            showMessage('Failed to fetch user info from the AWS Management Console page', 'error');
           }
         })
       } else if (url.host.endsWith('.aesr.dev') && url.pathname.startsWith('/callback')) {
         remoteCallback(url)
         .then(userCfg => {
-          const p = noMain.querySelector('p');
-          p.textContent = "Successfully connected to AESR Config Hub!";
-          noMain.style.display = 'block';
+          showMessage("Successfully connected to AESR Config Hub!");
           return writeProfileSetToTable(userCfg.profile);
         })
         .then(() => moveTabToOption(tab.id))
         .catch(err => {
-          const p = noMain.querySelector('p');
-          p.textContent = `Failed to connect to AESR Config Hub because.\n${err.message}`;
-          noMain.style.display = 'block';
+          showMessage(`Failed to connect to AESR Config Hub because.\n${err.message}`, 'error');
         });
       } else {
-        const p = noMain.querySelector('p');
-        p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
-        noMain.style.display = 'block';
+        showMessage("You'll see the role list here when the current tab is AWS Management Console page.");
       }
     })
 }
 
 async function loadFormList(curURL, userInfo, tabId) {
   const storageRepo = new SyncStorageRepository(chrome || browser);
-  const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'signinEndpointInHere']);
-  const { hidesAccountId = false, showOnlyMatchingRoles = false, signinEndpointInHere = false } = data;
+  const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'autoTabGrouping', 'signinEndpointInHere']);
+  const { hidesAccountId = false, showOnlyMatchingRoles = false, autoTabGrouping = false, signinEndpointInHere = false } = data;
 
   const curCtx = new CurrentContext(userInfo, { showOnlyMatchingRoles });
   const profiles = await findTargetProfiles(curCtx);
-  renderRoleList(profiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
+  renderRoleList(profiles, tabId, curURL, userInfo.prismMode, { hidesAccountId, autoTabGrouping, signinEndpointInHere });
   setupRoleFilter();
 }
 
-function renderRoleList(profiles, tabId, curURL, options) {
+function renderRoleList(profiles, tabId, curURL, prismMode, options) {
   const { url, region, isLocal } = getCurrentUrlandRegion(curURL)
-  const listItemOnSelect = function(data) {
+  const listItemOnSelect = function(sender, data) {
+    // disable link for loading
+    sender.style.fontWeight = 'bold';
+    sender.onclick = null;
+
     if (options.signinEndpointInHere && isLocal) data.actionSubdomain = region;
-    sendSwitchRole(tabId, data);
+    if (prismMode) {
+      if (options.autoTabGrouping) {
+        data.tabGroup = { title: data.profile, color: data.color };
+      }
+      data.displayname = data.displayname.replace(/\s\s\|\s\s\d{12}$/, '');
+    }
+    sendSwitchRole(tabId, data).catch(err => {
+      console.error(`Error: ${err}`);
+    })
   }
   const list = document.getElementById('roleList');
   profiles.forEach(item => {
@@ -180,15 +202,39 @@ function setupRoleFilter() {
   roleFilter.focus()
 }
 
-function sendSwitchRole(tabId, data) {
-  executeAction(tabId, 'switch', data).then(() => {
-    sessionMemory.get(['switchCount']).then(({ switchCount }) => {
-      let swcnt = switchCount || 0;
-      return sessionMemory.set({ switchCount: ++swcnt });
-    }).then(() => {
-      window.close()
-    })
-  });
+async function sendSwitchRole(tabId, data) {
+  const url = await executeAction(tabId, 'switch', data);
+  if (!url) {
+    showMessage("Switch failed: this session doesn't have permission to switch to target profile.", 'error');
+    return;
+  }
+
+  const tab = await createTab(url);
+  if (data.tabGroup && chrome.tabGroups) {
+    const { title, color } = data.tabGroup;
+    const groups = await chrome.tabGroups.query({ title });
+    if (groups.length) {
+      await chrome.tabs.group({ groupId: groups[0].id, tabIds: tab.id });
+    } else {
+      const uRL = new URL(url);
+      const params = new URLSearchParams(uRL.search);
+      const newGroupId = await chrome.tabs.group({ tabIds: tab.id });
+
+      await chrome.runtime.sendMessage({
+        action: 'registerTabGroup',
+        endpoint: 'https://' + params.get('region') + '.signin.aws.amazon.com',
+        sessionId: params.get('login_hint'),
+        tabGroupId: newGroupId,
+        title,
+        color,
+      });
+    }
+  }
+
+  const { switchCount } = await sessionMemory.get(['switchCount']);
+  let swcnt = switchCount || 0;
+  await sessionMemory.set({ switchCount: ++swcnt });
+  window.close();
 }
 
 function getCurrentUrlandRegion(aURL) {

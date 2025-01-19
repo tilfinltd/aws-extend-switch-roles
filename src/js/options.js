@@ -97,10 +97,32 @@ window.onload = function() {
       syncStorageRepo.set({ [key]: this.checked });
     }
   }
+  const autoTabGroupingCheckBox = elById('autoTabGroupingCheckBox');
+  if (!chrome.tabGroups) {
+    autoTabGroupingCheckBox.disabled = true;
+    autoTabGroupingCheckBox.parentElement.style.textDecoration = 'line-through';
+    autoTabGroupingCheckBox.parentElement.title = 'This browser does not support tab groups.';
+  }
   const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
   sessionMemory.get(['hasGoldenKey'])
   .then(({ hasGoldenKey }) => {
     if (hasGoldenKey) {
+      autoTabGroupingCheckBox.onchange = function(evt) {
+        if (this.checked) {
+          chrome.permissions.request({
+            permissions: ['tabGroups'],
+            origins: ["https://*.console.aws.amazon.com/*"],
+          }, (granted) => {
+            if (granted) {
+              syncStorageRepo.set({ autoTabGrouping: 'AddTabGroup,LogoutOnRemove' });
+            } else {
+              evt.preventDefault();
+            }
+          });
+        } else {
+          syncStorageRepo.set({ autoTabGrouping: false });
+        }
+      }
       signinEndpointInHereCheckBox.onchange = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
@@ -118,12 +140,14 @@ window.onload = function() {
         }
       });
     } else {
+      autoTabGroupingCheckBox.disabled = true;
       signinEndpointInHereCheckBox.disabled = true;
       const schb = elById('switchConfigHubButton')
       schb.disabled = true;
       schb.title = 'Supporters only';
     }
   });
+  booleanSettings.push('autoTabGrouping');
   booleanSettings.push('signinEndpointInHere');
 
   elById('configSenderIdText').onchange = function() {

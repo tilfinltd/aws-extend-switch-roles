@@ -72,7 +72,13 @@
 
     <hr style="margin:18px 0">
 
-    <h2>5.0.2 <span style="margin-left:0.75em; color:rgb(221, 63, 0)">New version!</span></h2>
+    <h2>6.0.0 <span style="margin-left:0.75em; color:rgb(221, 63, 0)">New version!</span></h2>
+    <ul>
+      <li>Experimental support for multi-session on the AWS Management Console</li>
+      <li>Fix <b>Show only matching roles</b> when target role ARN has a path</li>
+    </ul>
+
+    <h2>5.0.2</h2>
     <ul>
       <li>Fix to highlight the relevant part when validation fails in the configuration textarea</li>
       <li>Fix <b>Show only matching roles</b> when target role ARN has a path</li>
@@ -103,23 +109,6 @@
     <ul>
       <li>Change the storage location of profile data to <b>IndexedDB</b>, removing the registration number limit</li>
       <li>Update the host specification for the AWS Management Console</li>
-    </ul>
-
-    <h2>3.0.0</h2>
-    <ul>
-      <li>Migrate to Manifest V3</li>
-      <li>Add 'Visual mode' that can change UI to Dark Mode</li>
-    </ul>
-
-    <h2>2.1.0&ndash;2.3.2</h2>
-    <ul>
-      <li>Truncate the display name when the length exceeds the limit</li>
-      <li>Updating the target AWS console URLs, support new health dashboard and LightSail</li>
-      <li>Support 'aws_account_alias' parameter on base account</li>
-      <li><b>Implement 'Sign-in endpoint in current region' setting (Experimental, Supporters only)</b></li>
-      <li><b>Support 'role_name' parameter that expresses the name of role at login, on base account</b></li>
-      <li><b>Implement 'Configuration storage' setting to select 'Sync' or 'Local'</b></li>
-      <li>Change the configuration by Config Sender API saving to 'Local' storage</li>
     </ul>
   </section>
 

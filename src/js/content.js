@@ -39,25 +39,76 @@ function appendAESR() {
   divInfo.style.display = 'none';
   divInfo.style.visibility = 'hidden';
   document.body.appendChild(divInfo);
+
+  const divResult = document.createElement('div');
+  divResult.id = 'AESR_result';
+  divResult.style.display = 'none';
+  divResult.style.visibility = 'hidden';
+  document.body.appendChild(divResult);
 }
 
+function getSessionData() {
+  const metaASD = document.querySelector('meta[name="awsc-session-data"]');
+  let sessData = null;
+  if (metaASD) {
+    try {
+      sessData = JSON.parse(metaASD.getAttribute('content'));
+    } catch (e) {}
+  }
+  return sessData;
+}
+
+let prismModeEnabled = false;
 let accountInfo = null;
 function loadInfo(cb) {
-  if (!accountInfo) {
-    const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('/js/attach_target.js');
-    script.onload = function() {
-      const json = document.getElementById('AESR_info').dataset.content;
-      accountInfo = JSON.parse(json);
-      cb(accountInfo);
-      this.remove();
-    };
-    document.body.appendChild(script);
-    return true;
-  } else {
+  if (accountInfo) {
     cb(accountInfo);
     return false;
   }
+
+  const sessData = getSessionData();
+  if (sessData.prismModeEnabled) {
+    prismModeEnabled = true;
+  }
+
+  const script = document.createElement('script');
+  script.src = chrome.runtime.getURL('/js/war/attach_target.js');
+  script.onload = function() {
+    const json = document.getElementById('AESR_info').dataset.content;
+    accountInfo = JSON.parse(json);
+    if (prismModeEnabled) {
+      if (!accountInfo.loginDisplayNameAccount) {
+        accountInfo.loginDisplayNameAccount = accountInfo.roleDisplayNameAccount;
+        accountInfo.loginDisplayNameUser = accountInfo.roleDisplayNameUser;
+      }
+    }
+    accountInfo.prismMode = prismModeEnabled;
+    cb(accountInfo);
+    this.remove();
+  };
+  document.body.appendChild(script);
+  return true;
+}
+
+function getPrismSwitchUrl(cb) {
+  const NONE = 'NONE';
+  document.getElementById('AESR_result').dataset.content = NONE;
+  const script = document.createElement('script');
+  script.src = chrome.runtime.getURL('/js/war/prism_switch_dest.js');
+  script.onload = function() {
+    const checkResult = () => {
+      const url = document.getElementById('AESR_result').dataset.content;
+      if (url !== NONE) {
+        cb(url === 'null' ? null : url);
+        this.remove();
+        return;
+      }
+      setTimeout(checkResult, 150);
+    };
+    setTimeout(checkResult, 150);
+  };
+  document.body.appendChild(script);
+  return true;
 }
 
 function setupMessageListener(metaASE) {
@@ -78,9 +129,14 @@ function setupMessageListener(metaASE) {
       form.roleName.value = data.rolename;
       form.displayName.value = data.displayname;
       form.redirect_uri.value = data.redirecturi;
-      cb();
-      form.submit();
-      return false;
+
+      if (prismModeEnabled) {
+        return getPrismSwitchUrl(cb);
+      } else {
+        cb(null);
+        form.submit();
+        return false;
+      }
     }
   })
 }
