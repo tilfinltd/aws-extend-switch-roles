@@ -8,7 +8,9 @@
   },
   "scripts": {
     "archive": "npm run build; ./bin/archive.sh",
+    "archive:dev": "npm run build:dev; ./bin/archive.sh",
     "build": "./bin/build.sh",
+    "build:dev": "./bin/build.sh --dev",
     "pretest": "./bin/build_test.sh",
     "test": "mocha --timeout 10000 src/js/**/*.test.js",
     "test_emulator": "playwright test test/emulator/*.spec.js",
