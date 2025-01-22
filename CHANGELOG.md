@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 6.0.0 (2025/01/22)
+
+- Add support for **multi-session** on the AWS Management Console
+- Add support for **multi-level source profile references** to enable role chaining
+- Add experimental feature: **Automatic tab grouping for multi-session** for supporters
+
 ## 5.0.2 (2024/10/27)
 
 - Fix to highlight the relevant part when validation fails in the configuration textarea (thanks to @brandonkgarner)
