@@ -3,11 +3,18 @@ export class CurrentContext {
     const {
       loginDisplayNameAccount, loginDisplayNameUser,
       roleDisplayNameAccount, roleDisplayNameUser,
+      prism,
     } = userInfo;
     const { showOnlyMatchingRoles } = settings;
 
-    this.baseAccount = brushAccountId(loginDisplayNameAccount);
-    this.loginRole = extractLoginRole(loginDisplayNameUser.split("/", 2)[0]);
+    this.baseAccount = (() => {
+      if (prism && roleDisplayNameAccount) return brushAccountId(roleDisplayNameAccount);
+      return brushAccountId(loginDisplayNameAccount);
+    })();
+    this.loginRole = (() => {
+      if (prism && roleDisplayNameUser) return extractLoginRole(roleDisplayNameUser);
+      return extractLoginRole(loginDisplayNameUser.split("/", 2)[0]);
+    })();
     this.filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || this.loginRole) : null;
   }
 }

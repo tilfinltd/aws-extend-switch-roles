@@ -91,6 +91,23 @@ describe('CurrentContext', () => {
         });
       });
     });
+
+    describe('when prism', () => {
+      const userInfo = {
+        loginDisplayNameAccount: '1111-0000-4444',
+        loginDisplayNameUser: 'a1-user',
+        roleDisplayNameAccount: null,
+        roleDisplayNameUser: null,
+        prism: true,
+      };
+
+      it('returns baseAccount with hyphens removed, login user as loginRole', () => {
+        const ctx = new CurrentContext(userInfo, defaultSettings);
+
+        expect(ctx.baseAccount).to.eq('111100004444');
+        expect(ctx.loginRole).to.eq('a1-user');
+      });
+    })
   });
 
   describe('when userInfo is on switched', () => {
@@ -171,5 +188,20 @@ describe('CurrentContext', () => {
         });
       });
     });
+
+    describe('when prism', () => {
+      const prismUserInfo = {
+        ...userInfo,
+        prism: true,
+      }
+
+      it('returns roleDisplayNameAccount as baseAccount, roleDisplayNameUser as loginRole', () => {
+        const ctx = new CurrentContext(prismUserInfo, defaultSettings);
+
+        expect(ctx.baseAccount).to.eq('tilfin');
+        expect(ctx.loginRole).to.eq('role1');
+        expect(ctx.filterByTargetRole).to.be.null;
+      });
+    })
   });
 });

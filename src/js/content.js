@@ -85,12 +85,6 @@ function loadInfo(cb) {
     const json = document.getElementById('AESR_info').dataset.content;
     accountInfo = JSON.parse(json);
     accountInfo.prism = session.prismModeEnabled;
-    if (session.prismModeEnabled) {
-      if (!accountInfo.loginDisplayNameAccount) {
-        accountInfo.loginDisplayNameAccount = accountInfo.roleDisplayNameAccount;
-        accountInfo.loginDisplayNameUser = accountInfo.roleDisplayNameUser;
-      }
-    }
     cb(accountInfo);
     this.remove();
   };
