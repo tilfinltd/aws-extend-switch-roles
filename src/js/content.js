@@ -26,6 +26,17 @@ function adjustDisplayNameColor() {
   }
 }
 
+function adjustPrismDisplayNameColor() {
+  try {
+    const navUM = document.getElementById("nav-usernameMenu");
+    const spanEl = Array.from(navUM.querySelectorAll("div > span")).at(-1);
+    const frColor = window.getComputedStyle(spanEl).color;
+    if (frColor && needsInvertForeColorByBack(frColor)) {
+      spanEl.style.backgroundColor = "#bbbbbb";
+    }
+  } catch {}
+}
+
 function appendAESR() {
   const form = document.createElement('form');
   form.id = 'AESR_form';
@@ -167,10 +178,8 @@ if (document.body) {
     appendAESR();
     setupMessageListener();
 
-    if (!session.prismModeEnabled) {
-      setTimeout(() => {
-        adjustDisplayNameColor();
-      }, 1000);
-    }
+    setTimeout(() => {      
+      session.prismModeEnabled ? adjustPrismDisplayNameColor() : adjustDisplayNameColor();
+    }, 1000);
   }
 }
