@@ -39,7 +39,7 @@ export function createRoleListItem(document, item, url, region, { hidesAccountId
 
   anchor.onclick = function() {
     const data = { ...this.dataset }; // do not directly refer DOM data in Firefox
-    selectHandler(data)
+    selectHandler(this, data)
     return false;
   }
 

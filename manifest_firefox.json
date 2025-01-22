@@ -1,4 +1,5 @@
 {
+  "permissions": ["activeTab", "storage"],
   "browser_specific_settings": {
     "gecko": {
       "id": "aws-extend-switch-roles@toshi.tilfin.com",

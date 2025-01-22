@@ -5,39 +5,51 @@ import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.j
 import { remoteCallback } from './handlers/remote_connect.js';
 import { writeProfileSetToTable } from './lib/profile_db.js';
 
-const sessionMemory = new SessionMemory(chrome || browser);
+const brw = chrome || browser;
+
+const sessionMemory = new SessionMemory(brw);
 
 function openOptions() {
-  (chrome || browser).runtime.openOptionsPage().catch(err => {
+  brw.runtime.openOptionsPage().catch(err => {
     console.error(`Error: ${err}`);
   });
 }
 
 function openPage(pageUrl) {
-  const brw = chrome || browser;
   const url = brw.runtime.getURL(pageUrl);
-  brw.tabs.create({ url }).catch(err => {
+  return brw.tabs.create({ url }).catch(err => {
     console.error(`Error: ${err}`);
   });
 }
 
 async function getCurrentTab() {
-  const brw = chrome || browser;
   const [tab] = await brw.tabs.query({ currentWindow:true, active:true });
   return tab;
 }
 
 async function moveTabToOption(tabId) {
-  const brw = chrome || browser;
   const url = await brw.runtime.getURL('options.html');
   await brw.tabs.update(tabId, { url });
 }
 
 async function executeAction(tabId, action, data) {
-  return (chrome || browser).tabs.sendMessage(tabId, { action, data });
+  return brw.tabs.sendMessage(tabId, { action, data });
+}
+
+let mainEl, noMainEl;
+
+function showMessage(msg, level = 'info') {
+  const p = noMainEl.querySelector('p');
+  p.textContent = msg;
+  if (level === 'error') p.style.color = '#d11';
+  noMainEl.style.display = 'block';
+  mainEl.style.display = 'none';
 }
 
 window.onload = function() {
+  mainEl = document.getElementById('main');
+  noMainEl = document.getElementById('noMain');
+
   const MANY_SWITCH_COUNT = 4;
 
   document.getElementById('openOptionsLink').onclick = function(e) {
@@ -60,11 +72,15 @@ window.onload = function() {
     return false;
   }
 
-  const storageRepo = new SyncStorageRepository(chrome || browser);
-  storageRepo.get(['visualMode']).then(({ visualMode }) => {
+  const storageRepo = new SyncStorageRepository(brw);
+  storageRepo.get(['visualMode', 'autoTabGrouping']).then(({ visualMode, autoTabGrouping }) => {
     const mode = visualMode || 'default';
     if (mode === 'dark' || (mode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.body.classList.add('darkMode');
+    }
+
+    if (autoTabGrouping) {
+      brw.runtime.sendMessage({ action: 'listenTabGroupsRemove' });
     }
   });
 
@@ -90,53 +106,53 @@ function main() {
        || url.host.endsWith('.amazonaws.cn')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           if (userInfo) {
-            document.getElementById('main').style.display = 'block';
+            mainEl.style.display = 'block';
             return loadFormList(url, userInfo, tab.id);
           } else {
-            const noMain = document.getElementById('noMain');
-            const p = noMain.querySelector('p');
-            p.textContent = 'Failed to fetch user info from the AWS Management Console page';
-            p.style.color = '#d11';
-            noMain.style.display = 'block';
+            showMessage('Failed to fetch user info from the AWS Management Console page', 'error');
           }
         })
       } else if (url.host.endsWith('.aesr.dev') && url.pathname.startsWith('/callback')) {
         remoteCallback(url)
         .then(userCfg => {
-          const p = noMain.querySelector('p');
-          p.textContent = "Successfully connected to AESR Config Hub!";
-          noMain.style.display = 'block';
+          showMessage("Successfully connected to AESR Config Hub!");
           return writeProfileSetToTable(userCfg.profile);
         })
         .then(() => moveTabToOption(tab.id))
         .catch(err => {
-          const p = noMain.querySelector('p');
-          p.textContent = `Failed to connect to AESR Config Hub because.\n${err.message}`;
-          noMain.style.display = 'block';
+          showMessage(`Failed to connect to AESR Config Hub because.\n${err.message}`, 'error');
         });
       } else {
-        const p = noMain.querySelector('p');
-        p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
-        noMain.style.display = 'block';
+        showMessage("You'll see the role list here when the current tab is AWS Management Console page.");
       }
     })
 }
 
 async function loadFormList(curURL, userInfo, tabId) {
-  const storageRepo = new SyncStorageRepository(chrome || browser);
-  const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'signinEndpointInHere']);
-  const { hidesAccountId = false, showOnlyMatchingRoles = false, signinEndpointInHere = false } = data;
+  const storageRepo = new SyncStorageRepository(brw);
+  const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'autoTabGrouping', 'signinEndpointInHere']);
+  const { hidesAccountId = false, showOnlyMatchingRoles = false, autoTabGrouping = false, signinEndpointInHere = false } = data;
 
   const curCtx = new CurrentContext(userInfo, { showOnlyMatchingRoles });
   const profiles = await findTargetProfiles(curCtx);
-  renderRoleList(profiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
+  renderRoleList(profiles, tabId, curURL, userInfo.prism, { hidesAccountId, autoTabGrouping, signinEndpointInHere });
   setupRoleFilter();
 }
 
-function renderRoleList(profiles, tabId, curURL, options) {
+function renderRoleList(profiles, tabId, curURL, isPrism, options) {
   const { url, region, isLocal } = getCurrentUrlandRegion(curURL)
-  const listItemOnSelect = function(data) {
+  const listItemOnSelect = function(sender, data) {
+    // disable link for loading
+    sender.style.fontWeight = 'bold';
+    sender.onclick = null;
+
     if (options.signinEndpointInHere && isLocal) data.actionSubdomain = region;
+    if (isPrism) {
+      if (options.autoTabGrouping) {
+        data.tabGroup = { title: data.profile, color: data.color };
+      }
+      data.displayname = data.displayname.replace(/\s\s\|\s\s\d{12}$/, '');
+    }
     sendSwitchRole(tabId, data);
   }
   const list = document.getElementById('roleList');
@@ -180,15 +196,26 @@ function setupRoleFilter() {
   roleFilter.focus()
 }
 
-function sendSwitchRole(tabId, data) {
-  executeAction(tabId, 'switch', data).then(() => {
-    sessionMemory.get(['switchCount']).then(({ switchCount }) => {
-      let swcnt = switchCount || 0;
-      return sessionMemory.set({ switchCount: ++swcnt });
-    }).then(() => {
-      window.close()
-    })
-  });
+async function sendSwitchRole(tabId, data) {
+  const { prism, url, signinHost } = await executeAction(tabId, 'switch', data);
+  if (prism && !url) {
+    showMessage("Switch failed: this session doesn't have permission to switch to target profile.", 'error');
+    return;
+  }
+
+  const { switchCount } = await sessionMemory.get(['switchCount']);
+  await sessionMemory.set({ switchCount: (switchCount || 0) + 1 });
+
+  if (prism) {
+    await brw.runtime.sendMessage({
+      action: 'openTab',
+      url,
+      signinHost,
+      tabGroup: data.tabGroup,
+    });
+  }
+
+  window.close();
 }
 
 function getCurrentUrlandRegion(aURL) {
@@ -198,7 +225,7 @@ function getCurrentUrlandRegion(aURL) {
   if (md) region = md[1];
 
   let isLocal = false;
-  const mdsd = aURL.host.match(/^(([a-z]{2}\-[a-z]+\-[1-9])\.)?console\.aws/);
+  const mdsd = aURL.host.match(/(([a-z]{2}\-[a-z-]+\-[1-9])\.)?console\.(aws|amazonaws)/);
   if (mdsd) {
     const [,, cr = 'us-east-1'] = mdsd;
     if (cr === region) isLocal = true;

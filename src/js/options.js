@@ -11,7 +11,8 @@ function elById(id) {
   return document.getElementById(id);
 }
 
-const sessionMemory = new SessionMemory(chrome || browser)
+const brw = chrome || browser;
+const sessionMemory = new SessionMemory(brw);
 
 window.onload = function() {
   const syncStorageRepo = StorageProvider.getSyncRepository();
@@ -97,10 +98,32 @@ window.onload = function() {
       syncStorageRepo.set({ [key]: this.checked });
     }
   }
+  const autoTabGroupingCheckBox = elById('autoTabGroupingCheckBox');
+  if (navigator.userAgent.includes('Firefox')) {
+    autoTabGroupingCheckBox.disabled = true;
+    autoTabGroupingCheckBox.parentElement.style.textDecoration = 'line-through';
+    autoTabGroupingCheckBox.parentElement.title = 'This browser does not support tab groups.';
+  }
   const signinEndpointInHereCheckBox = elById('signinEndpointInHereCheckBox');
   sessionMemory.get(['hasGoldenKey'])
   .then(({ hasGoldenKey }) => {
     if (hasGoldenKey) {
+      autoTabGroupingCheckBox.onchange = function(evt) {
+        if (this.checked) {
+          brw.permissions.request({
+            permissions: ['tabGroups'],
+            origins: ["https://*.console.aws.amazon.com/*"],
+          }, (granted) => {
+            if (granted) {
+              syncStorageRepo.set({ autoTabGrouping: 'AddTabGroup,LogoutOnRemove' });
+            } else {
+              this.checked = false;
+            }
+          });
+        } else {
+          syncStorageRepo.set({ autoTabGrouping: false });
+        }
+      }
       signinEndpointInHereCheckBox.onchange = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
@@ -118,12 +141,14 @@ window.onload = function() {
         }
       });
     } else {
+      autoTabGroupingCheckBox.disabled = true;
       signinEndpointInHereCheckBox.disabled = true;
       const schb = elById('switchConfigHubButton')
       schb.disabled = true;
       schb.title = 'Supporters only';
     }
   });
+  booleanSettings.push('autoTabGrouping');
   booleanSettings.push('signinEndpointInHere');
 
   elById('configSenderIdText').onchange = function() {
@@ -177,7 +202,7 @@ window.onload = function() {
   .then(data => {
     elById('configSenderIdText').value = data.configSenderId || '';
     for (let key of booleanSettings) {
-      elById(`${key}CheckBox`).checked = data[key] || false;
+      elById(`${key}CheckBox`).checked = Boolean(data[key]);
     }
 
     configStorageArea = data.configStorageArea || 'sync'
@@ -263,7 +288,7 @@ function updateRemoteFieldsState(state) {
 }
 
 function focusConfigTextArea(ln) {
-  const ta = document.getElementById('awsConfigTextArea');
+  const ta = elById('awsConfigTextArea');
   ta.scrollTop = ln < 10 ? 0 : 16 * (ln - 10);
   const lines = ta.value.split('\n');
   if (ln === 1) {
