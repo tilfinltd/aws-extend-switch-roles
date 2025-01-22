@@ -225,7 +225,7 @@ function getCurrentUrlandRegion(aURL) {
   if (md) region = md[1];
 
   let isLocal = false;
-  const mdsd = aURL.host.match(/^(([a-z]{2}\-[a-z]+\-[1-9])\.)?console\.aws/);
+  const mdsd = aURL.host.match(/(([a-z]{2}\-[a-z-]+\-[1-9])\.)?console\.(aws|amazonaws)/);
   if (mdsd) {
     const [,, cr = 'us-east-1'] = mdsd;
     if (cr === region) isLocal = true;
