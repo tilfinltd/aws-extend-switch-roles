@@ -165,33 +165,91 @@ function renderRoleList(profiles, tabId, curURL, isPrism, options) {
 function setupRoleFilter() {
   const roleFilter = document.getElementById('roleFilter');
 
-  let AWSR_firstAnchor = null;
-  roleFilter.onkeyup = function(e) {
-    const words = this.value.toLowerCase().split(' ');
-    if (e.keyCode === 13) {
-      if (AWSR_firstAnchor) {
-        AWSR_firstAnchor.click()
-      }
+  let AWSR_selectedAnchor = null;
+  let AWSR_currentSelectedIndex = -1; // Track current selection index among visible items
+  
+  // Get currently visible (filtered) role list items
+  function getVisibleRoles() {
+    return Array.from(document.querySelectorAll('#roleList > li')).filter(li => li.style.display !== 'none');
+  }
+  
+  // Update visual selection and scroll into view
+  function updateSelection(visibleRoles, newIndex) {
+    // Clear previous selection
+    visibleRoles.forEach(li => li.classList.remove('selected'));
+    AWSR_selectedAnchor = null;
+    
+    // Set new selection if valid index
+    if (newIndex >= 0 && newIndex < visibleRoles.length) {
+      const selectedLi = visibleRoles[newIndex];
+      selectedLi.classList.add('selected');
+      AWSR_selectedAnchor = selectedLi.querySelector('a');
+      AWSR_currentSelectedIndex = newIndex;
+      
+      // Scroll into view if needed
+      selectedLi.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     } else {
-      const lis = Array.from(document.querySelectorAll('#roleList > li'));
-      let firstHitLi = null;
-      lis.forEach(li => {
-        const anchor = li.querySelector('a')
-        const profileName = anchor.dataset.search;
-        const hit = words.every(it => profileName.includes(it));
-        li.style.display = hit ? 'block' : 'none';
-        li.classList.remove('selected')
-        if (hit && firstHitLi === null) firstHitLi = li;
-      });
-
-      if (firstHitLi) {
-        firstHitLi.classList.add('selected');
-        AWSR_firstAnchor = firstHitLi.querySelector('a');
-      } else {
-        AWSR_firstAnchor = null;
-      }
+      AWSR_currentSelectedIndex = -1;
     }
   }
+  
+  // Handle arrow keys, Enter, and Escape
+  roleFilter.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === 'Escape') {
+      e.preventDefault(); // Prevent default behavior
+      
+      const visibleRoles = getVisibleRoles();
+      
+      if (e.key === 'ArrowDown') {
+        const newIndex = AWSR_currentSelectedIndex < visibleRoles.length - 1 ? AWSR_currentSelectedIndex + 1 : AWSR_currentSelectedIndex;
+        updateSelection(visibleRoles, newIndex);
+      } else if (e.key === 'ArrowUp') {
+        const newIndex = AWSR_currentSelectedIndex > 0 ? AWSR_currentSelectedIndex - 1 : 0;
+        updateSelection(visibleRoles, newIndex);
+      } else if (e.key === 'Enter') {
+        if (AWSR_selectedAnchor) {
+          AWSR_selectedAnchor.click();
+        }
+      } else if (e.key === 'Escape') {
+        // Clear filter and close popup
+        this.value = '';
+        // Trigger filtering to show all roles
+        this.dispatchEvent(new Event('keyup'));
+        window.close();
+      }
+    }
+  });
+  
+  // Handle text filtering (enhanced from existing logic)
+  roleFilter.addEventListener('keyup', function(e) {
+    // Skip if this was an arrow key or Enter (handled by keydown)
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === 'Escape') {
+      return;
+    }
+    
+    const words = this.value.toLowerCase().split(' ');
+    const lis = Array.from(document.querySelectorAll('#roleList > li'));
+    let firstHitLi = null;
+    
+    lis.forEach(li => {
+      const anchor = li.querySelector('a');
+      const profileName = anchor.dataset.search;
+      const hit = words.every(it => profileName.includes(it));
+      li.style.display = hit ? 'block' : 'none';
+      li.classList.remove('selected');
+      if (hit && firstHitLi === null) firstHitLi = li;
+    });
+    
+    // Reset selection and auto-select first visible item
+    AWSR_currentSelectedIndex = -1;
+    if (firstHitLi) {
+      firstHitLi.classList.add('selected');
+      AWSR_selectedAnchor = firstHitLi.querySelector('a');
+      AWSR_currentSelectedIndex = 0;
+    } else {
+      AWSR_selectedAnchor = null;
+    }
+  });
 
   roleFilter.focus()
 }
