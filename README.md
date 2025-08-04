@@ -160,6 +160,28 @@ The 'Show only matching roles' setting is for use with more sophisticated accoun
 - **Configuration storage** specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles. 'Local' is the exact opposite of 'Sync.'
 - **Visual mode** specifies whether light mode or dark mode is applied to the UI appearance.
 
+## Keyboard Navigation
+
+The popup interface supports keyboard navigation for efficient role switching:
+
+### Filter Input
+- Type to filter roles by name or account ID
+- **Enter** - Select the currently highlighted role and switch to it
+- **Escape** - Clear the filter and close the popup
+
+### Role Navigation
+- **Arrow Down** - Highlight the next visible role in the filtered list
+- **Arrow Up** - Highlight the previous visible role in the filtered list
+- **Enter** - Switch to the currently highlighted role
+
+### Usage Example
+1. Open the extension popup (click the extension icon)
+2. Type part of a role name (e.g., "prod" to filter production roles)
+3. Use **Arrow Down**/**Arrow Up** to navigate through the filtered results
+4. Press **Enter** to switch to the highlighted role
+
+This feature addresses GitHub issue [#279](https://github.com/tilfinltd/aws-extend-switch-roles/issues/279) and provides faster role switching without requiring mouse interaction.
+
 ## Extension API
 
 - **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. **'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.** [See](https://github.com/tilfinltd/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
