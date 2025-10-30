@@ -1,51 +1,265 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>AWS Extend Switch Roles - Credits</title>
-<style>
-html { padding: 0 }
-body {
-  background-color: #666;
-  font-size: 14px;
-  line-height: 1.25;
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-.pane {
-  background-color: #eee;
-  box-sizing: border-box;
-  height: 100vh;
-  max-width: 660px;
-  width: 100%;
-  padding: 10px 20px;
-}
-h1 {
-  font-size: 2em;
-  margin: 0.65em 0.2em;
-  font-weight: bold;
-}
-h2 {
-  font-size: 20px;
-  padding: 7px;
-}
-pre {
-  border: none;
-  font-size: 14px;
-  font-family: Consolas, "Courier New", Courier, Monaco, monospace;
-  padding: 7px;
-}
-</style>
+ <meta charset="UTF-8">
+ <title>AWS Extend Switch Roles - Credits</title>
+ <style>
+  * {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+  }
+
+  html, body {
+   height: 100%;
+   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  body {
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 20px;
+  }
+
+  .container {
+   background: white;
+   border-radius: 20px;
+   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+   max-width: 800px;
+   width: 100%;
+   max-height: 90vh;
+   overflow: hidden;
+   animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+   from {
+    opacity: 0;
+    transform: translateY(30px);
+   }
+   to {
+    opacity: 1;
+    transform: translateY(0);
+   }
+  }
+
+  .header {
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   padding: 40px;
+   text-align: center;
+  }
+
+  .header h1 {
+   color: white;
+   font-size: 36px;
+   font-weight: 700;
+   margin: 0;
+  }
+
+  .header p {
+   color: rgba(255, 255, 255, 0.9);
+   font-size: 16px;
+   margin-top: 8px;
+  }
+
+  .content {
+   padding: 40px;
+   overflow-y: auto;
+   max-height: calc(90vh - 140px);
+  }
+
+  .content::-webkit-scrollbar {
+   width: 8px;
+  }
+
+  .content::-webkit-scrollbar-track {
+   background: #f1f1f1;
+  }
+
+  .content::-webkit-scrollbar-thumb {
+   background: #cbd5e0;
+   border-radius: 4px;
+  }
+
+  .content::-webkit-scrollbar-thumb:hover {
+   background: #a0aec0;
+  }
+
+  .credit-card {
+   background: #f7fafc;
+   border-radius: 12px;
+   padding: 24px;
+   margin-bottom: 20px;
+   border: 1px solid #e2e8f0;
+   transition: all 0.2s;
+  }
+
+  .credit-card:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+   border-color: #667eea;
+  }
+
+  .credit-card h2 {
+   font-size: 22px;
+   font-weight: 600;
+   color: #1a202c;
+   margin-bottom: 16px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+  }
+
+  .credit-card h2::before {
+   content: "📦";
+   font-size: 24px;
+  }
+
+  .license-badge {
+   display: inline-block;
+   padding: 4px 12px;
+   background: #667eea;
+   color: white;
+   border-radius: 20px;
+   font-size: 12px;
+   font-weight: 600;
+   margin-left: auto;
+  }
+
+  pre {
+   background: #1a202c;
+   color: #e2e8f0;
+   border-radius: 8px;
+   padding: 20px;
+   font-size: 13px;
+   font-family: 'Courier New', Consolas, Monaco, monospace;
+   line-height: 1.6;
+   overflow-x: auto;
+   margin: 0;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+  }
+
+  pre::-webkit-scrollbar {
+   height: 6px;
+  }
+
+  pre::-webkit-scrollbar-track {
+   background: #2d3748;
+  }
+
+  pre::-webkit-scrollbar-thumb {
+   background: #4a5568;
+   border-radius: 3px;
+  }
+
+  .footer {
+   padding: 24px 40px;
+   background: #f7fafc;
+   border-top: 1px solid #e2e8f0;
+   text-align: center;
+  }
+
+  .footer p {
+   color: #718096;
+   font-size: 14px;
+   line-height: 1.6;
+  }
+
+  .footer a {
+   color: #667eea;
+   text-decoration: none;
+   font-weight: 600;
+   transition: color 0.2s;
+  }
+
+  .footer a:hover {
+   color: #764ba2;
+  }
+
+  /* Dark Mode */
+  .darkMode .container {
+   background: #1a202c;
+  }
+
+  .darkMode .content {
+   background: #1a202c;
+  }
+
+  .darkMode .content::-webkit-scrollbar-track {
+   background: #2d3748;
+  }
+
+  .darkMode .content::-webkit-scrollbar-thumb {
+   background: #4a5568;
+  }
+
+  .darkMode .credit-card {
+   background: #2d3748;
+   border-color: #4a5568;
+  }
+
+  .darkMode .credit-card:hover {
+   border-color: #667eea;
+  }
+
+  .darkMode .credit-card h2 {
+   color: #e2e8f0;
+  }
+
+  .darkMode pre {
+   background: #0d1117;
+   color: #c9d1d9;
+  }
+
+  .darkMode .footer {
+   background: #2d3748;
+   border-color: #4a5568;
+  }
+
+  .darkMode .footer p {
+   color: #a0aec0;
+  }
+
+  @media (max-width: 600px) {
+   .header {
+    padding: 30px 20px;
+   }
+
+   .header h1 {
+    font-size: 28px;
+   }
+
+   .content {
+    padding: 24px;
+   }
+
+   .credit-card {
+    padding: 20px;
+   }
+
+   .footer {
+    padding: 20px;
+   }
+  }
+ </style>
 </head>
 <body>
-<div class="pane" id="credits">
- <h1>Credits</h1>
- <section>
-  <h2>lz-string</h2>
-  <pre>
-MIT License
+<div class="container">
+ <div class="header">
+  <h1>Credits & Licenses</h1>
+  <p>Open source libraries used in this extension</p>
+ </div>
+
+ <div class="content">
+  <div class="credit-card">
+   <h2>
+    lz-string
+    <span class="license-badge">MIT License</span>
+   </h2>
+   <pre>MIT License
 
 Copyright (c) 2013 pieroxy
 
@@ -65,8 +279,19 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-  </pre>
- </section>
+SOFTWARE.</pre>
+  </div>
+ </div>
+
+ <div class="footer">
+  <p>Thank you to all open source contributors who make projects like this possible.</p>
+  <p><a href="https://github.com/tilfinltd/aws-extend-switch-roles" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>
+ </div>
+</div>
+<script>
+ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.body.classList.add('darkMode');
+ }
+</script>
 </body>
 </html>

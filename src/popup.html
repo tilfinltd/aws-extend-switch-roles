@@ -1,170 +1,436 @@
+<!DOCTYPE html>
 <html>
 <head>
-<style>
-* { box-sizing: border-box }
-html { padding: 0 }
-body {
-  background-color: #fff;
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", Arial, Meiryo, sans-serif;
-  max-width: 600px;
-  max-height: 600px;
-}
-.optionMenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.optionMenu li {
-  padding: 0;
-  margin: 0;
-  border-bottom: 1px solid #ccc;
-}
-.optionMenu a {
-  color: #000;
-  display: block;
-  font-size: 13px;
-  line-height: 2;
-  margin: 2px;
-  padding: 2px 14px;
-  text-decoration: none;
-  width: 9em;
-}
-a:hover { background-color: #e8fafa }
-#openOptionsLink { font-weight: bold }
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.mainPane {
-  border-right: 1px solid #ddd;
-  padding-left: 10px;
-  margin-right: 4px;
-  padding-right: 10px;
-}
-#main {
-  font-size: 15px;
-  padding-bottom: 5px;
-}
-#roleList {
-  padding: 0;
-  margin: 0;
-  overflow-x: hidden;
-  max-height: 516px;
-  scrollbar-width: thin;
-}
-#roleList li {
-  padding: 0;
-  margin: 4px 10px 4px 2px;
-  list-style: none;
-  white-space: nowrap;
-  vertical-align: middle;
-}
-#roleList li.selected { background-color: #f0f9ff }
-#roleList li a {
-  color: #000;
-  font-family: Arial;
-  cursor: pointer;
-  display: block;
-  line-height: 29px;
-  text-decoration: none;
-}
-#roleList li a > * {
-  vertical-align: top;
-}
-.headSquare {
-  background-size: contain;
-  display: inline-block;
-  margin: 5px 8px 5px 5px;
-  width: 20px;
-  height: 20px;
-}
-.suffixAccountId {
-  color: #666;
-  font-size: 95%;
-  font-weight: normal;
-  margin-left: 1.25em;
-}
-#noMain p {
-  font-size: 12px;
-  margin: 12px 5px 5px 5px;
-  line-height: 1.66;
-  color: #666;
-  white-space: pre-wrap;
-}
-#supportComment p {
-  line-height: 1.25;
-  margin: .5em 0;
-  font-weight: bold;
-}
-.roleListTitle {
-  color: #2c2c2c; 
-}
-.darkMode {
-  background-color: #2a2e33; 
-  color: #d3d9d9;
-}
-.darkMode a:hover { background-color: #153247 }
-.darkMode #noMain p { color: #eaeded }
-.darkMode #roleList a { color: #fff }
-.darkMode #roleList li.selected { background-color: #143846 }
-.darkMode #roleList .suffixAccountId { color: #95a5a6 }
-.darkMode .mainPane { border-color: #41474F }
-.darkMode .optionMenu li { border-color: #41474F }
-.darkMode .optionMenu a { color: #d5dbdb }
-.darkMode #roleFilter {
-  background-color: #1a2029;
-  color: #d5dbdb;
-  border-color: #879596;
-}
-.darkMode .roleListTitle { color: #eaeded }
-.darkMode #roleList::-webkit-scrollbar {
-  width: 10px;
-}
-.darkMode #roleList::-webkit-scrollbar-track {
-  background-color: #3b3b3b;
-}
-.darkMode #roleList::-webkit-scrollbar-thumb {
-  background-color: #616161;
-}
-</style>
+    html, body {
+      width: 400px;
+      height: 600px;
+      overflow: hidden;
+      border-radius: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 12px;
+    }
+
+    .search-container {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0aec0;
+      pointer-events: none;
+    }
+
+    #roleFilter {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    #roleFilter:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #roleFilter::placeholder {
+      color: #a0aec0;
+    }
+
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      background: white;
+    }
+
+    .main-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .main-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .main-content::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 3px;
+    }
+
+    .main-content::-webkit-scrollbar-thumb:hover {
+      background: #a0aec0;
+    }
+
+    #main {
+      display: none;
+    }
+
+    #roleList {
+      list-style: none;
+      padding: 8px;
+      margin: 0;
+    }
+
+    #roleList li {
+      margin-bottom: 4px;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.2s;
+      list-style: none;
+      padding: 0;
+    }
+
+    #roleList li:hover {
+      transform: translateX(4px);
+    }
+
+    #roleList li.selected {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+
+    #roleList li a {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      text-decoration: none;
+      color: #2d3748;
+      transition: background 0.2s;
+      gap: 12px;
+    }
+
+    #roleList li a:hover {
+      background: #f7fafc;
+    }
+
+    .headSquare {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-size: cover;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+    }
+
+    .suffixAccountId {
+      font-size: 12px;
+      color: #718096;
+      font-weight: normal;
+      margin-left: auto;
+      padding-left: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .footer {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding: 12px;
+    }
+
+    .optionMenu {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 0;
+      margin: 0;
+    }
+
+    .optionMenu li {
+      padding: 0;
+      margin: 0;
+      border: none;
+    }
+
+    .optionMenu li a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #4a5568;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .optionMenu li a:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    #openOptionsLink {
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+    }
+
+    #openOptionsLink:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    #noMain {
+      display: none;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    #noMain p {
+      color: #718096;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .support-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    #supportComment {
+      display: none;
+    }
+
+    #supportComment p {
+      font-size: 13px;
+      color: #4a5568;
+      margin: 0 0 8px 0;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    #openSupportMe {
+      display: inline-block;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    #openSupportMe:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    #goldenkey {
+      display: none;
+      margin: 12px auto 0;
+      width: 48px;
+      height: 48px;
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)); }
+      50% { filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.8)); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 30px;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .empty-state-text {
+      color: #718096;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .roleListTitle {
+      color: #2c2c2c;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Dark Mode */
+    .darkMode {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    }
+
+    .darkMode .header,
+    .darkMode .footer {
+      background: rgba(26, 32, 44, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .darkMode .header h1 {
+      color: #e2e8f0;
+    }
+
+    .darkMode #roleFilter {
+      background: #2d3748;
+      border-color: #4a5568;
+      color: #e2e8f0;
+    }
+
+    .darkMode #roleFilter::placeholder {
+      color: #718096;
+    }
+
+    .darkMode #roleFilter:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .darkMode .main-content {
+      background: #1a202c;
+    }
+
+    .darkMode #roleList li a {
+      color: #e2e8f0;
+    }
+
+    .darkMode #roleList li a:hover {
+      background: #2d3748;
+    }
+
+    .darkMode #roleList li.selected {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    }
+
+    .darkMode .role-name {
+      color: #e2e8f0;
+    }
+
+    .darkMode .suffixAccountId {
+      color: #a0aec0;
+    }
+
+    .darkMode .optionMenu li a {
+      background: #2d3748;
+      border-color: #4a5568;
+      color: #cbd5e0;
+    }
+
+    .darkMode .optionMenu li a:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+    }
+
+    .darkMode #openOptionsLink {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .darkMode #noMain p,
+    .darkMode .empty-state-text {
+      color: #a0aec0;
+    }
+
+    .darkMode .support-section {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    }
+
+    .darkMode #supportComment p {
+      color: #cbd5e0;
+    }
+
+    .darkMode .roleListTitle {
+      color: #eaeded;
+    }
+  </style>
 </head>
 <body>
-<div style="display: flex">
-  <div class="mainPane" style="min-width: 280px">
-    <div id="main" style="display: none">
-      <div style="padding: 12px 6px 6px;">
-        <span class="roleListTitle">Role List</span>
-        <input id="roleFilter" type="text" placeholder="Filter"
-          style="border:1px solid #bbb;border-radius:3px;font-size:13px;margin-left:0.4em;max-width:30ex;padding:.8ex">
-      </div>
-      <ul id="roleList">
-      </ul>
-    </div>
-    <div id="noMain" style="display: none;">
-      <p></p>
-    </div>
-  </div>
-  <div>
-    <ul class="optionMenu">
-      <li><a href="#" id="openOptionsLink">Configuration</a></li>
-      <li><a href="#" id="openUpdateNoticeLink">Update Notice</a></li>
-      <li><a
-          href="https://github.com/tilfinltd/aws-extend-switch-roles/blob/master/CHANGELOG.md#changelog" rel="noopener noreferrer" target="_blank">Release Notes</a></li>
-      <li><a href="#" id="openCreditsLink">Credits</a></li>
-      <li><a href="#" id="openSupportersLink">Supporters</a></li>
-      <li><a href="https://github.com/tilfinltd/aws-extend-switch-roles" rel="noopener noreferrer"
-              target="_blank">Website</a></li>
-    </ul>
-    <div style="margin: 5px">
-      <div id="supportComment" style="display: none; margin: 6px">
-        <p>Is this helpful?</p>
-        <p>Could you <a href="#" id="openSupportMe" style="text-decoration: none">support me</a>? &#x1f97a;</p>
-      </div>
-      <img id="goldenkey" style="display: none; margin: 6px 8px 6px auto" title="Thank you for your support." src="/icons/golden_icon.png" width="44" height="44">
-    </div>
+<div class="header">
+  <h1>AWS Switch Roles</h1>
+  <div class="search-container">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
+    </svg>
+    <input id="roleFilter" type="text" placeholder="Search roles...">
   </div>
 </div>
+
+<div class="main-content">
+  <div id="main">
+    <ul id="roleList">
+      <!-- Role items will be dynamically inserted here by popup.js -->
+    </ul>
+  </div>
+
+  <div id="noMain">
+    <p></p>
+  </div>
+</div>
+
+<div class="footer">
+  <ul class="optionMenu">
+    <li><a href="#" id="openOptionsLink">⚙️ Configuration</a></li>
+    <li><a href="#" id="openUpdateNoticeLink">📢 Updates</a></li>
+    <li><a href="https://github.com/tilfinltd/aws-extend-switch-roles/blob/master/CHANGELOG.md#changelog" rel="noopener noreferrer" target="_blank">📝 Changelog</a></li>
+    <li><a href="#" id="openCreditsLink">👏 Credits</a></li>
+    <li><a href="#" id="openSupportersLink">💝 Supporters</a></li>
+    <li><a href="https://github.com/tilfinltd/aws-extend-switch-roles" rel="noopener noreferrer" target="_blank">🌐 GitHub</a></li>
+  </ul>
+
+  <div class="support-section" id="supportComment">
+    <p>Is this helpful?</p>
+    <p>Could you <a href="#" id="openSupportMe">support me</a>? &#x1f97a;</p>
+  </div>
+
+  <img id="goldenkey" title="Thank you for your support!" src="/icons/golden_icon.png" alt="Golden Key">
+</div>
+
 <script type="module" src="js/popup.js" charset="utf-8"></script>
 <div id="sandbox" style="display: none;"></div>
 </body>
-</head>
 </html>

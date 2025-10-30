@@ -1,220 +1,678 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>AWS Extend Switch Roles - Configuration</title>
-<script type="module" src="js/options.js"></script>
-<style>
-html { padding: 0 }
-body {
-  background-color: #666;
-  font-size: 14px;
-  line-height: 1.25;
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-h1 { font-size: 22px; margin-block: 14px 10px }
-h2 { font-size: 17px; margin-block: 14px }
-h3 { font-size: 15px; margin-block: 8px }
-section { margin-block: 10px 20px }
-.pane {
-  box-sizing: border-box;
-  height: 100vh;
-  max-width: 660px;
-  width: 100%;
-  padding-inline: 20px;
-}
-#settingPane {
-  background-color: #fff;
-  color: #000;
-}
-#howto {
-  background-color: #eee;
-  color: #444;
-  overflow-y: scroll;
-  padding-bottom: 25px;
-}
-#howto p {
-  line-height: 1.6;
-}
-#howto li {
-  margin-top: 0.3em;
-  margin-bottom: 0.3em;
-  line-height: 1.5;
-}
-a { text-decoration: none }
-.head {
-  font-size: 13px;
-  font-weight: bold;
-  margin: 5px 0;
-}
-#settings ul {
-  list-style: none;
-  margin: 0 0; padding: 0;
-}
-#settings ul li {
-  margin: 0;
-  padding: 0;
-  line-height: 26px;
-}
-input[type="checkbox"], 
-input[type="radio"] {
-  position: relative;
-  top: 2px;
-  margin-right: .33ex;
-}
-#awsConfigTextArea {
-  box-sizing: border-box;
-  font-size: 14px;
-  font-family: Consolas, "Courier New", Courier, Monaco, monospace;
-  padding: 0.5ex;
-  resize: none;
-  white-space: pre;
-  width: 100%;
-  height: calc(100vh - 456px);
-  margin: 8px 0;
-  max-height: 800px;
-}
-#colorValue {
-  font-family: monospace;
-  width: 9ex;
-}
-pre {
-  border: 1px solid #484848;
-  box-sizing: border-box;
-  font-size: 14px;
-  font-family: Consolas, "Courier New", Courier, Monaco, monospace;
-  padding: 0.5ex;
-  overflow-x: hidden;
-}
-input, button {
-  font-size: 14px;
-  padding-block: 3px;
-}
-code {
-  color: #222;
-  font-weight: bold;
-}
-.success, #msgSpan, a { color: #1c1cff }
-.warn { color: #de1010 }
-.darkMode .success, .darkMode #msgSpan, .darkMode a { color: #2aedff }
-.darkMode .warn { color: #e82828 }
-.darkMode #settingPane {
-  background-color: #333;
-  color: #fff;
-}
-.darkMode #howto {
-  background-color: #444;
-  color: #bbb;
-}
-.darkMode code { color: #ddd }
-.darkMode pre { border-color: #979797 }
-.darkMode textarea, .darkMode input[type="text"] {
-  background-color: #222;
-  border-color: #9d9d9d;
-  color: #eee;
-}
-.formItem {
-  line-height: 32px;
-}
-.formItem label {
-  display: inline-block;
-  min-width: 4em;
-  padding-right: 1ex;
-}
-.radioGroup {
-  display: flex;
-  flex-direction: row;
-  line-height: 26px;
-}
-.radioGroup label {
-  margin-left: .5ex;
-  margin-right: 1ex;
-}
-</style>
+ <meta charset="UTF-8">
+ <title>AWS Extend Switch Roles - Configuration</title>
+ <script type="module" src="js/options.js"></script>
+ <style>
+  html { padding: 0 }
+  body {
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   font-size: 14px;
+   line-height: 1.25;
+   display: flex;
+   justify-content: center;
+   padding: 20px;
+   margin: 0;
+   min-height: 100%;
+   max-height: 100%;
+   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  h1 {
+   font-size: 28px;
+   font-weight: 700;
+   margin-block: 0 20px;
+   color: #1a202c;
+  }
+
+  h2 {
+   font-size: 22px;
+   font-weight: 600;
+   margin-block: 24px 16px;
+   color: #1a202c;
+  }
+
+  h3 {
+   font-size: 16px;
+   font-weight: 600;
+   margin-block: 16px 8px;
+   color: #2d3748;
+  }
+
+  section {
+   margin-block: 20px 32px;
+  }
+
+  .pane {
+   box-sizing: border-box;
+   max-width: 1320px;
+   width: 100%;
+   display: flex;
+   gap: 0;
+   background: white;
+   border-radius: 20px;
+   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+   overflow: hidden;
+   animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+   from {
+    opacity: 0;
+    transform: translateY(30px);
+   }
+   to {
+    opacity: 1;
+    transform: translateY(0);
+   }
+  }
+
+  #settingPane {
+   background-color: #fff;
+   color: #000;
+   padding: 40px;
+   flex: 1;
+   max-height: 90vh;
+   overflow-y: auto;
+  }
+
+  #settingPane::-webkit-scrollbar {
+   width: 8px;
+  }
+
+  #settingPane::-webkit-scrollbar-track {
+   background: #f1f1f1;
+  }
+
+  #settingPane::-webkit-scrollbar-thumb {
+   background: #cbd5e0;
+   border-radius: 4px;
+  }
+
+  #settingPane::-webkit-scrollbar-thumb:hover {
+   background: #a0aec0;
+  }
+
+  #howto {
+   background-color: #f7fafc;
+   color: #444;
+   overflow-y: scroll;
+   padding: 40px;
+   flex: 1;
+   max-height: 90vh;
+  }
+
+  #howto::-webkit-scrollbar {
+   width: 8px;
+  }
+
+  #howto::-webkit-scrollbar-track {
+   background: #e2e8f0;
+  }
+
+  #howto::-webkit-scrollbar-thumb {
+   background: #cbd5e0;
+   border-radius: 4px;
+  }
+
+  #howto::-webkit-scrollbar-thumb:hover {
+   background: #a0aec0;
+  }
+
+  #howto h1 {
+   color: #1a202c;
+  }
+
+  #howto h2 {
+   color: #2d3748;
+  }
+
+  #howto h3 {
+   color: #4a5568;
+  }
+
+  #howto p {
+   line-height: 1.6;
+   margin-block: 12px;
+   color: #4a5568;
+  }
+
+  #howto li {
+   margin-top: 0.5em;
+   margin-bottom: 0.5em;
+   line-height: 1.6;
+   color: #4a5568;
+  }
+
+  #howto ul {
+   margin-left: 20px;
+  }
+
+  a {
+   text-decoration: none;
+   color: #667eea;
+   font-weight: 500;
+   transition: color 0.2s;
+  }
+
+  a:hover {
+   color: #764ba2;
+  }
+
+  .head {
+   font-size: 14px;
+   font-weight: bold;
+   margin: 8px 0;
+   color: #4a5568;
+  }
+
+  #settings ul {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+  }
+
+  #settings ul li {
+   margin: 0;
+   padding: 12px;
+   line-height: 26px;
+   border-radius: 8px;
+   transition: background 0.2s;
+  }
+
+  #settings ul li:hover {
+   background: #f7fafc;
+  }
+
+  #settings ul li label {
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+   font-size: 14px;
+   color: #2d3748;
+   font-weight: 500;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+   width: 18px;
+   height: 18px;
+   cursor: pointer;
+   margin-right: 10px;
+   position: relative;
+   top: 0;
+  }
+
+  #awsConfigTextArea {
+   box-sizing: border-box;
+   font-size: 14px;
+   font-family: 'Courier New', Consolas, Monaco, monospace;
+   padding: 16px;
+   resize: vertical;
+   white-space: pre;
+   width: 100%;
+   min-height: 300px;
+   max-height: 500px;
+   margin: 12px 0;
+   border: 2px solid #e2e8f0;
+   border-radius: 12px;
+   transition: border-color 0.2s;
+   background: white;
+   color: #3e3e3e;
+  }
+
+  #awsConfigTextArea:focus {
+   outline: none;
+   border-color: #667eea;
+   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  #colorValue {
+   font-family: 'Courier New', monospace;
+   width: 100px;
+   padding: 8px 12px;
+   border: 2px solid #e2e8f0;
+   border-radius: 8px;
+   font-size: 14px;
+   transition: border-color 0.2s;
+  }
+
+  #colorValue:focus {
+   outline: none;
+   border-color: #667eea;
+  }
+
+  pre {
+   border: 1px solid #e2e8f0;
+   box-sizing: border-box;
+   font-size: 13px;
+   font-family: 'Courier New', Consolas, Monaco, monospace;
+   padding: 16px;
+   overflow-x: auto;
+   background: #f7fafc;
+   border-radius: 8px;
+   margin: 16px 0;
+  }
+
+  input[type="text"], button {
+   font-size: 14px;
+   padding: 10px 14px;
+  }
+
+  input[type="text"] {
+   border: 2px solid #e2e8f0;
+   border-radius: 8px;
+   transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+   outline: none;
+   border-color: #667eea;
+   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  input[type="color"] {
+   width: 50px;
+   height: 38px;
+   border: 2px solid #e2e8f0;
+   border-radius: 8px;
+   cursor: pointer;
+  }
+
+  button {
+   padding: 12px 24px;
+   border: none;
+   border-radius: 10px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.2s;
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   color: white;
+  }
+
+  button:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+  }
+
+  #switchConfigHubButton,
+  #cancelConfigHubButton,
+  #disconnectConfigHubButton,
+  #reloadConfigHubButton {
+   background: #e2e8f0;
+   color: #4a5568;
+  }
+
+  #switchConfigHubButton:hover:not(:disabled),
+  #cancelConfigHubButton:hover:not(:disabled),
+  #disconnectConfigHubButton:hover:not(:disabled),
+  #reloadConfigHubButton:hover:not(:disabled) {
+   background: #cbd5e0;
+   transform: translateY(-2px);
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  #switchConfigHubButton:disabled,
+  #cancelConfigHubButton:disabled,
+  #disconnectConfigHubButton:disabled,
+  #reloadConfigHubButton:disabled {
+   cursor: not-allowed;
+   background: #82858c;
+   color: #303744;
+   box-shadow: none;
+   transform: none;
+  }
+
+  code {
+   color: #667eea;
+   font-weight: 600;
+   background: #f7fafc;
+   padding: 2px 6px;
+   border-radius: 4px;
+   font-family: 'Courier New', monospace;
+   font-size: 13px;
+  }
+
+  .success {
+   color: #38a169;
+   font-weight: 500;
+  }
+
+  #msgSpan {
+   color: #667eea;
+   font-weight: 500;
+   margin-left: 12px;
+  }
+
+  .warn {
+   color: #e53e3e;
+   font-weight: 500;
+  }
+
+  .formItem {
+   line-height: 32px;
+   margin-bottom: 16px;
+  }
+
+  .formItem label {
+   display: inline-block;
+   min-width: 5em;
+   padding-right: 1ex;
+   font-weight: 600;
+   color: #4a5568;
+  }
+
+  .radioGroup {
+   display: flex;
+   flex-direction: row;
+   line-height: 26px;
+   gap: 16px;
+   flex-wrap: wrap;
+  }
+
+  .radioGroup span {
+   font-weight: 600;
+   color: #4a5568;
+   margin-right: 8px;
+  }
+
+  .radioGroup label {
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+   font-size: 14px;
+   color: #2d3748;
+  }
+
+  .badge {
+   display: inline-block;
+   padding: 4px 8px;
+   background: #ffd700;
+   color: #744210;
+   border-radius: 4px;
+   font-size: 11px;
+   font-weight: 600;
+   margin-left: 8px;
+  }
+
+  /* Dark Mode */
+  .darkMode body {
+   background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  }
+
+  .darkMode .pane {
+   background: #1a202c;
+  }
+
+  .darkMode #settingPane {
+   background-color: #1a202c;
+   color: #e2e8f0;
+  }
+
+  .darkMode h1,
+  .darkMode h2 {
+   color: #e2e8f0;
+  }
+
+  .darkMode h3 {
+   color: #cbd5e0;
+  }
+
+  .darkMode #howto {
+   background-color: #2d3748;
+   color: #cbd5e0;
+  }
+
+  .darkMode #howto h1 {
+   color: #e2e8f0;
+  }
+
+  .darkMode #howto h2 {
+   color: #cbd5e0;
+  }
+
+  .darkMode #howto h3 {
+   color: #a0aec0;
+  }
+
+  .darkMode #howto p,
+  .darkMode #howto li {
+   color: #a0aec0;
+  }
+
+  .darkMode code {
+   color: #9f7aea;
+   background: #2d3748;
+  }
+
+  .darkMode pre {
+   border-color: #4a5568;
+   background: #2d3748;
+   color: #e2e8f0;
+  }
+
+  .darkMode textarea,
+  .darkMode input[type="text"] {
+   background-color: #2d3748;
+   border-color: #4a5568;
+   color: #e2e8f0;
+  }
+
+  .darkMode textarea:focus,
+  .darkMode input[type="text"]:focus {
+   border-color: #667eea;
+  }
+
+  .darkMode input[type="color"] {
+   border-color: #4a5568;
+  }
+
+  .darkMode #settings ul li:hover {
+   background: #2d3748;
+  }
+
+  .darkMode #settings ul li label {
+   color: #e2e8f0;
+  }
+
+  .darkMode .formItem label,
+  .darkMode .radioGroup span,
+  .darkMode .radioGroup label,
+  .darkMode .head {
+   color: #cbd5e0;
+  }
+
+  .darkMode .success,
+  .darkMode #msgSpan,
+  .darkMode a {
+   color: #2aedff;
+  }
+
+  .darkMode a:hover {
+   color: #5df3ff;
+  }
+
+  .darkMode .warn {
+   color: #fc8181;
+  }
+
+  .darkMode #switchConfigHubButton,
+  .darkMode #cancelConfigHubButton,
+  .darkMode #disconnectConfigHubButton,
+  .darkMode #reloadConfigHubButton {
+   background: #2d3748;
+   color: #cbd5e0;
+   border: 1px solid #4a5568;
+  }
+
+  .darkMode #switchConfigHubButton:disabled,
+  .darkMode #cancelConfigHubButton:disabled,
+  .darkMode #disconnectConfigHubButton:disabled,
+  .darkMode #reloadConfigHubButton:disabled {
+   background: #1b212c;
+   color: #99a1a9;
+   border: 1px solid #2e3541;
+   cursor: not-allowed;
+  }
+
+  .darkMode #switchConfigHubButton:hover:not(:disabled),
+  .darkMode #cancelConfigHubButton:hover:not(:disabled),
+  .darkMode #disconnectConfigHubButton:hover:not(:disabled),
+  .darkMode #reloadConfigHubButton:hover:not(:disabled) {
+   background: #4a5568;
+  }
+
+  @media (max-width: 1200px) {
+   .pane {
+    flex-direction: column;
+    max-height: none;
+   }
+
+   #settingPane,
+   #howto {
+    max-height: none;
+   }
+  }
+ </style>
 </head>
 <body>
-<div class="pane" id="settingPane">
- <h1>Configuration</h1>
- <section id="standalonePanel">
-  <div id="storageDiv">
-   <div class="radioGroup">
-    <span>Storage:</span>
-    <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
-    <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
-    <button id="switchConfigHubButton" style="margin-left: auto;">Switch into fetching from Config Hub</button>
+<div class="pane">
+ <div id="settingPane">
+  <h1>Configuration</h1>
+
+  <section id="standalonePanel">
+   <div id="storageDiv">
+    <div class="radioGroup">
+     <span>Storage:</span>
+     <label for="configStorageSyncRadioButton">
+      <input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">
+      Sync
+     </label>
+     <label for="configStorageLocalRadioButton">
+      <input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">
+      Local
+     </label>
+     <button id="switchConfigHubButton" style="margin-left: auto;">Switch into fetching from Config Hub</button>
+    </div>
    </div>
-  </div>
-  <textarea id="awsConfigTextArea" spellcheck="false"></textarea>
-  <div>
-   <input type="color" id="colorPicker">
-   <b style="margin-left: 6px">#</b>
-   <input type="text" id="colorValue" maxlength="6" placeholder="RRGGBB">
-   <a style="float:right" target="_blank" rel="noopener noreferrer"
-      href="http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html">About ~/.aws/config file</a>
-  </div>
-  <div style="margin-top:12px">
-   <button id="saveButton">&nbsp; Save &nbsp;</button>
-   <span id="msgSpan" style="margin-left:12px"></span>
-  </div>
- </section>
- <section id="configHubPanel" style="display: none">
-  <h2>Config Hub settings</h2>
-  <div class="formItem">
+
+   <textarea id="awsConfigTextArea" spellcheck="false" placeholder="Enter your AWS configuration here..."></textarea>
+
+   <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
+    <input type="color" id="colorPicker">
+    <b style="margin-left: 0">#</b>
+    <input type="text" id="colorValue" maxlength="6" placeholder="RRGGBB">
+    <a style="margin-left: auto" target="_blank" rel="noopener noreferrer"
+       href="http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html">About ~/.aws/config file</a>
+   </div>
+
+   <div style="margin-top:20px; display: flex; align-items: center;">
+    <button id="saveButton">Save</button>
+    <span id="msgSpan" style="margin-left:12px"></span>
+   </div>
+  </section>
+
+  <section id="configHubPanel" style="display: none">
+   <h2>Config Hub settings</h2>
+
+   <div class="formItem">
     <label for="configHubDomain">Domain:</label>
     <input id="configHubDomain" type="text" maxlength="40" style="width: 15ex">.aesr.dev
-  </div>
-  <div class="formItem">
+   </div>
+
+   <div class="formItem">
     <label for="configHubClientId">Client ID:</label>
     <input id="configHubClientId" type="text" maxlength="40" style="width: 40ex">
-  </div>
-  <div style="margin-top:12px">
-   <button id="cancelConfigHubButton">Cancel</button>
-   <button id="connectConfigHubButton">Connect Config Hub</button>
-   <button id="disconnectConfigHubButton">Disconnect</button>
-   <button id="reloadConfigHubButton">Reload config from Hub</button>
-   <span id="remoteMsgSpan" style="margin-left:12px"></span>
-  </div>
- </section>
- <section id="settings">
-  <h1>Settings</h1>
-  <ul>
-    <li><label for="hidesAccountIdCheckBox"><input type="checkbox" id="hidesAccountIdCheckBox">Hide account id</label></li>
-    <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
-    <li><label for="autoTabGroupingCheckBox"><input type="checkbox" id="autoTabGroupingCheckBox">Automatic tab grouping for multi-Session</label> (Experimental, Supporters only) </li>
-    <li><label for="signinEndpointInHereCheckBox"><input type="checkbox" id="signinEndpointInHereCheckBox">Sign-in endpoint in current region</label> (Experimental, Supporters only) </li>
-    <li><s><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </s> (temporarily disabled) </li>
-    <li class="radioGroup">
-      <span>Visual mode:</span>
-      <label for="defaultVisualRadioButton"><input type="radio" name="visual" id="defaultVisualRadioButton" value="default">Browser default</label>
-      <label for="lightVisualRadioButton"><input type="radio" name="visual" id="lightVisualRadioButton" value="light">Light</label>
-      <label for="darkVisualRadioButton"><input type="radio" name="visual" id="darkVisualRadioButton" value="dark">Dark</label>
-    </li>
-  </ul>
- </section>
- <section id="api">
-  <h1>Extension API</h1>
-  <div class="formItem">
-   <label for="configSenderIdText">Config sender extension ID:</label>
-   <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex">
-  </div>
- </section>
-</div>
-<div class="pane" id="howto">
- <h1>How to configure</h1>
- <section>
-  <h2>Simple Configuration</h2>
-  <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list.  <b>Target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code>.</p>
+   </div>
 
-  <h3>Optional parameters</h3>
-  <ul>
-   <li><code>color</code> - The RGB hex value (without the prefix '#') for the color of the header bottom border and around the current profile.</li>
-   <li><code>region</code> - Changing the region whenever switching the role if this parameter is specified.</li>
-   <li><code>image</code> - The uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.</li>
-  </ul>
-  <pre>
+   <div style="margin-top:20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <button id="cancelConfigHubButton">Cancel</button>
+    <button id="connectConfigHubButton">Connect Config Hub</button>
+    <button id="disconnectConfigHubButton">Disconnect</button>
+    <button id="reloadConfigHubButton">Reload config from Hub</button>
+    <span id="remoteMsgSpan" style="margin-left:12px"></span>
+   </div>
+  </section>
+
+  <section id="settings">
+   <h1>Settings</h1>
+   <ul>
+    <li>
+     <label for="hidesAccountIdCheckBox">
+      <input type="checkbox" id="hidesAccountIdCheckBox">
+      Hide account id
+     </label>
+    </li>
+    <li>
+     <label for="showOnlyMatchingRolesCheckBox">
+      <input type="checkbox" id="showOnlyMatchingRolesCheckBox">
+      Show only matching roles
+     </label>
+    </li>
+    <li>
+     <label for="autoTabGroupingCheckBox">
+      <input type="checkbox" id="autoTabGroupingCheckBox">
+      Automatic tab grouping for multi-Session
+      <span class="badge">PRO</span>
+     </label>
+    </li>
+    <li>
+     <label for="signinEndpointInHereCheckBox">
+      <input type="checkbox" id="signinEndpointInHereCheckBox">
+      Sign-in endpoint in current region
+      <span class="badge">PRO</span>
+     </label>
+    </li>
+    <li>
+     <s>
+      <label for="autoAssumeLastRoleCheckBox">
+       <input type="checkbox" id="autoAssumeLastRoleCheckBox">
+       Automatically assume last assumed role
+      </label>
+     </s> (temporarily disabled)
+    </li>
+    <li class="radioGroup">
+     <span>Visual mode:</span>
+     <label for="defaultVisualRadioButton">
+      <input type="radio" name="visual" id="defaultVisualRadioButton" value="default">
+      Browser default
+     </label>
+     <label for="lightVisualRadioButton">
+      <input type="radio" name="visual" id="lightVisualRadioButton" value="light">
+      Light
+     </label>
+     <label for="darkVisualRadioButton">
+      <input type="radio" name="visual" id="darkVisualRadioButton" value="dark">
+      Dark
+     </label>
+    </li>
+   </ul>
+  </section>
+
+  <section id="api">
+   <h1>Extension API</h1>
+   <div class="formItem">
+    <label for="configSenderIdText">Config sender extension ID:</label>
+    <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex">
+   </div>
+  </section>
+ </div>
+
+ <div id="howto">
+  <h1>How to configure</h1>
+
+  <section>
+   <h2>Simple Configuration</h2>
+   <p>The simplest configuration is for multiple <b>target roles</b> when you always intend to show the whole list. <b>Target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code>.</p>
+
+   <h3>Optional parameters</h3>
+   <ul>
+    <li><code>color</code> - The RGB hex value (without the prefix '#') for the color of the header bottom border and around the current profile.</li>
+    <li><code>region</code> - Changing the region whenever switching the role if this parameter is specified.</li>
+    <li><code>image</code> - The uri of an image to use on top of any color attribute supplied. The color and image are not mutually exclusive.</li>
+   </ul>
+   <pre>
 [profile marketingadmin]
 role_arn = arn:aws:iam::123456789012:role/marketingadmin
 color = ffaaee
@@ -228,23 +686,22 @@ region=ap-northeast-1
 aws_account_id = 987654321988
 role_name = athirdrole
 image = "https://aesr.dev/img/150"
-  </pre>
- </section>
- <section>
-  <h2>Complex Configuration</h2>  
-  <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
-  <ul>
-   <li>A profile specified by the <code>source_profile</code> of the others is defined as <b>base account</b></li>
-   <li>If your account is aliased, you specify <code>aws_account_alias</code> in <b>base account</b>.</li>
-   <li>If an <code>role_name</code> is specified in a <b>base account</b> it will also check for the role that is used to login to AWS.
-    This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS. If a role name starts with <i>AWSReservedSSO_</i>, the value should be only the <b>permission set</b>>** name.
-  </li>
-   <li>A <b>target role</b> is associated with a <b>base account</b> by its <code>source_profile</code> specifying the profile name of the base account.</li>
-   <li>As above, <b>target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code> and can pass the optional parameters.</li>
-   <li>If <code>target_role_name</code> is set in <b>base account</b>, the value is provided as the default role name for each <b>target roles</b>.</li>
-   <li>If <code>target_region</code> is set in <b>base account</b>, the value is provided as the default region for each <b>target roles</b>.</li>
-  </ul>
-  <pre>
+   </pre>
+  </section>
+
+  <section>
+   <h2>Complex Configuration</h2>
+   <p>More complex configurations involve multiple AWS accounts and/or organizations.</p>
+   <ul>
+    <li>A profile specified by the <code>source_profile</code> of the others is defined as <b>base account</b></li>
+    <li>If your account is aliased, you specify <code>aws_account_alias</code> in <b>base account</b>.</li>
+    <li>If an <code>role_name</code> is specified in a <b>base account</b> it will also check for the role that is used to login to AWS. This can be used to select a subset of accounts when you are using an SSO IdP to login to AWS. If a role name starts with <i>AWSReservedSSO_</i>, the value should be only the <b>permission set</b> name.</li>
+    <li>A <b>target role</b> is associated with a <b>base account</b> by its <code>source_profile</code> specifying the profile name of the base account.</li>
+    <li>As above, <b>target roles</b> can be expressed with a <code>role_arn</code> or with both <code>aws_account_id</code> and <code>role_name</code> and can pass the optional parameters.</li>
+    <li>If <code>target_role_name</code> is set in <b>base account</b>, the value is provided as the default role name for each <b>target roles</b>.</li>
+    <li>If <code>target_region</code> is set in <b>base account</b>, the value is provided as the default region for each <b>target roles</b>.</li>
+   </ul>
+   <pre>
 [organization1]
 aws_account_id = 000011112222
 aws_account_alias = your-account-alias
@@ -311,31 +768,33 @@ source_profile = Org3-BaseAccount1
 aws_account_id = 222200002222
 role_name = Role2
 source_profile = Org3-BaseAccount2
-  </pre>
-  <p>If you sign-in a base account, target roles of the other base accounts are excluded.</p>
-  <p>The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite.  Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts.  Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown.  You won't see roles that your current role can't actually assume.</p>
- </section>
- <section>
-  <h2>Settings</h2>
-  <ul>
-   <li><b>Hide account id</b> hides the account_id for each profile.</li>
-   <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
-   <li><b>Automatic tab grouping for multi-Session (Experimental, Supporters only)</b> automatically organizes tabs from the same AWS Management Console multi-session into tab groups. The tab group name will be the corresponding profile name. When a tab group is removed, the corresponding session will be automatically signed out.</li>
-   <li><b>Sign-in endpoint in current region (Experimental, Supporters only)</b> instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console. For those working geographically far from Virginia, the switch role may be a little faster.</li>
-   <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
-   <li><b>Configuration storage</b> specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles.
-    'Local' is the exact opposite of 'Sync.'</li>
-   <li><b>Visual mode</b> specifies whether light mode or dark mode is applied to the UI appearance.</li>
-  </ul>
- </section>
- <section>
-  <h2>Extension API</h2>
-  <ul>
-   <li><b>Config sender extension</b> allowed by the <b>ID</b> can send your switch roles configuration to this extension.
+   </pre>
+   <p>If you sign-in a base account, target roles of the other base accounts are excluded.</p>
+   <p>The 'Show only matching roles' setting is for use with more sophisticated account structures where you're using AWS Organizations with multiple accounts along with AWS Federated Logins via something like Active Directory or Google GSuite. Common practice is to have a role in the master account that is allowed to assume a role of the same name in other member accounts. Checking this box means that if you're logged in to the 'Developer' role in the master account, only member accounts with a role_arn ending in 'role/Developer' will be shown. You won't see roles that your current role can't actually assume.</p>
+  </section>
+
+  <section>
+   <h2>Settings</h2>
+   <ul>
+    <li><b>Hide account id</b> hides the account_id for each profile.</li>
+    <li><b>Show only matching roles</b> filters to only show profiles with roles that match your role in your master account.</li>
+    <li><b>Automatic tab grouping for multi-Session (Experimental, Supporters only)</b> automatically organizes tabs from the same AWS Management Console multi-session into tab groups. The tab group name will be the corresponding profile name. When a tab group is removed, the corresponding session will be automatically signed out.</li>
+    <li><b>Sign-in endpoint in current region (Experimental, Supporters only)</b> instead of <i>signin.aws.amazon.com</i> when you browse a non-global page in AWS Management Console. For those working geographically far from Virginia, the switch role may be a little faster.</li>
+    <li><b>Automatically assume last assumed role (Experimental)</b> automatically assumes last assumed role on the next sign-in if did not back to the base account and signed out.</li>
+    <li><b>Configuration storage</b> specifies which storage to save to. 'Sync' can automatically share it between browsers with your account but cannot store many profiles. 'Local' is the exact opposite of 'Sync.'</li>
+    <li><b>Visual mode</b> specifies whether light mode or dark mode is applied to the UI appearance.</li>
+   </ul>
+  </section>
+
+  <section>
+   <h2>Extension API</h2>
+   <ul>
+    <li><b>Config sender extension</b> allowed by the <b>ID</b> can send your switch roles configuration to this extension.
      <strong class="warn">'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.</strong>
      <a href="https://github.com/tilfinltd/aws-extend-switch-roles/wiki/External-API#config-sender-extension" target="_blank" rel="noopener noreferrer">See</a> how to make your config sender extension.</li>
-  </ul>
- </section>
+   </ul>
+  </section>
+ </div>
 </div>
 </body>
 </html>
