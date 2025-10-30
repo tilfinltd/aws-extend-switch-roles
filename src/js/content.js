@@ -60,8 +60,6 @@ function appendAESR() {
 }
 
 function getMetaData() {
-  const ase = document.getElementById('awsc-signin-endpoint');
-  
   const result = { prismModeEnabled: false };
 
   const asd = document.querySelector('meta[name="awsc-session-data"]');
@@ -73,11 +71,8 @@ function getMetaData() {
   }
 
   if (!result.signInEndpoint) {
-    if (ase) {
-      result.signInEndpoint = ase.getAttribute('content');
-    } else {
-      result.signInEndpoint = 'signin.aws.amazon.com';
-    }
+    const ase = document.getElementById('awsc-signin-endpoint');
+    result.signInEndpoint = ase ? ase.getAttribute('content') : 'signin.aws.amazon.com';
   }
 
   return result;
