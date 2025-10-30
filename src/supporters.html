@@ -3,109 +3,436 @@
 <head>
   <meta charset="UTF-8">
   <title>Supporters Program | AWS Extend Switch Roles</title>
+  <script type="module" src="js/supporters.js"></script>
   <style>
-  html { padding: 10px 40px }
-  body {
-    background-color: #fafafa;
-    color: #2d2d2d;
-    font-size: 14px;
-    line-height: 1.75;
-    padding: 0;
-    margin: 0;
-  }
-  a { text-decoration: none }
-  h1, h2, h3, p { margin: .5em 0 }
-  h2 { font-size: 18px; }
-  h3 { font-size: 15px; }
-  section { margin: 30px 0 }
-  code {
-    color: #222;
-    font-weight: bold;
-  }
-  ul > li { padding-left: .25em; }
-  ol > li { padding-left: .5em }
-  .buttons {
-    margin: 1.5em 0;
-  }
-  .sponsorButton {
-    border: 1px solid #bbb;
-    border-radius: .5em;
-    padding: .3em .8em .5em;
-    font-family: -apple-system,BlinkMacSystemFont, "Segoe UI", Helvetica, Arial;
-    font-weight: 500;
-    color: #111;
-  }
-  #textareaKeyCode {
-    border: 1px solid #bbb;
-    font-size: 14px;
-    font-family: monospace;
-    padding: .5em;
-    line-height: 1.25;
-  }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      line-height: 1.75;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+    }
+
+    .header p {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .content {
+      padding: 40px;
+      overflow-y: auto;
+      max-height: calc(90vh - 180px);
+    }
+
+    .content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 4px;
+    }
+
+    .content::-webkit-scrollbar-thumb:hover {
+      background: #a0aec0;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a202c;
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: "✨";
+      font-size: 26px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
+      margin: 20px 0 12px 0;
+    }
+
+    section {
+      margin-bottom: 32px;
+      padding: 24px;
+      background: #f7fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    p {
+      color: #4a5568;
+      font-size: 14px;
+      line-height: 1.75;
+      margin: 12px 0;
+    }
+
+    b, strong {
+      color: #1a202c;
+      font-weight: 600;
+    }
+
+    code {
+      background: #e2e8f0;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    ul > li, ol > li {
+      color: #4a5568;
+      padding: 8px 0 8px 8px;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .sponsorButton {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .sponsorButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .sponsorButton::before {
+      content: "💝";
+      font-size: 18px;
+    }
+
+    .notice {
+      color: #e53e3e;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .key-section {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+      border: 2px solid #e2e8f0;
+    }
+
+    .key-input-container {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    #textareaKeyCode {
+      flex: 1;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      padding: 16px;
+      line-height: 1.4;
+      resize: vertical;
+      min-height: 200px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+
+    #textareaKeyCode:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .validation-box {
+      min-width: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #keyCodeValid,
+    #keyCodeInvalid {
+      display: none;
+      padding: 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    #keyCodeValid {
+      background: #d4edda;
+      color: #155724;
+      border: 2px solid #c3e6cb;
+    }
+
+    #keyCodeInvalid {
+      background: #f8d7da;
+      color: #721c24;
+      border: 2px solid #f5c6cb;
+    }
+
+    .info-box {
+      background: #ebf4ff;
+      border-left: 4px solid #4299e1;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .info-box p {
+      color: #2c5282;
+      margin: 0;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
+      border: 2px solid #ffd700;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    /* Dark Mode */
+    .darkMode .container {
+      background: #1a202c;
+    }
+
+    .darkMode .content {
+      background: #1a202c;
+    }
+
+    .darkMode .content::-webkit-scrollbar-track {
+      background: #2d3748;
+    }
+
+    .darkMode .content::-webkit-scrollbar-thumb {
+      background: #4a5568;
+    }
+
+    .darkMode h2,
+    .darkMode h3,
+    .darkMode b,
+    .darkMode strong {
+      color: #e2e8f0;
+    }
+
+    .darkMode section {
+      background: #2d3748;
+      border-color: #4a5568;
+    }
+
+    .darkMode p,
+    .darkMode ul > li,
+    .darkMode ol > li {
+      color: #a0aec0;
+    }
+
+    .darkMode code {
+      background: #1a202c;
+      color: #9f7aea;
+    }
+
+    .darkMode .key-section {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-color: #4a5568;
+    }
+
+    .darkMode #textareaKeyCode {
+      background: #1a202c;
+      border-color: #4a5568;
+      color: #e2e8f0;
+    }
+
+    .darkMode #textareaKeyCode:focus {
+      border-color: #667eea;
+    }
+
+    .darkMode .info-box {
+      background: #2c5282;
+      border-color: #4299e1;
+    }
+
+    .darkMode .info-box p {
+      color: #bee3f8;
+    }
+
+    .darkMode .highlight-box {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 193, 7, 0.15) 100%);
+      border-color: #ffd700;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 30px 20px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .content {
+        padding: 24px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      .key-input-container {
+        flex-direction: column;
+      }
+
+      .validation-box {
+        min-width: auto;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sponsorButton {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Supporters Program</h1>
+<div class="container">
+  <div class="header">
+    <h1>Supporters Program</h1>
+    <p><b>AWS Extend Switch Roles</b> is hereinafter referred to as the <b>AESR</b>. The "I" below refers to Toshimitsu Takahashi, who produces AESR.</p>
+  </div>
 
-  <p>
-    <b>AWS Extend Switch Roles</b> is hereinafter referred to as the <b>AESR</b>.
-    The "I" below refers to Toshimitsu Takahashi, who produces AESR.
-  </p>
-
-  <section>
-    <h2>Background</h2>
-    <p>
-      I believe that power users of AESR are saving a reasonable amount of business time.
-      I am painful that it isn't fair to get donations from a few users.
-      I have received no monetary or equivalent benefit from AWS for the production or distribution of AESR.
-    </p>
-  </section>
-
-  <section>
-    <h2>Points to be checked</h2>
-    <ul>
-      <li>It does not provide individual support for issues with AESR.</li>
-      <li>It does not grant a commercial license for AESR.</li>
-      <li>It does not give supporters any advantages concerning the implementation of feature requests in AESR.</li>
-      <li>However, special features or enhancements may be offered exclusively to supporters of AESR.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>How to support as an organization</h2>
-    <p>
-      Tilfin Ltd. has multiple tiers of GitHub Sponsors depending on the number of users in your team or company. Tilfin Ltd. is a small company run by me.
-      Your organization can join the GitHub Sponsors. You don't need to count precisely the number of AESR installations, but you have to apply the number of users you use regularly.
-      I publish your AESR Golden Key code as a thank-you for your organization.
-      I post your company logo on particular pages if your organization is a company and joins above a certain tier ($75 a month) of GitHub Sponsors.
-    </p>
-    <div class="buttons">
-      <a class="sponsorButton" title="Sponsor @tilfinltd" target="_blank" rel="noopener" href="https://github.com/sponsors/tilfinltd">GitHub Sponsor</a>
-      <span style="color:#a00; font-size: small; margin-left: 2em">
-        I do not accept support from individuals.
-      </span>
-    </div>
+  <div class="content">
+    <section>
+      <h2>Background</h2>
+      <p>I believe that power users of AESR are saving a reasonable amount of business time. I am painful that it isn't fair to get donations from a few users. I have received no monetary or equivalent benefit from AWS for the production or distribution of AESR.</p>
+    </section>
 
     <section>
-      <h3>To those who have donated before</h3>
-      <p>
-        If you have already donated, please contact me at <b>toshi@tilfin.com</b> with <b>the date,
-        the way and the amount</b>. I will email you the <b>AESR Golden Key</b> code as a thank-you.
-      </p>
+      <h2>Points to be checked</h2>
+      <ul>
+        <li>It does not provide individual support for issues with AESR.</li>
+        <li>It does not grant a commercial license for AESR.</li>
+        <li>It does not give supporters any advantages concerning the implementation of feature requests in AESR.</li>
+        <li>However, special features or enhancements may be offered exclusively to supporters of AESR.</li>
+      </ul>
     </section>
-  </section>
 
-  <section>
-    <h2>Registration AESR Golden Key code</h2>
-    <p>Paste your key code in the below box.</p>
-    <div style="display: flex">
-      <textarea id="textareaKeyCode" spellcheck="false" style="width: 62ex; height: 27em"></textarea>
-      <div style="margin-left: 20px">
-        <p id="keyCodeValid" style="display: none">The key code has been registered ✅.<br>Thank you for your support.</p>
-        <p id="keyCodeInvalid" style="display: none">The key code is invalid ❌.</p>
+    <section>
+      <h2>How to support as an organization</h2>
+      <p>Tilfin Ltd. has multiple tiers of GitHub Sponsors depending on the number of users in your team or company. Tilfin Ltd. is a small company run by me. Your organization can join the GitHub Sponsors. You don't need to count precisely the number of AESR installations, but you have to apply the number of users you use regularly. I publish your AESR Golden Key code as a thank-you for your organization. I post your company logo on particular pages if your organization is a company and joins above a certain tier ($75 a month) of GitHub Sponsors.</p>
+
+      <div class="buttons">
+        <a class="sponsorButton" title="Sponsor @tilfinltd" target="_blank" rel="noopener" href="https://github.com/sponsors/tilfinltd">Become a GitHub Sponsor</a>
+        <span class="notice">⚠️ I do not accept support from individuals.</span>
       </div>
-    </div>
-  </section>
+
+      <div class="highlight-box">
+        <h3>To those who have donated before</h3>
+        <p>If you have already donated, please contact me at <b>toshi@tilfin.com</b> with <b>the date, the way and the amount</b>. I will email you the <b>AESR Golden Key</b> code as a thank-you.</p>
+      </div>
+    </section>
+
+    <section class="key-section">
+      <h2>Registration AESR Golden Key code</h2>
+      <p>Paste your key code in the below box.</p>
+
+      <div class="key-input-container">
+        <textarea id="textareaKeyCode" spellcheck="false" placeholder="Paste your Golden Key code here..."></textarea>
+        <div class="validation-box">
+          <p id="keyCodeValid">The key code has been registered ✅<br><br>Thank you for your support!</p>
+          <p id="keyCodeInvalid">The key code is invalid ❌<br><br>Please check and try again.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 <script type="module" src="js/supporters.js"></script>
 </body>
 </html>
