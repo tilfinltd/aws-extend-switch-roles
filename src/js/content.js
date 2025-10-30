@@ -92,6 +92,7 @@ function loadInfo(cb) {
   script.src = brw.runtime.getURL('/js/war/attach_target.js');
   script.onload = function() {
     const json = document.getElementById('AESR_info').dataset.content;
+    if (!json) return;
     accountInfo = JSON.parse(json);
     accountInfo.prism = session.prismModeEnabled;
     cb(accountInfo);
@@ -169,15 +170,17 @@ function setupMessageListener() {
   })
 }
 
-if (document.body) {
-  const data = getMetaData();
-  if (data) {
-    session = data;
-    appendAESR();
-    setupMessageListener();
+function isMainFrame(body) {
+  if (!body) return false;
+  return Array.from(body.children).some(el => el.localName !== 'script');
+}
 
-    setTimeout(() => {      
-      session.prismModeEnabled ? adjustPrismDisplayNameColor() : adjustDisplayNameColor();
-    }, 1000);
-  }
+if (isMainFrame(document.body)) {
+  session = getMetaData();
+  appendAESR();
+  setupMessageListener();
+
+  setTimeout(() => {
+    session.prismModeEnabled ? adjustPrismDisplayNameColor() : adjustDisplayNameColor();
+  }, 1000);
 }
