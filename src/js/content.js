@@ -60,9 +60,6 @@ function appendAESR() {
 }
 
 function getMetaData() {
-  const ase = document.getElementById('awsc-signin-endpoint');
-  if (!ase) return null;
-
   const result = { prismModeEnabled: false };
 
   const asd = document.querySelector('meta[name="awsc-session-data"]');
@@ -74,7 +71,8 @@ function getMetaData() {
   }
 
   if (!result.signInEndpoint) {
-    result.signInEndpoint = ase.getAttribute('content');
+    const ase = document.getElementById('awsc-signin-endpoint');
+    result.signInEndpoint = ase ? ase.getAttribute('content') : 'signin.aws.amazon.com';
   }
 
   return result;
@@ -94,6 +92,7 @@ function loadInfo(cb) {
   script.src = brw.runtime.getURL('/js/war/attach_target.js');
   script.onload = function() {
     const json = document.getElementById('AESR_info').dataset.content;
+    if (!json) return;
     accountInfo = JSON.parse(json);
     accountInfo.prism = session.prismModeEnabled;
     cb(accountInfo);
@@ -171,15 +170,17 @@ function setupMessageListener() {
   })
 }
 
-if (document.body) {
-  const data = getMetaData();
-  if (data) {
-    session = data;
-    appendAESR();
-    setupMessageListener();
+function isMainFrame(body) {
+  if (!body) return false;
+  return Array.from(body.children).some(el => el.localName !== 'script');
+}
 
-    setTimeout(() => {      
-      session.prismModeEnabled ? adjustPrismDisplayNameColor() : adjustDisplayNameColor();
-    }, 1000);
-  }
+if (isMainFrame(document.body)) {
+  session = getMetaData();
+  appendAESR();
+  setupMessageListener();
+
+  setTimeout(() => {
+    session.prismModeEnabled ? adjustPrismDisplayNameColor() : adjustDisplayNameColor();
+  }, 1000);
 }
