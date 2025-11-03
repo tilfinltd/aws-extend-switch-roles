@@ -130,7 +130,7 @@ test.describe('Database and Storage fixture examples', () => {
       {
         profilePath: 'org-a;000002',
         name: 'org-a-dev',
-        aws_account_id: '111111111112'
+        aws_account_id: '111111111112',
         // Will inherit role_name from target_role_name
       },
       {
