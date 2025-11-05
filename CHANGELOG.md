@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 6.0.2 (2025/11/05)
+
+- Fix incorrect processing applied to iframes
+
 ## 6.0.1 (2025/10/30)
 
 - Resolve an issue where users could not switch in the updated AWS Management Console (thanks to @Optischa)
