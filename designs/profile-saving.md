@@ -1,11 +1,15 @@
-# Saving profiles
+# Profile Saving Process
 
 ## Overview flowchart
 
 ```mermaid
 flowchart TD
     Start([User clicks Save button]) --> ReadInput[Read textarea value and storage area]
-    ReadInput --> SaveStorage{Storage area?}
+    ReadInput --> Parse[Parse INI text with ConfigParser]
+    
+    Parse --> ValidConfig{Is config valid?}
+    ValidConfig -->|No| ShowError[Show error message]
+    ValidConfig -->|Yes| SaveStorage{Storage area?}
     
     SaveStorage -->|Local| SaveLocal[Save to Local Storage]
     SaveStorage -->|Sync| SaveBoth[Save to both Local and Sync Storage]
@@ -13,12 +17,8 @@ flowchart TD
     SaveLocal --> UpdateTimestamp1[Update profilesLastUpdated in Local]
     SaveBoth --> UpdateTimestamp2[Update profilesLastUpdated in Sync]
     
-    UpdateTimestamp1 --> Parse[Parse INI text with ConfigParser]
-    UpdateTimestamp2 --> Parse
-    
-    Parse --> ValidConfig{Valid config?}
-    ValidConfig -->|No| ShowError[Show error message]
-    ValidConfig -->|Yes| ClearDB[Clear existing profiles in IndexedDB]
+    UpdateTimestamp1 --> ClearDB[Clear existing profiles in IndexedDB]
+    UpdateTimestamp2 --> ClearDB
     
     ClearDB --> WriteSingles[Write single profiles to IndexedDB]
     WriteSingles --> WriteComplexes[Write complex base profiles and targets to IndexedDB]
@@ -33,34 +33,34 @@ flowchart TD
 ```mermaid
 sequenceDiagram
     participant Options as Options Page
+    participant ConfigParser as ConfigParser<br/>(aesr-config)
     participant ConfigIni as config_ini.js
     participant Compressor as CompressedTextSplitter
     participant Storage as StorageRepository<br/>(Browser Storage API)
-    participant ConfigParser as ConfigParser<br/>(aesr-config)
     participant ProfileDB as profile_db.js
 
     Note over Options: Read textarea value<br/>and storage area (sync/local)
     
     Options->>Options: saveConfiguration(text, area)
     
-    Note over Options: 1. Save to Browser Storage
+    Note over Options: 1. Parse and validate configuration
+    Options->>ConfigParser: parseIni(text)
+    ConfigParser-->>Options: profileSet
+    
+    Note over Options: 2. Save to Browser Storage
     Options->>ConfigIni: saveConfigIni(localRepo, text)
     ConfigIni->>Compressor: textToDataSet(text)
-    Compressor-->>ConfigIni: dataSet splitted LZ string
+    Compressor-->>ConfigIni: dataSet with split LZ string
     ConfigIni->>Storage: localRepo.set(dataSet)
     
     alt storageArea === 'sync'
         Options->>ConfigIni: saveConfigIni(syncRepo, text)
         ConfigIni->>Compressor: textToDataSet(text)
-        Compressor-->>ConfigIni: dataSet splitted LZ string
+        Compressor-->>ConfigIni: dataSet with split LZ string
         ConfigIni->>Storage: syncRepo.set(dataSet)
         
         Options->>Storage: syncRepo.set({profilesLastUpdated})
     end
-    
-    Note over Options: 2. Parse configuration
-    Options->>ConfigParser: parseIni(text)
-    ConfigParser-->>Options: profileSet
     
     Note over Options: 3. Write to IndexedDB
     Options->>ProfileDB: writeProfileSetToTable(profileSet)
@@ -108,19 +108,19 @@ sequenceDiagram
     
     Note over ProfileDB: Singles
     loop For each single profile
-        ProfileDB->>DBManager: dbTable.insert(<SINGLE>)
+        ProfileDB->>DBManager: dbTable.insert(&lt;SINGLE&gt;)
         DBManager->>IndexedDB: objectStore.add(profile)
         IndexedDB-->>DBManager: success
     end
     
     Note over ProfileDB: Complexes
     loop For each complex base profile
-        ProfileDB->>DBManager: dbTable.insert(<COMPLEX>)
+        ProfileDB->>DBManager: dbTable.insert(&lt;COMPLEX&gt;)
         DBManager->>IndexedDB: objectStore.add(baseProfile)
         IndexedDB-->>DBManager: success
         
         loop For each target profile of this base
-            ProfileDB->>DBManager: dbTable.insert(<base>)
+            ProfileDB->>DBManager: dbTable.insert(&lt;base&gt;)
             DBManager->>IndexedDB: objectStore.add(targetProfile)
             IndexedDB-->>DBManager: success
         end
