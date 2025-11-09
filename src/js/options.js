@@ -228,6 +228,8 @@ window.onload = function() {
 }
 
 async function saveConfiguration(text, storageArea) {
+  const profileSet = ConfigParser.parseIni(text);
+
   const syncRepo = StorageProvider.getSyncRepository();
   const localRepo = StorageProvider.getLocalRepository();
   const now = nowEpochSeconds();
@@ -238,7 +240,6 @@ async function saveConfiguration(text, storageArea) {
     await syncRepo.set({ profilesLastUpdated: now });
   }
 
-  const profileSet = ConfigParser.parseIni(text);
   await writeProfileSetToTable(profileSet);
   await localRepo.set({ profilesTableUpdated: now });
 }
