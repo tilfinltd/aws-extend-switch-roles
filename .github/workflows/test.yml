@@ -22,6 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Cache Playwright browsers
+        id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -29,6 +30,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-playwright-
       - name: Install playwright browsers
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
       - name: Run tests
         run: npm test
