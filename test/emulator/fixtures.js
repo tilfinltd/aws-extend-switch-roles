@@ -30,10 +30,23 @@ export const test = base.extend({
 
 const sleep = util.promisify(setTimeout);
 
+async function waitForWorkerReady(worker, maxRetries = 10) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      await worker.evaluate(() => true);
+      await sleep(300);
+      return;
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await sleep(500);
+    }
+  }
+}
+
 export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
-    await sleep(400);
+    await waitForWorkerReady(worker);
 
     const resultB = await worker.evaluate(beforeFunc);
     if (resultB !== undefined) console.log(resultB);
@@ -53,7 +66,7 @@ export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
 export const testInPopup = (message, beforeFunc, pageFunc, afterFunc) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
-    await sleep(400);
+    await waitForWorkerReady(worker);
 
     const resultB = await worker.evaluate(beforeFunc);
     if (resultB !== undefined) console.log(resultB);
@@ -82,7 +95,7 @@ export const testInSupporters = (message, pageFunc) => {
 export const testInWorker = (message, workerFunc) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
-    await sleep(400);
+    await waitForWorkerReady(worker);
 
     const result = await worker.evaluate(workerFunc);
 
