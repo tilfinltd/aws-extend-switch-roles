@@ -72,7 +72,11 @@ function getMetaData() {
 
   if (!result.signInEndpoint) {
     const ase = document.getElementById('awsc-signin-endpoint');
-    result.signInEndpoint = ase ? ase.getAttribute('content') : 'signin.aws.amazon.com';
+    result.signInEndpoint = ase
+      ? ase.getAttribute("content")
+      : result.infrastructureRegion?.startsWith("us-gov")
+      ? "signin.amazonaws-us-gov.com"
+      : "signin.aws.amazon.com";
   }
 
   return result;
@@ -128,9 +132,15 @@ function doSwitch(data, cb) {
       let actionHost = session.signInEndpoint;
       const { actionSubdomain } = data;
       if (actionSubdomain) {
-        if (actionHost === 'signin.aws.amazon.com') {
-          actionHost = actionSubdomain + '.' + actionHost;
-        } else if (actionHost.endsWith('.signin.aws.amazon.com')) {
+        if (
+          actionHost === "signin.aws.amazon.com" ||
+          actionHost === "signin.amazonaws-us-gov.com"
+        ) {
+          actionHost = actionSubdomain + "." + actionHost;
+        } else if (
+          actionHost.endsWith(".signin.aws.amazon.com") ||
+          actionHost.endsWith(".signin.amazonaws-us-gov.com")
+        ) {
           actionHost = actionHost.replace(/^[^\.]+/, actionSubdomain);
         }
       }
