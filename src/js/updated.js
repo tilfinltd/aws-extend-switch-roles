@@ -37,10 +37,23 @@ const updateData = {
     },
     versions: [
         {
-            version: "6.0.2",
+            version: "6.0.4",
             isNew: true,
             changes: [
                 "Update <b>Design</b> to a Modern Look",
+            ]
+        },
+        {
+            version: "6.0.3",
+            changes: [
+                "Fix an issue where role switching failed in AWS GovCloud and China region",
+                "Fix a potential internal storage corruption when configuration validation fails"
+            ]
+        },
+        {
+            version: "6.0.2",
+            changes: [
+                "Fix incorrect processing applied to iframes"
             ]
         },
         {
@@ -185,7 +198,7 @@ function renderContent() {
 }
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
-syncStorageRepo.get(['visualMode', 'autoTabGrouping']).then(({ visualMode, autoTabGrouping }) => {
+syncStorageRepo.get(['visualMode', 'autoTabGrouping']).then(({ visualMode }) => {
     const mode = visualMode || 'default';
     if (mode === 'dark' || (mode === 'default' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add('darkMode');
