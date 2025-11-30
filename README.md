@@ -180,8 +180,6 @@ The popup interface supports keyboard navigation for efficient role switching:
 3. Use **Arrow Down**/**Arrow Up** to navigate through the filtered results
 4. Press **Enter** to switch to the highlighted role
 
-This feature addresses GitHub issue [#279](https://github.com/tilfinltd/aws-extend-switch-roles/issues/279) and provides faster role switching without requiring mouse interaction.
-
 ## Extension API
 
 - **Config sender extension** allowed by the **ID** can send your switch roles configuration to this extension. **'Configuration storage' forcibly becomes 'Local' when the configuration is received from a config sender.** [See](https://github.com/tilfinltd/aws-extend-switch-roles/wiki/External-API#config-sender-extension) how to make your config sender extension.
