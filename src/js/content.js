@@ -101,10 +101,11 @@ function loadInfo(cb) {
   const script = document.createElement('script');
   script.src = brw.runtime.getURL('/js/war/attach_target.js');
   script.onload = function() {
-    const json = document.getElementById('AESR_info').dataset.content;
-    if (!json) return;
-    accountInfo = JSON.parse(json);
-    accountInfo.prism = session.prismModeEnabled;
+    try {
+      const json = document.getElementById('AESR_info').dataset.content;
+      accountInfo = JSON.parse(json);
+      accountInfo.prism = session.prismModeEnabled;
+    } catch {}
     cb(accountInfo);
     this.remove();
   };
