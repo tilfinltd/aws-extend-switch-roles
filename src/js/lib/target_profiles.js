@@ -13,7 +13,7 @@ export async function findTargetProfiles(ctx) {
 }
 
 async function retrieveTargetProfilesFromDB(ctx) {
-  const { baseAccount, loginRole, filterByTargetRole } = ctx;
+  const { baseAccount, loginRole, filterByTargetRole, isInDelegatedRole, sourceAccount, sourceRole } = ctx;
   const dbManager = new DBManager('aesr');
   await dbManager.open();
 
@@ -31,6 +31,20 @@ async function retrieveTargetProfilesFromDB(ctx) {
         targets = targets.filter(it => matchRoleNameLeaf(it, filterByTargetRole));
       }
       results.push(...targets)
+    }
+
+    // If we're in a delegated role, add the base account as a switchable target
+    if (isInDelegatedRole && sourceAccount) {
+      const baseProfile = complexSrcItems.find(it => matchSourceProfile(it, sourceAccount, sourceRole));
+      if (baseProfile) {
+        const switchBackProfile = {
+          ...baseProfile,
+          isSwitchBack: true,
+          profile: `← ${baseProfile.name}`,
+        };
+        // Add it at the beginning for easy access
+        results.unshift(switchBackProfile);
+      }
     }
   }, 'readonly');
 
@@ -58,8 +72,8 @@ function convertComplexTarget(item, baseProfile) {
 }
 
 async function retrieveTargetProfilesFromLztext(ctx) {
-  const { baseAccount, loginRole, filterByTargetRole } = ctx;
-  
+  const { baseAccount, loginRole, filterByTargetRole, isInDelegatedRole, sourceAccount, sourceRole } = ctx;
+
   const localRepo = StorageProvider.getLocalRepository();
   const cfgText = await loadConfigIni(localRepo);
   if (!cfgText) return [];
@@ -75,6 +89,20 @@ async function retrieveTargetProfilesFromLztext(ctx) {
       targets = targets.filter(it => matchRoleNameLeaf(it, filterByTargetRole));
     }
     results.push(...targets)
+  }
+
+  // If we're in a delegated role, add the base account as a switchable target
+  if (isInDelegatedRole && sourceAccount) {
+    const baseProfile = profileSet.complexes.find(it => matchSourceProfile(it, sourceAccount, sourceRole));
+    if (baseProfile) {
+      const switchBackProfile = {
+        ...baseProfile,
+        isSwitchBack: true,
+        profile: `← ${baseProfile.name}`,
+      };
+      // Add it at the beginning for easy access
+      results.unshift(switchBackProfile);
+    }
   }
 
   return results;

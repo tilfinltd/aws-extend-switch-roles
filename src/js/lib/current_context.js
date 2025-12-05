@@ -16,6 +16,11 @@ export class CurrentContext {
       return extractLoginRole(loginDisplayNameUser.split("/", 2)[0]);
     })();
     this.filterByTargetRole = showOnlyMatchingRoles ? (roleDisplayNameUser || this.loginRole) : null;
+
+    // Track if we're in a delegated role and what the source account is
+    this.isInDelegatedRole = !!(roleDisplayNameAccount || (prism && roleDisplayNameUser));
+    this.sourceAccount = this.isInDelegatedRole ? brushAccountId(loginDisplayNameAccount) : null;
+    this.sourceRole = this.isInDelegatedRole ? extractLoginRole(loginDisplayNameUser.split("/", 2)[0]) : null;
   }
 }
 

@@ -159,6 +159,16 @@ function doSwitch(data, cb) {
 
   const form = document.getElementById('AESR_form');
   form.setAttribute('action', formActionUrl);
+
+  // Handle switch-back to base account
+  if (data.isswitchback === 'true') {
+    form.action.value = 'switchToBasis';
+    form.redirect_uri.value = data.redirecturi;
+    cb({ prism: session.prismModeEnabled, switchBack: true });
+    form.submit();
+    return false;
+  }
+
   form.account.value = data.account;
   form.color.value = data.color;
   form.roleName.value = data.rolename;
