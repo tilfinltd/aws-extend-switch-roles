@@ -1,6 +1,9 @@
+import { writeProfileSetToTable } from './js/lib/profile_db.js';
 import * as externalTest from "./tests/external.test.js";
 import * as findTargetProfilesTest from "./tests/find_target_profiles.test.js";
 import * as updateProfileTableTest from "./tests/update_profiles.test.js";
+
+self.loadProfileSet = writeProfileSetToTable
 
 self.assert = function deepEqual(actual, expected, message = '') {
   Object.entries(actual).forEach(([key, value]) => {

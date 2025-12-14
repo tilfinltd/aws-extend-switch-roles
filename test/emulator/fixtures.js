@@ -2,6 +2,7 @@ import path from 'path';
 import util from 'util';
 import { fileURLToPath } from 'url';
 import { test as base, chromium } from '@playwright/test';
+import { popupInit } from './popup_init.js';
 
 export const test = base.extend({
   context: async ({}, use) => {
@@ -28,7 +29,7 @@ export const test = base.extend({
   },
 });
 
-const sleep = util.promisify(setTimeout);
+export const sleep = util.promisify(setTimeout);
 
 async function waitForWorkerReady(worker, maxRetries = 10) {
   for (let i = 0; i < maxRetries; i++) {
@@ -63,7 +64,7 @@ export const testInOptions = (message, beforeFunc, pageFunc, afterFunc) => {
   });
 };
 
-export const testInPopup = (message, beforeFunc, pageFunc, afterFunc) => {
+export const testInPopup = (message, beforeFunc, pageFunc, afterFunc = () => {}) => {
   test(message, async ({ page, context, extensionId }) => {
     const [worker] = context.serviceWorkers();
     await waitForWorkerReady(worker);
@@ -71,6 +72,7 @@ export const testInPopup = (message, beforeFunc, pageFunc, afterFunc) => {
     const resultB = await worker.evaluate(beforeFunc);
     if (resultB !== undefined) console.log(resultB);
 
+    await page.addInitScript(popupInit);
     await page.goto(`chrome-extension://${extensionId}/popup.html`);
     const resultP = await pageFunc({ page, expect: test.expect });
     if (resultP !== undefined) console.log(resultP);
@@ -79,7 +81,6 @@ export const testInPopup = (message, beforeFunc, pageFunc, afterFunc) => {
 
     const resultA = await worker.evaluate(afterFunc);
     if (resultA !== undefined) console.log(resultA);
-    //await sleep(1000000);
   });
 };
 

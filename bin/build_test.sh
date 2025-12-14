@@ -14,6 +14,8 @@ for file in src/js/*; do
   fi
 done
 
+rollup -c ./rollup.config.js src/js/lib/profile_db.js --file $destdir/js/lib/profile_db.js
+
 mkdir -p $destdir/tests
 for file in src/tests/*; do
   fname="${file##*/}"
