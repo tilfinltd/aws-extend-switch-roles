@@ -5,19 +5,30 @@ import { testInPopup } from './fixtures.js';
 
 testInPopup(
   'keyboard navigation with empty filter results',
-  // beforeFunc - setup mock data
-  function() {
-    chrome.storage.sync.set({
-      profiles: '[profile dev]\naws_account_id = 123456789012\nrole_name = DeveloperRole\ncolor = ff5722\n\n[profile prod]\naws_account_id = 123456789013\nrole_name = ProductionRole\ncolor = 4caf50'
+  async () => {
+    await self.loadProfileSet({
+      singles: [
+        {
+          name: 'dev',
+          aws_account_id: '123456789012',
+          role_name: 'DeveloperRole',
+          color: 'ff5722'
+        },
+        {
+          name: 'prod',
+          aws_account_id: '123456789013',
+          role_name: 'ProductionRole',
+          color: '4caf50'
+        }
+      ]
     });
   },
   // pageFunc - test keyboard navigation with no results
   async function({ page, expect }) {
-    await page.waitForSelector('#roleList li', { timeout: 5000 });
-    
+    await page.waitForSelector('#roleList li', { timeout: 1000 });
+
     const roleFilter = page.locator('#roleFilter');
-    await roleFilter.focus();
-    
+
     // Type a filter that matches no roles
     await roleFilter.fill('nonexistent');
     await page.waitForTimeout(100);
@@ -37,29 +48,28 @@ testInPopup(
     
     // Test Enter key with no selection (should not cause errors)
     await page.keyboard.press('Enter');
-    
-    return 'Empty filter results test completed successfully';
   },
-  // afterFunc - cleanup
-  function() {
-    chrome.storage.sync.clear();
-  }
 );
 
 testInPopup(
   'keyboard navigation with single role',
-  // beforeFunc - setup mock data with single role
-  function() {
-    chrome.storage.sync.set({
-      profiles: '[profile single]\naws_account_id = 123456789012\nrole_name = SingleRole\ncolor = ff5722'
+  async () => {
+    await self.loadProfileSet({
+      singles: [
+        {
+          name: 'single',
+          aws_account_id: '123456789012',
+          role_name: 'SingleRole',
+          color: 'ff5722'
+        }
+      ]
     });
   },
   // pageFunc - test navigation with only one role
   async function({ page, expect }) {
-    await page.waitForSelector('#roleList li', { timeout: 5000 });
+    await page.waitForSelector('#roleList li', { timeout: 1000 });
     
     const roleFilter = page.locator('#roleFilter');
-    await roleFilter.focus();
     
     // Filter shows single role
     await roleFilter.fill('single');
@@ -82,29 +92,40 @@ testInPopup(
     
     selectedRoles = page.locator('#roleList li.selected');
     await expect(selectedRoles).toHaveCount(1);
-    
-    return 'Single role navigation test completed successfully';
   },
-  // afterFunc - cleanup
-  function() {
-    chrome.storage.sync.clear();
-  }
 );
 
 testInPopup(
   'keyboard navigation mixed with typing',
-  // beforeFunc - setup mock data
-  function() {
-    chrome.storage.sync.set({
-      profiles: '[profile alpha]\naws_account_id = 111111111111\nrole_name = AlphaRole\ncolor = ff5722\n\n[profile beta]\naws_account_id = 222222222222\nrole_name = BetaRole\ncolor = 2196f3\n\n[profile gamma]\naws_account_id = 333333333333\nrole_name = GammaRole\ncolor = 4caf50'
+  async () => {
+    await self.loadProfileSet({
+      singles: [
+        {
+          name: 'alpha',
+          aws_account_id: '111111111111',
+          role_name: 'AlphaRole',
+          color: 'ff5722'
+        },
+        {
+          name: 'beta',
+          aws_account_id: '222222222222',
+          role_name: 'BetaRole',
+          color: '2196f3'
+        },
+        {
+          name: 'gamma',
+          aws_account_id: '333333333333',
+          role_name: 'GammaRole',
+          color: '4caf50'
+        }
+      ]
     });
   },
   // pageFunc - test typing after navigation
   async function({ page, expect }) {
-    await page.waitForSelector('#roleList li', { timeout: 5000 });
+    await page.waitForSelector('#roleList li', { timeout: 1000 });
     
     const roleFilter = page.locator('#roleFilter');
-    await roleFilter.focus();
     
     // Start with broad filter
     await roleFilter.fill('a');
@@ -123,11 +144,5 @@ testInPopup(
     
     // Further navigation should work normally
     await page.keyboard.press('ArrowDown');
-    
-    return 'Mixed typing and navigation test completed successfully';
   },
-  // afterFunc - cleanup
-  function() {
-    chrome.storage.sync.clear();
-  }
 );

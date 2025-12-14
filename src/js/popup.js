@@ -214,19 +214,14 @@ function setupRoleFilter() {
         // Clear filter and close popup
         this.value = '';
         // Trigger filtering to show all roles
-        this.dispatchEvent(new Event('keyup'));
+        this.dispatchEvent(new Event('input'));
         window.close();
       }
     }
   });
   
   // Handle text filtering (enhanced from existing logic)
-  roleFilter.addEventListener('keyup', function(e) {
-    // Skip if this was an arrow key or Enter (handled by keydown)
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === 'Escape') {
-      return;
-    }
-    
+  roleFilter.addEventListener('input', function(e) {
     const words = this.value.toLowerCase().split(' ');
     const lis = Array.from(document.querySelectorAll('#roleList > li'));
     let firstHitLi = null;
