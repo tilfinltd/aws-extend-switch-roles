@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 6.1.0 (2024-12-14)
+
+- Add comprehensive keyboard navigation support for the popup interface
+
 ## 6.0.3 (2025-11-17)
 
 - Fix an issue where role switching failed in AWS GovCloud and China region (thanks to @harveymonster)
