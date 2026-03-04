@@ -6,6 +6,10 @@
   "directories": {
     "test": "test"
   },
+  "overrides": {
+    "diff": "^8.0.3",
+    "serialize-javascript": "^7.0.4"
+  },
   "scripts": {
     "archive": "npm run build; ./bin/archive.sh",
     "archive:dev": "npm run build:dev; ./bin/archive.sh",
@@ -33,9 +37,11 @@
     "@playwright/test": "^1.56.1",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "chai": "^6.2.0",
+    "diff": "^8.0.3",
     "jsdom": "^26.1.0",
-    "mocha": "^11.7.4",
-    "rollup": "^4.52.5"
+    "mocha": "^11.7.5",
+    "rollup": "^4.52.5",
+    "serialize-javascript": "^7.0.4"
   },
   "type": "module"
 }
