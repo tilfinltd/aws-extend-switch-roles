@@ -22,6 +22,9 @@ export function createRoleListItem(document, item, url, region, { hidesAccountId
   anchor.dataset.color = item.color || 'aaaaaa';
   anchor.dataset.redirecturi = createRedirectUri(url, region, item.region);
   anchor.dataset.search = item.name.toLowerCase() + ' ' + item.aws_account_id;
+  if (item.isSwitchBack) {
+    anchor.dataset.isswitchback = 'true';
+  }
 
   anchor.appendChild(headSquare);
   anchor.appendChild(document.createTextNode(item.name));
