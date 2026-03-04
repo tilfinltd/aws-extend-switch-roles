@@ -92,7 +92,7 @@ describe('createRoleListItem', () => {
 
       const a = li.querySelector('a')
       expect(a.innerHTML).to.eq(`<span class="headSquare" style="\
-background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
+background-image: url(&quot;https://www.exapmle.com/icon.png&quot;);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
     });
   });
 
@@ -110,7 +110,7 @@ background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class
 
       const a = li.querySelector('a')
       expect(a.innerHTML).to.eq(`<span class="headSquare" style="background-color: rgb(255, 170, 34); \
-background-image: url(https://www.exapmle.com/icon.png);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
+background-image: url(&quot;https://www.exapmle.com/icon.png&quot;);"> </span>prf<span class="suffixAccountId">333344441111</span>`);
     });
   });
 
