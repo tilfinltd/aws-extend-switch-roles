@@ -30,12 +30,16 @@
     "aesr-config": "^0.6.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
+    "@playwright/test": "^1.58.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "chai": "^6.2.0",
-    "jsdom": "^26.1.0",
-    "mocha": "^11.7.4",
-    "rollup": "^4.52.5"
+    "chai": "^6.2.2",
+    "jsdom": "^28.1.0",
+    "mocha": "^11.7.5",
+    "rollup": "^4.59.0"
+  },
+  "overrides": {
+    "diff": "^8.0.3",
+    "serialize-javascript": "^7.0.4"
   },
   "type": "module"
 }
