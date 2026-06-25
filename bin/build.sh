@@ -2,6 +2,7 @@
 #--
 # build.sh
 #--
+set -e
 
 mkdir -p dist/chrome/js
 mkdir -p dist/firefox/js
@@ -11,10 +12,10 @@ popup=dist/chrome/js/popup.js
 background=dist/chrome/js/background.js
 supporters=dist/chrome/js/supporters.js
 
-rollup -c ./rollup.config.js src/js/options.js --file $options
-rollup -c ./rollup.config.js src/js/popup.js --file $popup
-rollup -c ./rollup.config.js src/js/background.js --file $background
-rollup -c ./rollup.config.js src/js/supporters.js --file $supporters
+rolldown -c ./rolldown.config.js --input src/js/options.js --file $options
+rolldown -c ./rolldown.config.js --input src/js/popup.js --file $popup
+rolldown -c ./rolldown.config.js --input src/js/background.js --file $background
+rolldown -c ./rolldown.config.js --input src/js/supporters.js --file $supporters
 
 \cp -f $options    dist/firefox/js/options.js
 \cp -f $popup      dist/firefox/js/popup.js
