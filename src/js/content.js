@@ -79,6 +79,7 @@ function getMetaData() {
       if (ir) {
         if (ir.startsWith("us-gov-")) return "signin.amazonaws-us-gov.com";
         else if (ir.startsWith("cn-"))  return "signin.amazonaws.cn";
+        else if (ir.startsWith("eusc-")) return "signin.amazonaws-eusc.eu";
       }
 
       return "signin.aws.amazon.com";
@@ -142,13 +143,15 @@ function doSwitch(data, cb) {
         if (
           actionHost === "signin.aws.amazon.com" ||
           actionHost === "signin.amazonaws-us-gov.com" ||
-          actionHost === "signin.amazonaws.cn"
+          actionHost === "signin.amazonaws.cn" ||
+          actionHost === "signin.amazonaws-eusc.eu"
         ) {
           actionHost = actionSubdomain + "." + actionHost;
         } else if (
           actionHost.endsWith(".signin.aws.amazon.com") ||
           actionHost.endsWith(".signin.amazonaws-us-gov.com") ||
-          actionHost.endsWith(".signin.amazonaws.cn")
+          actionHost.endsWith(".signin.amazonaws.cn") ||
+          actionHost.endsWith(".signin.amazonaws-eusc.eu")
         ) {
           actionHost = actionHost.replace(/^[^\.]+/, actionSubdomain);
         }

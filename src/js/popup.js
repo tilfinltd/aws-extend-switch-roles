@@ -103,7 +103,8 @@ function main() {
       const url = new URL(tab.url)
       if (url.host.endsWith('.aws.amazon.com')
        || url.host.endsWith('.amazonaws-us-gov.com')
-       || url.host.endsWith('.amazonaws.cn')) {
+       || url.host.endsWith('.amazonaws.cn')
+       || url.host.endsWith('.amazonaws-eusc.eu')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           if (userInfo) {
             mainEl.style.display = 'block';
