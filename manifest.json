@@ -28,7 +28,9 @@
         "https://*.console.amazonaws-us-gov.com/*",
         "https://phd.amazonaws-us-gov.com/*",
         "https://*.console.amazonaws.cn/*",
-        "https://health.amazonaws.cn/*"
+        "https://health.amazonaws.cn/*",
+        "https://*.console.amazonaws-eusc.eu/*",
+        "https://health.amazonaws-eusc.eu/*"
       ],
       "js": [
         "js/content.js"
@@ -49,7 +51,9 @@
       "https://*.console.amazonaws-us-gov.com/*",
       "https://phd.amazonaws-us-gov.com/*",
       "https://*.console.amazonaws.cn/*",
-      "https://health.amazonaws.cn/*"
+      "https://health.amazonaws.cn/*",
+      "https://*.console.amazonaws-eusc.eu/*",
+      "https://health.amazonaws-eusc.eu/*"
     ]
   }],
   "manifest_version": 3
