@@ -79,7 +79,7 @@ function getMetaData() {
       if (ir) {
         if (ir.startsWith("us-gov-")) return "signin.amazonaws-us-gov.com";
         else if (ir.startsWith("cn-"))  return "signin.amazonaws.cn";
-        else if (ir.startsWith("eusc-")) return "signin.amazonaws-eusc.eu";
+        else if (ir.startsWith("eusc-")) return `${ir}.signin.amazonaws-eusc.eu`;
       }
 
       return "signin.aws.amazon.com";
