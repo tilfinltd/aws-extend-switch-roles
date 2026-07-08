@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 6.2.0 (2026-07-05)
+## 6.2.1 (2026-07-07)
 
 - Add AWS European Sovereign Cloud support (thanks to @ArnaudLjn)
 
