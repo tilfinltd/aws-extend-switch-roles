@@ -7,3 +7,4 @@ test/extension/*
 manifest_*_dev.json
 .DS_Store
 test-results/
+private-*
